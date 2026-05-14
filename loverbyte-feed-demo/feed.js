@@ -1,0 +1,4051 @@
+(() => {
+  const DEMO_CURRENT_USER = {
+    displayName: 'Kendra',
+    handle: '@kendratheeblackgoddess',
+    avatarUrl: './assets/kENDRA.jpeg',
+  };
+
+  const dayButtons = Array.from(document.querySelectorAll('.lb-week-tabs__tab'));
+  const weekTabsRoot = document.querySelector('.lb-week-tabs');
+  const weekTabsScroller = document.querySelector('.lb-week-tabs__scroller');
+  const weekTabsHint = document.querySelector('[data-week-hint]');
+  const weekTabsThumb = document.querySelector('[data-week-thumb]');
+  const vibeTitleBase = document.querySelector('[data-vibe-title-base]');
+  const vibeTitleAccent = document.querySelector('[data-vibe-title-accent]');
+  const vibeTagline = document.querySelector('[data-vibe-tagline]');
+  const vibeDescription = document.querySelector('[data-vibe-description]');
+  const feedPlaceholder = document.querySelector('[data-feed-placeholder]');
+  const feedDefault = document.querySelector('[data-feed-default]');
+  const feedDayCopy = document.querySelector('[data-feed-day-copy]');
+  const feedSignals = document.querySelector('[data-feed-signals]');
+  const postFooters = Array.from(document.querySelectorAll('[data-post-footer]'));
+  const signalFeedState = {
+    signals: [],
+  };
+  const reactionInteractionMode = 'increment_only';
+  const showRelationshipGoalChip = true;
+  const datingSnapshotMockData = new Map([
+    ['@maya', { romanticallyOpen: true, datingCardActive: true, openBadge: 'Open to Crushes', datingDirection: 'F4M', ageBand: '30s', locationState: 'CA/USA', relationshipGoal: 'Long-term' }],
+    ['@username', { romanticallyOpen: true, datingCardActive: true, openBadge: 'Open to Crushes', datingDirection: 'F4M', ageBand: '30s', locationState: 'CA/USA', relationshipGoal: 'Long-term' }],
+    ['@jakegymienerd', { romanticallyOpen: true, datingCardActive: true, openBadge: 'Open to Crushes', datingDirection: 'M4F', ageBand: '30s', locationState: 'CA/USA', relationshipGoal: 'Long-term' }],
+  ]);
+
+  // TODO(brand): this is Loverbyte’s fixed weekly brand schedule; do not change unless brand schedule changes.
+  const weeklyThemes = {
+    Mon: {
+      day: 'Mon',
+      dayName: 'Monday',
+      themeName: 'Money Moves Monday',
+      titleBase: 'Money Moves',
+      titleAccent: 'Monday',
+      tagline: 'The tea starts with the future.',
+      description:
+        'Career wins, soft-life goals, financial red flags, ambition, dating standards, power-couple dreams, and the bag you’re building.',
+    },
+    Tue: {
+      day: 'Tue',
+      dayName: 'Tuesday',
+      themeName: 'Toxic Teasday Tuesday',
+      titleBase: 'Toxic Teasday',
+      titleAccent: 'Tuesday',
+      tagline: 'Questionable decisions. Unforgettable lessons.',
+      description:
+        'Red flags, mixed signals, situationships, emotional plot twists, celebrity chaos, and the relationship habits we probably should’ve avoided.',
+    },
+    Wed: {
+      day: 'Wed',
+      dayName: 'Wednesday',
+      themeName: 'Weasdom Wednesday',
+      titleBase: 'Weasdom',
+      titleAccent: 'Wednesday',
+      tagline: 'Bad decisions. Great character development.',
+      description:
+        'Lessons, realizations, self-drags, healing journeys, hard truths, and the clarity that shows up after the chaos.',
+    },
+    Thu: {
+      day: 'Thu',
+      dayName: 'Thursday',
+      themeName: 'Thirst Trap Thursday',
+      titleBase: 'Thirst Trap',
+      titleAccent: 'Thursday',
+      tagline: 'Main character energy only.',
+      description:
+        'Flirty selfies, glow-ups, soft launches, style, confidence, crush-worthy moments, and posts you definitely didn’t make “for them.”',
+    },
+    Fri: {
+      day: 'Fri',
+      dayName: 'Friday',
+      themeName: 'Freaky Friday',
+      titleBase: 'Freaky',
+      titleAccent: 'Friday',
+      tagline: 'Chemistry, chaos, and group-chat energy.',
+      description:
+        'Spicy confessions, flirty debates, intimacy, attraction, fantasies, and dangerously honest questions.',
+    },
+    Sat: {
+      day: 'Sat',
+      dayName: 'Saturday',
+      themeName: 'Slayturday',
+      titleBase: 'Slayturday',
+      titleAccent: '',
+      tagline: 'Weekend energy fully activated.',
+      description:
+        'Night-out looks, stay-in vibes, friends, romance, soft-life moments, confidence, connection, and main-character weekend storylines.',
+    },
+    Sun: {
+      day: 'Sun',
+      dayName: 'Sunday',
+      themeName: 'Soultea Sunday',
+      titleBase: 'Soultea',
+      titleAccent: 'Sunday',
+      tagline: 'Soft hearts. Deep talks. Soul-touching tea.',
+      description:
+        'Wholesome love stories, emotional resets, reflective conversations, relationship lessons, brunch-level gossip, and the moments that actually stay with you.',
+    },
+  };
+
+  const jsDayToThemeDay = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const localThemeDay = jsDayToThemeDay[new Date().getDay()];
+  const todayDay = weeklyThemes[localThemeDay] ? localThemeDay : 'Mon';
+  let selectedDay = todayDay;
+  let selectedThemeDay = todayDay;
+
+  const getTabLabel = (day, isActive) => {
+    if (day === 'YouUp') return 'You Up? 🌙';
+    if (day === 'AfterHours') return 'After Hours 🔥';
+    if (isActive && day === todayDay) return `${day} · Today`;
+    return day;
+  };
+
+  const formatSignalActionLabel = (type, count) => {
+    if (count <= 0) {
+      if (type === 'tip') return 'Tip';
+      if (type === 'poke') return 'Poke';
+      if (type === 'crush') return 'Crush';
+      return '';
+    }
+
+    if (type === 'tip') return `${count} ${count === 1 ? 'tip' : 'tips'}`;
+    if (type === 'poke') return `${count} ${count === 1 ? 'poke' : 'pokes'}`;
+    if (type === 'crush') return `${count} ${count === 1 ? 'crush' : 'crushes'}`;
+    return String(count);
+  };
+
+  const parseCountValue = (value) => {
+    const rawCount = Number.parseInt(value || '0', 10);
+    return Number.isFinite(rawCount) ? Math.max(0, rawCount) : 0;
+  };
+
+  const setStandardActionCount = (actionButton, nextCount) => {
+    if (!actionButton) return;
+    const count = Math.max(0, nextCount);
+    actionButton.dataset.actionCount = String(count);
+
+    const label = actionButton.querySelector('[data-action-count-label]');
+    if (!label) return;
+    label.textContent = count > 0 ? String(count) : '';
+    label.hidden = count <= 0;
+  };
+
+  const setSignalActionCount = (signalButton, nextCount) => {
+    if (!signalButton) return;
+    const count = Math.max(0, nextCount);
+    signalButton.dataset.signalCount = String(count);
+
+    const label = signalButton.querySelector('[data-signal-label]');
+    if (!label) return;
+    const type = signalButton.dataset.signalType || '';
+    label.textContent = formatSignalActionLabel(type, count);
+  };
+
+  const hydratePostFooters = () => {
+    const postLabelRows = Array.from(document.querySelectorAll('[data-post-labels]'));
+    postLabelRows.forEach((row) => {
+      row.hidden = row.children.length === 0;
+    });
+
+    postFooters.forEach((footer) => {
+      const reactionRow = footer.querySelector('[data-reaction-chips]');
+      if (reactionRow) {
+        reactionRow.hidden = reactionRow.children.length === 0;
+      }
+
+      const standardCountLabels = Array.from(footer.querySelectorAll('[data-action-count-label]'));
+      standardCountLabels.forEach((label) => {
+        const actionButton = label.closest('[data-action-type]');
+        const rawCount = Number.parseInt(actionButton?.dataset.actionCount || '0', 10);
+        const count = Number.isFinite(rawCount) ? rawCount : 0;
+        label.textContent = count > 0 ? String(count) : '';
+        label.hidden = count <= 0;
+      });
+
+      const signalLabels = Array.from(footer.querySelectorAll('[data-signal-label]'));
+      signalLabels.forEach((label) => {
+        const signalButton = label.closest('[data-signal-type]');
+        const type = signalButton?.dataset.signalType || '';
+        const rawCount = Number.parseInt(signalButton?.dataset.signalCount || '0', 10);
+        const count = Number.isFinite(rawCount) ? rawCount : 0;
+        label.textContent = formatSignalActionLabel(type, count);
+      });
+    });
+  };
+
+  const createActionGradient = (svg, type, gradientId) => {
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    gradient.setAttribute('id', gradientId);
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '0%');
+    gradient.setAttribute('x2', '100%');
+    gradient.setAttribute('y2', '100%');
+
+    const stopPaletteByType = {
+      react: [
+        { offset: '0%', color: '#61A9FF' },
+        { offset: '36%', color: '#FF72CC' },
+        { offset: '72%', color: '#54E9D8' },
+        { offset: '100%', color: '#FFFFFF' },
+      ],
+      save: [
+        { offset: '0%', color: '#4D96FF' },
+        { offset: '38%', color: '#FF67C6' },
+        { offset: '76%', color: '#45E0D1' },
+        { offset: '100%', color: '#FFFFFF' },
+      ],
+    };
+
+    const stops = stopPaletteByType[type] || stopPaletteByType.react;
+    stops.forEach(({ offset, color }) => {
+      const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop.setAttribute('offset', offset);
+      stop.setAttribute('stop-color', color);
+      gradient.appendChild(stop);
+    });
+
+    defs.appendChild(gradient);
+    svg.insertBefore(defs, svg.firstChild);
+  };
+
+  const setEngagementActionState = (button, isEngaged) => {
+    const actionType = button.dataset.actionType;
+    if (actionType !== 'react' && actionType !== 'save') return;
+
+    const iconPath = button.querySelector('.lb-rail-action__iconSvg path');
+    if (!iconPath) return;
+
+    const gradientId = iconPath.dataset.gradientId || '';
+    if (isEngaged && gradientId) {
+      iconPath.style.fill = `url(#${gradientId})`;
+    } else {
+      iconPath.style.fill = '';
+    }
+
+    button.classList.toggle('is-engaged', isEngaged);
+    button.setAttribute('aria-pressed', String(isEngaged));
+  };
+
+  const initEngagementActionToggles = () => {
+    const toggleButtons = Array.from(
+      document.querySelectorAll('.lb-rail-action[data-action-type="react"], .lb-rail-action[data-action-type="save"]')
+    );
+
+    toggleButtons.forEach((button, index) => {
+      const actionType = button.dataset.actionType;
+      const iconSvg = button.querySelector('.lb-rail-action__iconSvg');
+      const iconPath = button.querySelector('.lb-rail-action__iconSvg path');
+      if (!iconSvg || !iconPath || !actionType) return;
+
+      const gradientId = `lbActionGradient-${actionType}-${index}`;
+      createActionGradient(iconSvg, actionType, gradientId);
+      iconPath.dataset.gradientId = gradientId;
+      setEngagementActionState(button, false);
+
+      button.addEventListener('click', () => {
+        const willEngage = !button.classList.contains('is-engaged');
+        const currentCount = parseCountValue(button.dataset.actionCount);
+        const nextCount = willEngage ? currentCount + 1 : Math.max(0, currentCount - 1);
+        setStandardActionCount(button, nextCount);
+        setEngagementActionState(button, willEngage);
+      });
+    });
+  };
+
+  const initSignalActionToggles = () => {
+    const signalButtons = Array.from(document.querySelectorAll('.lb-signal-action[data-signal-type]'));
+
+    signalButtons.forEach((button) => {
+      const type = button.dataset.signalType || '';
+      if (type !== 'tip') {
+        button.classList.remove('is-engaged');
+        button.setAttribute('aria-pressed', 'false');
+      }
+
+      button.addEventListener('click', () => {
+        if (type === 'tip') {
+          const postCard = button.closest('.lb-post-card, [data-post-card]');
+          if (!postCard) return;
+          toggleTipForPost(postCard);
+          return;
+        }
+
+        const willEngage = !button.classList.contains('is-engaged');
+        const currentCount = parseCountValue(button.dataset.signalCount);
+        const nextCount = willEngage ? currentCount + 1 : Math.max(0, currentCount - 1);
+        setSignalActionCount(button, nextCount);
+        button.classList.toggle('is-engaged', willEngage);
+        button.setAttribute('aria-pressed', String(willEngage));
+      });
+    });
+  };
+
+  const renderVibeCard = (themeDay) => {
+    const theme = weeklyThemes[themeDay] || weeklyThemes.Mon;
+    if (!theme) return;
+
+    if (vibeTitleBase) {
+      if (themeDay === 'Wed' && theme.titleBase === 'Weasdom') {
+        vibeTitleBase.innerHTML = 'W<span class="lb-vibe-card__wordplayEa">ea</span>sdom';
+      } else {
+        vibeTitleBase.textContent = theme.titleBase;
+      }
+    }
+    if (vibeTitleAccent) {
+      vibeTitleAccent.textContent = theme.titleAccent;
+      vibeTitleAccent.hidden = !theme.titleAccent;
+    }
+
+    if (vibeTagline) {
+      const hasTagline = Boolean(theme.tagline);
+      vibeTagline.hidden = !hasTagline;
+      vibeTagline.textContent = hasTagline ? theme.tagline : '';
+    }
+
+    if (vibeDescription) {
+      vibeDescription.textContent = theme.description;
+    }
+  };
+
+  const syncWeekTabOverflowUI = () => {
+    if (!weekTabsRoot || !weekTabsScroller) return;
+
+    const scrollLeft = weekTabsScroller.scrollLeft;
+    const clientWidth = weekTabsScroller.clientWidth;
+    const scrollWidth = weekTabsScroller.scrollWidth;
+    const maxScroll = Math.max(0, scrollWidth - clientWidth);
+    const isScrollable = maxScroll > 2;
+    const atStart = scrollLeft <= 2;
+    const atEnd = scrollLeft >= maxScroll - 2;
+
+    weekTabsRoot.classList.toggle('is-scrollable', isScrollable);
+    weekTabsRoot.classList.toggle('is-at-start', atStart);
+    weekTabsRoot.classList.toggle('is-at-end', atEnd);
+    weekTabsRoot.classList.toggle('has-scrolled', scrollLeft > 6);
+
+    if (weekTabsHint) {
+      weekTabsHint.hidden = !isScrollable;
+    }
+
+    if (weekTabsThumb) {
+      if (!isScrollable) {
+        weekTabsThumb.style.width = '100%';
+        weekTabsThumb.style.transform = 'translateX(0)';
+      } else {
+        const thumbWidth = Math.max(20, (clientWidth / scrollWidth) * 100);
+        const maxTranslate = 100 - thumbWidth;
+        const progress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+        const translate = progress * maxTranslate;
+        weekTabsThumb.style.width = `${thumbWidth}%`;
+        weekTabsThumb.style.transform = `translateX(${translate}%)`;
+      }
+    }
+  };
+
+  const pruneExpiredTeaSignals = () => {
+    const now = Date.now();
+    signalFeedState.signals = signalFeedState.signals.filter((signal) => {
+      const isActive = signal.postType === 'teaSignal' && signal.expiresAt > now;
+      if (isActive) return true;
+      if (Array.isArray(signal.images)) {
+        signal.images.forEach((image) => {
+          if (image?.url && String(image.url).startsWith('blob:')) {
+            URL.revokeObjectURL(image.url);
+          }
+        });
+      }
+      return false;
+    });
+  };
+
+  const formatExpiresIn = (expiresAt) => {
+    const remainingMs = expiresAt - Date.now();
+    if (remainingMs <= 0) return 'Expires now';
+    const hoursRemaining = Math.max(1, Math.ceil(remainingMs / (60 * 60 * 1000)));
+    return `Expires in ${hoursRemaining}h`;
+  };
+
+  const renderTeaSignalFeed = () => {
+    if (!feedSignals) return;
+    pruneExpiredTeaSignals();
+    feedSignals.innerHTML = '';
+
+    if (!signalFeedState.signals.length) {
+      const empty = document.createElement('div');
+      empty.className = 'lb-tea-empty';
+      empty.innerHTML = `
+        <p class="lb-tea-empty__title">Nobody’s sent a Tea Signal yet.</p>
+        <p class="lb-tea-empty__copy">Be the first to wake the group chat.</p>
+        <button class="lb-tea-empty__cta" type="button" data-signal-empty-open>Send Signal</button>
+      `;
+      feedSignals.appendChild(empty);
+      return;
+    }
+
+    const list = document.createElement('div');
+    list.className = 'lb-tea-feed';
+
+    signalFeedState.signals.forEach((signal) => {
+      const card = document.createElement('article');
+      card.className = 'lb-tea-card';
+      card.dataset.postCard = '';
+      card.dataset.postId = signal.id;
+      card.dataset.postType = 'tea-signal';
+
+      const labelsMarkup = Array.isArray(signal.labels) && signal.labels.length
+        ? `<div class="lb-tea-card__labels">${signal.labels
+            .map((id) => {
+              const label = labelById.get(id);
+              if (!label) return '';
+              return `<span class="lb-post-card__labelChip" data-label-group="${label.group}">${label.label}</span>`;
+            })
+            .join('')}</div>`
+        : '';
+      const imageMarkup = Array.isArray(signal.images) && signal.images.length
+        ? `<div class="lb-tea-card__media">${signal.images
+            .map((image) => `<img src="${image.url}" alt="Tea Signal image" loading="lazy" decoding="async" />`)
+            .join('')}</div>`
+        : '';
+
+      card.innerHTML = `
+        <header class="lb-tea-card__head">
+          <p class="lb-tea-card__author">${signal.handle} sent a Tea Signal 🌙</p>
+          <p class="lb-tea-card__meta">${signal.localTime} · ${formatExpiresIn(signal.expiresAt)}</p>
+        </header>
+        ${labelsMarkup}
+        <div class="lb-post-card__bodyWrap">
+          <div class="lb-post-card__contentCol">
+            ${signal.message ? `<p class="lb-tea-card__message">${signal.message}</p>` : ''}
+            ${imageMarkup}
+            <div class="lb-post-footer__reactions" data-reaction-chips></div>
+          </div>
+          <div class="lb-post-footer__standardRail" role="group" aria-label="Standard interactions">
+            <button class="lb-rail-action" type="button" data-action-type="react" data-action-count="0" aria-label="React">
+              <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 20.6c-.2 0-.3-.1-.4-.2l-1.8-1.7C5.1 14.5 2 11.7 2 8.2 2 5.4 4.2 3.2 7 3.2c1.6 0 3.2.8 4.1 2.1.9-1.3 2.5-2.1 4.1-2.1 2.8 0 5 2.2 5 5 0 3.5-3.1 6.3-7.8 10.5l-1.8 1.7c-.2.1-.4.2-.6.2z"></path>
+              </svg>
+              <span class="lb-rail-action__count" data-action-count-label hidden></span>
+            </button>
+            <button class="lb-rail-action" type="button" data-action-type="reply" data-action-count="0" aria-label="Reply">
+              <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M4 5.5c0-1.4 1.1-2.5 2.5-2.5h11c1.4 0 2.5 1.1 2.5 2.5v8c0 1.4-1.1 2.5-2.5 2.5H10l-4.6 3.6c-.5.4-1.2 0-1.2-.7V16H6.5C5.1 16 4 14.9 4 13.5v-8z"></path>
+              </svg>
+              <span class="lb-rail-action__count" data-action-count-label hidden></span>
+            </button>
+            <button class="lb-rail-action" type="button" data-action-type="save" data-action-count="0" aria-label="Save">
+              <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M7 3.5h10a2 2 0 0 1 2 2V21l-7-4-7 4V5.5a2 2 0 0 1 2-2z"></path>
+              </svg>
+              <span class="lb-rail-action__count" data-action-count-label hidden></span>
+            </button>
+          </div>
+        </div>
+        <footer class="lb-post-footer" data-post-footer>
+          <div class="lb-post-footer__row lb-post-footer__row--signals" role="group" aria-label="Loverbyte signal actions">
+            <button class="lb-signal-action" type="button" data-signal-type="tip" data-signal-count="0">
+              <span class="lb-signal-action__icon" aria-hidden="true">☕</span>
+              <span class="lb-signal-action__label" data-signal-label></span>
+            </button>
+            <button class="lb-signal-action" type="button" data-signal-type="poke" data-signal-count="0">
+              <span class="lb-signal-action__icon" aria-hidden="true">👀</span>
+              <span class="lb-signal-action__label" data-signal-label></span>
+            </button>
+            <button class="lb-signal-action" type="button" data-signal-type="crush" data-signal-count="0">
+              <span class="lb-signal-action__icon" aria-hidden="true">💘</span>
+              <span class="lb-signal-action__label" data-signal-label></span>
+            </button>
+          </div>
+        </footer>
+      `;
+
+      Array.from(card.querySelectorAll('.lb-rail-action[data-action-type="react"], .lb-rail-action[data-action-type="save"]'))
+        .forEach((button, i) => {
+          const actionType = button.dataset.actionType;
+          const iconSvg = button.querySelector('.lb-rail-action__iconSvg');
+          const iconPath = iconSvg?.querySelector('path');
+          if (!iconSvg || !iconPath) return;
+          const gradientId = `lbActionGradient-${actionType}-${signal.id}-${i}`;
+          createActionGradient(iconSvg, actionType, gradientId);
+          iconPath.dataset.gradientId = gradientId;
+          setEngagementActionState(button, false);
+          button.addEventListener('click', () => {
+            const willEngage = !button.classList.contains('is-engaged');
+            const currentCount = parseCountValue(button.dataset.actionCount);
+            setStandardActionCount(button, willEngage ? currentCount + 1 : Math.max(0, currentCount - 1));
+            setEngagementActionState(button, willEngage);
+          });
+        });
+
+      Array.from(card.querySelectorAll('.lb-signal-action[data-signal-type]')).forEach((button) => {
+        const type = button.dataset.signalType || '';
+        const labelEl = button.querySelector('[data-signal-label]');
+        if (labelEl) labelEl.textContent = formatSignalActionLabel(type, 0);
+        if (type !== 'tip') {
+          button.classList.remove('is-engaged');
+          button.setAttribute('aria-pressed', 'false');
+        }
+        button.addEventListener('click', () => {
+          if (type === 'tip') { toggleTipForPost(card); return; }
+          const willEngage = !button.classList.contains('is-engaged');
+          const currentCount = parseCountValue(button.dataset.signalCount);
+          setSignalActionCount(button, willEngage ? currentCount + 1 : Math.max(0, currentCount - 1));
+          button.classList.toggle('is-engaged', willEngage);
+          button.setAttribute('aria-pressed', String(willEngage));
+        });
+      });
+
+      const reactionRow = card.querySelector('[data-reaction-chips]');
+      if (reactionRow) ensureReactionAddChip(reactionRow);
+
+      const tipButton = card.querySelector('.lb-signal-action[data-signal-type="tip"]');
+      if (tipButton) {
+        const tipState = { tipCount: 0, viewerHasTipped: false };
+        postTipState.set(signal.id, tipState);
+        setTipButtonState(tipButton, tipState);
+      }
+
+      list.appendChild(card);
+    });
+
+    feedSignals.appendChild(list);
+  };
+
+  const renderFeedByDay = () => {
+    if (!feedPlaceholder) return;
+    const isYouUp = selectedDay === 'YouUp';
+
+    if (feedDefault) feedDefault.hidden = isYouUp;
+    if (feedSignals) feedSignals.hidden = !isYouUp;
+
+    if (isYouUp) {
+      renderTeaSignalFeed();
+      return;
+    }
+
+    if (feedDayCopy) {
+      const theme = weeklyThemes[selectedDay] || weeklyThemes.Mon;
+      feedDayCopy.textContent = `Showing ${theme.dayName} theme posts for now.`;
+    }
+  };
+
+  if (dayButtons.length) {
+    const setActiveDay = (day) => {
+      selectedDay = day;
+      if (day !== 'YouUp' && weeklyThemes[day]) {
+        selectedThemeDay = day;
+      }
+
+      dayButtons.forEach((button) => {
+        const dayKey = button.dataset.day || button.textContent.trim();
+        const isActive = button.dataset.day === day;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+        button.textContent = getTabLabel(dayKey, isActive);
+      });
+      renderVibeCard(selectedThemeDay);
+      renderFeedByDay();
+    };
+
+    dayButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const day = button.dataset.day;
+        if (!day || day === selectedDay) return;
+        setActiveDay(day);
+        seedDemoPosts();
+      });
+    });
+
+    setActiveDay(selectedDay);
+  } else {
+    renderVibeCard(selectedThemeDay);
+    renderFeedByDay();
+  }
+
+  hydratePostFooters();
+  initEngagementActionToggles();
+  initSignalActionToggles();
+
+  weekTabsScroller?.addEventListener('scroll', syncWeekTabOverflowUI, { passive: true });
+  window.addEventListener('resize', syncWeekTabOverflowUI);
+  requestAnimationFrame(syncWeekTabOverflowUI);
+
+  const menuRoot = document.querySelector('[data-menu]');
+  const menuTrigger = document.querySelector('.lb-feed-topbar__iconBtn');
+  const menuBackdrop = document.querySelector('[data-menu-close]');
+  const menuClose = document.querySelector('[data-menu-close-btn]');
+  const menuDrawer = document.querySelector('[data-menu-drawer]');
+  const menuItems = Array.from(document.querySelectorAll('[data-menu-item]'));
+  const menuToggles = Array.from(document.querySelectorAll('[data-menu-toggle]'));
+  const menuPanels = Array.from(document.querySelectorAll('[data-menu-panel]'));
+  const menuSubitems = Array.from(document.querySelectorAll('[data-menu-subitem]'));
+  const menuScreenRoot = document.querySelector('[data-menu-screen-root]');
+  const menuScreenTitle = document.querySelector('[data-menu-screen-title]');
+  const menuBackBtn = document.querySelector('[data-menu-back]');
+  const menuViews = Array.from(document.querySelectorAll('[data-menu-view]'));
+  const menuOpenScreenButtons = Array.from(document.querySelectorAll('[data-open-screen]'));
+  const accountSettingsForm = document.querySelector('[data-menu-form="account-settings"]');
+  const tipsSupportForm = document.querySelector('[data-menu-form="tips-support-links"]');
+  const accountSettingsNote = document.querySelector('[data-menu-form-note="account-settings"]');
+  const tipsSupportNote = document.querySelector('[data-menu-form-note="tips-support-links"]');
+  const accountDisplayNameInput = document.querySelector('[data-account-display-name]');
+  const accountPronounsInput = document.querySelector('[data-account-pronouns]');
+  const accountShortBioInput = document.querySelector('[data-account-short-bio]');
+  const accountUsernameInput = document.querySelector('[data-account-username]');
+  const accountEmailInput = document.querySelector('[data-account-email]');
+  const accountRecoveryEmailInput = document.querySelector('[data-account-recovery-email]');
+  const tipCashAppInput = tipsSupportForm?.querySelector('input[name="cashApp"]');
+  const tipVenmoInput = tipsSupportForm?.querySelector('input[name="venmo"]');
+  const tipPayPalInput = tipsSupportForm?.querySelector('input[name="paypal"]');
+  let lastFocusedElement = null;
+  let menuCloseTimer = null;
+  const menuState = {
+    supportLinks: {
+      cashApp: '',
+      venmo: '',
+      paypal: '',
+    },
+  };
+  const signalRoot = document.querySelector('[data-signal]');
+  const signalOpenButton = document.querySelector('[data-signal-open]');
+  const signalCloseBackdrop = document.querySelector('[data-signal-close]');
+  const signalCancelButtons = Array.from(document.querySelectorAll('[data-signal-cancel]'));
+  const signalText = document.querySelector('[data-signal-text]');
+  const signalSend = document.querySelector('[data-signal-send]');
+  const signalTime = document.querySelector('[data-signal-time]');
+  const signalImageBtn = document.querySelector('[data-signal-image]');
+  const signalEmojiBtn = document.querySelector('[data-signal-emoji]');
+  const signalLabelBtn = document.querySelector('[data-signal-label-btn]');
+  const signalImageInput = document.querySelector('[data-signal-image-input]');
+  const signalCounts = document.querySelector('[data-signal-counts]');
+  const signalError = document.querySelector('[data-signal-error]');
+  const signalPreview = document.querySelector('[data-signal-preview]');
+  const signalLabels = document.querySelector('[data-signal-labels]');
+  const reactionPickerRoot = document.querySelector('[data-reaction-picker]');
+  const reactionPickerGrid = document.querySelector('[data-reaction-picker-grid]');
+  const reactionTabButtons = Array.from(document.querySelectorAll('[data-reaction-tab]'));
+  const reactionPickerCloseTriggers = Array.from(document.querySelectorAll('[data-reaction-picker-close]'));
+  const tipModalRoot = document.querySelector('[data-tip-modal]');
+  const tipModalTitle = document.querySelector('[data-tip-title]');
+  const tipModalProviders = document.querySelector('[data-tip-providers]');
+  const tipModalEmpty = document.querySelector('[data-tip-empty]');
+  const tipModalEmptyHandle = document.querySelector('[data-tip-empty-handle]');
+  const tipModalSub = document.querySelector('[data-tip-sub]');
+  const tipModalFine = document.querySelector('[data-tip-fine]');
+  const tipModalNote = document.querySelector('[data-tip-note]');
+  const tipCloseTriggers = Array.from(document.querySelectorAll('[data-tip-close]'));
+  const miniToast = document.querySelector('[data-mini-toast]');
+  const feedShell = document.querySelector('.lb-feed-shell');
+  const threadViewRoot = document.querySelector('[data-thread-view]');
+  const threadBackButton = document.querySelector('[data-thread-back]');
+  const threadPostWrap = document.querySelector('[data-thread-post-wrap]');
+  const threadCommentsList = document.querySelector('[data-thread-comments-list]');
+  const threadCommentsEmpty = document.querySelector('[data-thread-comments-empty]');
+  const threadReplyTarget = document.querySelector('[data-thread-reply-target]');
+  const threadReplyingTo = document.querySelector('[data-thread-replying-to]');
+  const threadReplyUser = document.querySelector('[data-thread-reply-user]');
+  const threadReplyTime = document.querySelector('[data-thread-reply-time]');
+  const threadReplyText = document.querySelector('[data-thread-reply-text]');
+  const threadReplyThumb = document.querySelector('[data-thread-reply-thumb]');
+  const threadCancelReply = document.querySelector('[data-thread-cancel-reply]');
+  const threadText = document.querySelector('[data-thread-text]');
+  const threadImageButton = document.querySelector('[data-thread-image]');
+  const threadEmojiButton = document.querySelector('[data-thread-emoji]');
+  const threadImageInput = document.querySelector('[data-thread-image-input]');
+  const threadCounts = document.querySelector('[data-thread-counts]');
+  const threadError = document.querySelector('[data-thread-error]');
+  const threadPreview = document.querySelector('[data-thread-preview]');
+  const threadSubmit = document.querySelector('[data-thread-submit]');
+  let signalImages = [];
+  let signalLabelIds = [];
+  let activeLabelContext = 'compose';
+  const allowedImageMimeTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/heic', 'image/heif'];
+  const threadAllowedImageMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
+  const tipProviderMeta = [
+    { key: 'cashApp', label: 'Cash App' },
+    { key: 'venmo', label: 'Venmo' },
+    { key: 'paypal', label: 'PayPal' },
+  ];
+  const postTipState = new Map();
+  const postReactionState = new Map();
+  const postReactionCountState = new Map();
+  let activeReactionPickerTab = 'standard';
+  let activeReactionPostId = '';
+  let activeTipTarget = null;
+  let activeCrushCardPostId = '';
+  let activeCrushCardButton = null;
+  let activeThreadPostId = '';
+  let activeThreadReplyToCommentId = '';
+  let activeThreadReplyToIsReply = false;
+  let activeThreadReplyToHandle = '';
+  let activeThreadTrigger = null;
+  let threadDraftImage = null;
+  let miniToastTimer = null;
+  const threadCommentState = new Map();
+  const threadRepliesExpandedState = new Map();
+  const reactionCategoryOrder = [
+    { id: 'standard', label: 'Standard' },
+    { id: 'byte_tea_coded', label: 'Byte Tea Coded' },
+    { id: 'pop_culture_coded', label: 'Pop Culture Coded' },
+    { id: 'kinky', label: 'Kinky' },
+  ];
+
+  const popCultureStickerFiles = [
+    'arms-over-head-stressed.webp',
+    'cardi-b-confused-disgusted.png',
+    'diamond-grillz-glam-doll.jpg',
+    'disappointed-hands-on-hips.jpg',
+    'disgusted-face-doll-headwrap.webp',
+    'disgusted-face-doll-straight-hair.jpg',
+    'doll-bed-smartphone-running-mascara.jpg',
+    'doll-fire-explosion-tongue.jpg',
+    'doll-peeking-through-bushes..jpg',
+    'green-sweatsuit-suv-exit.jpg',
+    'horrified-vintage-doll.jpg',
+    'megan-thee-stallion-disgusted..png',
+    'mona-lisa-baddie-peace-sign.png',
+    'nene-leakes-laughing.png',
+    'office-doll-gun-at-printer.jpg',
+    'party-doll-dancing-purple-cup.jpg',
+    'porsha-williams-awkward-smile.png',
+    'ray-j-shifting-hat.png',
+    'shocked-doll-clutching-pearls..jpg',
+    'shocked-man-tie-gasp.png',
+    'skeptical-kid-yellow-shirt.png',
+    'stressed-doll-smoking-dr-pepper.jpg',
+    'stressed-doll-smoking-whiskey.jpg',
+    'suit-briefcase-railing-jump.webp',
+    'sunglasses-shocked-reaction.jpg',
+    'teacup-gun-unbothered..webp',
+    'teyana-taylor-disgusted-shock.png',
+    'that-part-receding-hairline.webp',
+    'toddler-doll-afro-puffs-side-eye.jpg',
+    'unimpressed-kid-gavin.png',
+    'vintage-doll-disgusted-lips.jpg',
+    'wine-glass-side-eye.webp',
+    'woman-bonnet-covering-mouth.png',
+  ];
+
+  const toSlug = (value) => String(value || '')
+    .toLowerCase()
+    .replace(/\.[^.]+$/, '')
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+
+  const toReadableLabel = (value) => {
+    const stem = String(value || '').replace(/\.[^.]+$/, '');
+    const normalized = stem
+      .replace(/[_-]+/g, ' ')
+      .replace(/\.+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (!normalized) return 'Sticker';
+    return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+  };
+
+  const compactImageReactionIds = new Set([
+    'byte_red_flag',
+    'byte_yellow_flag',
+    'byte_green_flag',
+  ]);
+
+  const usesStickerSizing = (asset) =>
+    Boolean(asset?.type === 'image' && !compactImageReactionIds.has(asset.id));
+
+  const reactionAssets = [
+    { id: 'standard_heart', category: 'standard', type: 'emoji', value: '❤️', label: 'Heart' },
+    { id: 'standard_laughing', category: 'standard', type: 'emoji', value: '😂', label: 'Laughing' },
+    { id: 'standard_crying', category: 'standard', type: 'emoji', value: '😭', label: 'Crying' },
+    { id: 'standard_angry', category: 'standard', type: 'emoji', value: '😡', label: 'Angry' },
+    { id: 'standard_shocked', category: 'standard', type: 'emoji', value: '😮', label: 'Shocked' },
+    { id: 'standard_sad', category: 'standard', type: 'emoji', value: '😢', label: 'Sad' },
+    { id: 'standard_thumbs_up', category: 'standard', type: 'emoji', value: '👍', label: 'Thumbs up' },
+    { id: 'standard_thumbs_down', category: 'standard', type: 'emoji', value: '👎', label: 'Thumbs down' },
+    { id: 'standard_clapping', category: 'standard', type: 'emoji', value: '🙌', label: 'Clapping' },
+    { id: 'standard_heart_eyes', category: 'standard', type: 'emoji', value: '😍', label: 'Heart eyes' },
+    { id: 'standard_cool', category: 'standard', type: 'emoji', value: '😎', label: 'Cool' },
+    { id: 'byte_receipts', category: 'byte_tea_coded', type: 'emoji', value: '🧾', label: 'Receipts' },
+    { id: 'byte_ghosting', category: 'byte_tea_coded', type: 'emoji', value: '👻', label: 'Ghosting' },
+    { id: 'byte_drama', category: 'byte_tea_coded', type: 'emoji', value: '🍿', label: 'Drama' },
+    { id: 'byte_trash', category: 'byte_tea_coded', type: 'emoji', value: '🗑️', label: 'Trash' },
+    { id: 'byte_delusional', category: 'byte_tea_coded', type: 'emoji', value: '🤡', label: 'Delusional' },
+    { id: 'byte_cold', category: 'byte_tea_coded', type: 'emoji', value: '🧊', label: 'Cold' },
+    { id: 'byte_flirty', category: 'byte_tea_coded', type: 'emoji', value: '🫦', label: 'Flirty' },
+    { id: 'byte_chemistry', category: 'byte_tea_coded', type: 'emoji', value: '🔥', label: 'Chemistry' },
+    { id: 'byte_heartbreak', category: 'byte_tea_coded', type: 'emoji', value: '💔', label: 'Heartbreak' },
+    { id: 'byte_watching', category: 'byte_tea_coded', type: 'emoji', value: '👀', label: 'Watching' },
+    { id: 'byte_dead', category: 'byte_tea_coded', type: 'emoji', value: '💀', label: 'Dead' },
+    { id: 'byte_clock_it', category: 'byte_tea_coded', type: 'emoji', value: '🤏', label: 'Clock it' },
+    { id: 'byte_clock_it_dark', category: 'byte_tea_coded', type: 'emoji', value: '🤏🏾', label: 'Clock it' },
+    { id: 'byte_chefs_kiss', category: 'byte_tea_coded', type: 'emoji', value: '🤌', label: 'Chef\'s kiss' },
+    { id: 'byte_rainbow', category: 'byte_tea_coded', type: 'emoji', value: '🌈', label: 'Rainbow' },
+    { id: 'byte_red_flag', category: 'byte_tea_coded', type: 'image', src: '/assets/reactions/byte-tea-coded/red-flag.png', label: 'Red flag' },
+    { id: 'byte_yellow_flag', category: 'byte_tea_coded', type: 'image', src: '/assets/reactions/byte-tea-coded/yellow-flag.png', label: 'Yellow flag' },
+    { id: 'byte_green_flag', category: 'byte_tea_coded', type: 'image', src: '/assets/reactions/byte-tea-coded/green-flag.png', label: 'Green flag' },
+    { id: 'kinky_devil', category: 'kinky', type: 'emoji', value: '😈', label: 'Devil' },
+    { id: 'kinky_eggplant', category: 'kinky', type: 'emoji', value: '🍆', label: 'Eggplant' },
+    { id: 'kinky_peach', category: 'kinky', type: 'emoji', value: '🍑', label: 'Peach' },
+    { id: 'kinky_tongue', category: 'kinky', type: 'emoji', value: '👅', label: 'Tongue' },
+    { id: 'kinky_droplets', category: 'kinky', type: 'emoji', value: '💦', label: 'Droplets' },
+    { id: 'kinky_drooling', category: 'kinky', type: 'emoji', value: '🤤', label: 'Drooling' },
+    { id: 'kinky_hot', category: 'kinky', type: 'emoji', value: '🥵', label: 'Hot' },
+    { id: 'kinky_unicorn', category: 'kinky', type: 'emoji', value: '🦄', label: 'Unicorn' },
+    { id: 'kinky_cat', category: 'kinky', type: 'emoji', value: '🐱', label: 'Cat' },
+    { id: 'byte_laughing_tongue_glam_hair_nails', category: 'pop_culture_coded', type: 'image', src: '/assets/reactions/byte-tea-coded/laughing-tongue-glam-hair-nails.png', label: 'Laughing tongue glam hair nails' },
+    { id: 'byte_clockit_hand_pose_white_acrylics', category: 'pop_culture_coded', type: 'image', src: '/assets/reactions/byte-tea-coded/clockit-hand-pose-white-acrylics.png', label: 'Clockit hand pose white acrylics' },
+    { id: 'byte_sassy_glam_lips_lashes', category: 'pop_culture_coded', type: 'image', src: '/assets/reactions/byte-tea-coded/sassy-glam-lips-lashes.png', label: 'Sassy glam lips lashes' },
+    { id: 'byte_smirk_pinch_pink_nails', category: 'pop_culture_coded', type: 'image', src: '/assets/reactions/byte-tea-coded/smirk-pinch-pink-nails.jpg', label: 'Smirk pinch pink nails' },
+    ...popCultureStickerFiles.map((fileName) => ({
+      id: `pop_${toSlug(fileName)}`,
+      category: 'pop_culture_coded',
+      type: 'image',
+      src: `/assets/Stickers:emojis/ Pop Culture Coded W:names/${fileName}`,
+      label: toReadableLabel(fileName),
+    })),
+  ];
+  const reactionAssetById = new Map(reactionAssets.map((asset) => [asset.id, asset]));
+
+  const normalizeReactionId = (rawValue) => String(rawValue || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[-\s]+/g, '_')
+    .replace(/[^a-z0-9_]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+
+  const legacyReactionIdAlias = new Map([
+    ['heart', 'standard_heart'],
+    ['laugh', 'standard_laughing'],
+    ['cry', 'standard_sad'],
+    ['sob', 'standard_crying'],
+    ['angry', 'standard_angry'],
+    ['surprised', 'standard_shocked'],
+    ['thumbs_up', 'standard_thumbs_up'],
+    ['thumbs_down', 'standard_thumbs_down'],
+    ['ghost', 'byte_ghosting'],
+    ['popcorn', 'byte_drama'],
+    ['trash', 'byte_trash'],
+    ['clown', 'byte_delusional'],
+    ['ice_cube', 'byte_cold'],
+    ['lips', 'byte_flirty'],
+    ['fire', 'byte_chemistry'],
+    ['broken_heart', 'byte_heartbreak'],
+    ['eyes', 'byte_watching'],
+    ['skull', 'byte_dead'],
+    ['pinch', 'byte_clock_it'],
+    ['pinch_dark', 'byte_clock_it_dark'],
+    ['receipt', 'byte_receipts'],
+    ['red_flag', 'byte_red_flag'],
+    ['yellow_flag', 'byte_yellow_flag'],
+    ['green_flag', 'byte_green_flag'],
+  ]);
+
+  const getCanonicalReactionId = (rawValue) => {
+    const normalized = normalizeReactionId(rawValue);
+    return legacyReactionIdAlias.get(normalized) || normalized;
+  };
+
+  const resolveReactionAssetSrc = (src) => {
+    const value = String(src || '').trim();
+    if (!value) return '';
+    if (value.startsWith('/assets/')) return `.${value}`;
+    return value;
+  };
+
+  const setPostReactionCountRecord = (postId, reactionId, count) => {
+    if (!postId || !reactionId) return;
+    let reactionCounts = postReactionCountState.get(postId);
+    if (!reactionCounts) {
+      reactionCounts = new Map();
+      postReactionCountState.set(postId, reactionCounts);
+    }
+
+    if (count <= 0) {
+      reactionCounts.delete(reactionId);
+      return;
+    }
+
+    reactionCounts.set(reactionId, {
+      postId,
+      reactionId,
+      count,
+    });
+  };
+
+  const getPostReactionCountRecords = (postId) => {
+    const reactionCounts = postReactionCountState.get(postId);
+    if (!reactionCounts) return [];
+    return Array.from(reactionCounts.values());
+  };
+
+  const readStoredValue = (key) => {
+    try {
+      return sessionStorage.getItem(key) || localStorage.getItem(key) || '';
+    } catch (error) {
+      return '';
+    }
+  };
+
+  const readStoredSupportLinks = () => {
+    try {
+      const raw = sessionStorage.getItem('lb_support_links') || localStorage.getItem('lb_support_links') || '';
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return null;
+      return {
+        cashApp: String(parsed.cashApp || '').trim(),
+        venmo: String(parsed.venmo || '').trim(),
+        paypal: String(parsed.paypal || '').trim(),
+      };
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const showMiniToast = (message) => {
+    if (!miniToast) return;
+    miniToast.textContent = message;
+    miniToast.hidden = false;
+    miniToast.classList.add('is-visible');
+    if (miniToastTimer) window.clearTimeout(miniToastTimer);
+    miniToastTimer = window.setTimeout(() => {
+      miniToast.classList.remove('is-visible');
+      miniToastTimer = window.setTimeout(() => {
+        miniToast.hidden = true;
+      }, 180);
+    }, 1200);
+  };
+
+  const buildSupportLinksForHandle = (handle) => {
+    if (!handle) return [];
+    // Check demo author links first (set in demo-feed-content.js).
+    // Falls back to the current user's support links from the settings menu.
+    const demoLinks = (window.LB_DEMO_AUTHOR_LINKS || {})[handle] || {};
+    const sourceLinks = Object.keys(demoLinks).length ? demoLinks : menuState.supportLinks;
+    return tipProviderMeta
+      .map((entry) => {
+        const url = String(sourceLinks[entry.key] || '').trim();
+        return url ? { ...entry, url } : null;
+      })
+      .filter(Boolean);
+  };
+
+  const getPostKey = (postCard, fallback = '') => {
+    if (!postCard) return '';
+    const existing = String(postCard.dataset.postId || '').trim();
+    if (existing) return existing;
+    const generated = fallback || `post_${Math.random().toString(36).slice(2, 10)}`;
+    postCard.dataset.postId = generated;
+    return generated;
+  };
+
+  const getPostHandle = (postCard) => {
+    const handle = postCard?.querySelector('.lb-post-card__handle')?.textContent?.trim();
+    return handle || '@username';
+  };
+
+  const isThreadViewOpen = () => Boolean(threadViewRoot && !threadViewRoot.hidden);
+
+  const getCurrentUserHandle = () => {
+    return DEMO_CURRENT_USER.handle;
+  };
+
+  const getSnapshotForHandle = (handle) => {
+    const normalizedHandle = String(handle || '').trim();
+    let snapshot = datingSnapshotMockData.get(normalizedHandle) || null;
+
+    if (!snapshot && normalizedHandle && normalizedHandle === getCurrentUserHandle()) {
+      snapshot = datingSnapshotMockData.get('@username') || null;
+    }
+
+    if (!snapshot || !snapshot.romanticallyOpen || !snapshot.datingCardActive) {
+      return null;
+    }
+
+    return snapshot;
+  };
+
+  const renderSnapshotChips = (snapshot) => {
+    if (!snapshot) return null;
+    const wrap = document.createElement('span');
+    wrap.className = 'lb-post-snapshot';
+
+    if (snapshot.romanticallyOpen === false) {
+      const badge = document.createElement('span');
+      badge.className = 'lb-post-snapshot__badge lb-post-snapshot__badge--closed';
+      badge.textContent = '🚫 😅 Not Open to Crushes';
+      wrap.appendChild(badge);
+      return wrap;
+    }
+
+    const badge = document.createElement('span');
+    badge.className = 'lb-post-snapshot__badge';
+    badge.textContent = `💘 ${snapshot.openBadge || 'Open to Crushes'}`;
+    wrap.appendChild(badge);
+
+    [snapshot.datingDirection, snapshot.ageBand, snapshot.locationState]
+      .filter(Boolean)
+      .forEach((value) => {
+        const chip = document.createElement('span');
+        chip.className = 'lb-post-snapshot__chip';
+        chip.textContent = value;
+        wrap.appendChild(chip);
+      });
+
+    if (showRelationshipGoalChip && snapshot.relationshipGoal) {
+      const goalChip = document.createElement('span');
+      goalChip.className = 'lb-post-snapshot__chip';
+      goalChip.textContent = snapshot.relationshipGoal;
+      wrap.appendChild(goalChip);
+    }
+
+    return wrap;
+  };
+
+  const injectSnapshotIntoPostIdentity = (identity) => {
+    if (!identity || identity.querySelector('.lb-post-snapshot')) return;
+    const handleEl = identity.querySelector('.lb-post-card__handle');
+    if (!handleEl) return;
+    const snapshot = getSnapshotForHandle(handleEl.textContent || '');
+    if (!snapshot) return;
+    const chips = renderSnapshotChips(snapshot);
+    if (!chips) return;
+    handleEl.insertAdjacentElement('afterend', chips);
+  };
+
+  const hydratePostSnapshots = (root = document) => {
+    Array.from(root.querySelectorAll('.lb-post-card__identity')).forEach((identity) => {
+      injectSnapshotIntoPostIdentity(identity);
+    });
+  };
+
+  const formatRelativeMinutes = (createdAt) => {
+    if (!createdAt) return 'now';
+    const diffMs = Math.max(0, Date.now() - createdAt);
+    const minutes = Math.floor(diffMs / 60000);
+    if (minutes < 1) return 'now';
+    if (minutes < 60) return `${minutes}m`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h`;
+    const days = Math.floor(hours / 24);
+    return `${days}d`;
+  };
+
+  const getThreadCommentsForPost = (postId) => {
+    if (!postId) return [];
+    let comments = threadCommentState.get(postId);
+    if (!comments) {
+      comments = [];
+      threadCommentState.set(postId, comments);
+    }
+    return comments;
+  };
+
+  const getThreadReplyStateKey = (postId, commentId) => `${postId}::${commentId}`;
+
+  const isThreadRepliesExpanded = (postId, commentId) =>
+    Boolean(threadRepliesExpandedState.get(getThreadReplyStateKey(postId, commentId)));
+
+  const setThreadRepliesExpanded = (postId, commentId, expanded) => {
+    if (!postId || !commentId) return;
+    const key = getThreadReplyStateKey(postId, commentId);
+    if (!expanded) {
+      threadRepliesExpandedState.delete(key);
+      return;
+    }
+    threadRepliesExpandedState.set(key, true);
+  };
+
+  const resetThreadRepliesExpandedForPost = (postId) => {
+    if (!postId) return;
+    const prefix = `${postId}::`;
+    Array.from(threadRepliesExpandedState.keys()).forEach((key) => {
+      if (key.startsWith(prefix)) {
+        threadRepliesExpandedState.delete(key);
+      }
+    });
+  };
+
+  const getThreadCommentLookup = (postId, commentId) => {
+    const comments = getThreadCommentsForPost(postId);
+    for (const comment of comments) {
+      if (comment.id === commentId) {
+        return { comment, parent: null, root: comment };
+      }
+      const replies = Array.isArray(comment.replies) ? comment.replies : [];
+      for (const reply of replies) {
+        if (reply.id === commentId) {
+          return { comment: reply, parent: comment, root: comment };
+        }
+      }
+    }
+    return null;
+  };
+
+  const buildInitialCommentActions = () => ({
+    heart: { count: 0, selected: false },
+    save: { count: 0, selected: false },
+    tip: { count: 0, selected: false },
+    poke: { count: 0, selected: false },
+    crush: { count: 0, selected: false },
+  });
+
+  const getReplyCountForComment = (comment) => (Array.isArray(comment?.replies) ? comment.replies.length : 0);
+
+  const setThreadReplyTarget = (target = null) => {
+    activeThreadReplyToCommentId = target?.id || '';
+    activeThreadReplyToHandle = target?.handle || '';
+    activeThreadReplyToIsReply = Boolean(target?.isReply);
+
+    const isReplying = Boolean(target?.id && target?.handle);
+
+    if (threadText) {
+      threadText.placeholder = isReplying ? 'Write your reply...' : 'Add a comment...';
+    }
+
+    if (!threadReplyTarget || !threadReplyingTo || !threadReplyUser || !threadReplyTime || !threadReplyText || !threadReplyThumb) {
+      return;
+    }
+
+    threadReplyTarget.hidden = !isReplying;
+    if (!isReplying) {
+      threadReplyingTo.textContent = '';
+      threadReplyUser.textContent = '';
+      threadReplyTime.textContent = '';
+      threadReplyText.textContent = '';
+      threadReplyThumb.hidden = true;
+      threadReplyThumb.removeAttribute('src');
+      threadReplyThumb.removeAttribute('alt');
+      return;
+    }
+
+    threadReplyingTo.textContent = `Replying to ${target.handle}`;
+    threadReplyUser.textContent = target.handle;
+    threadReplyTime.textContent = formatRelativeMinutes(target.createdAt);
+    threadReplyText.textContent = target.text || (target.imageUrl ? '[image]' : 'Reply');
+
+    if (target.imageUrl) {
+      threadReplyThumb.src = target.imageUrl;
+      threadReplyThumb.alt = `${target.handle} comment image`;
+      threadReplyThumb.hidden = false;
+    } else {
+      threadReplyThumb.hidden = true;
+      threadReplyThumb.removeAttribute('src');
+      threadReplyThumb.removeAttribute('alt');
+    }
+  };
+
+  const clearThreadDraftImage = () => {
+    if (threadDraftImage?.url) {
+      URL.revokeObjectURL(threadDraftImage.url);
+    }
+    threadDraftImage = null;
+  };
+
+  const renderThreadComposerPreview = () => {
+    if (!threadPreview) return;
+    threadPreview.innerHTML = '';
+
+    if (!threadDraftImage?.url) {
+      threadPreview.hidden = true;
+      return;
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'lb-thread-compose__thumbWrap';
+
+    const img = document.createElement('img');
+    img.className = 'lb-thread-compose__thumb';
+    img.src = threadDraftImage.url;
+    img.alt = 'Selected comment upload';
+    wrap.appendChild(img);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'lb-thread-compose__remove';
+    removeBtn.type = 'button';
+    removeBtn.setAttribute('aria-label', 'Remove image');
+    removeBtn.dataset.threadRemoveImage = 'true';
+    removeBtn.textContent = '×';
+    wrap.appendChild(removeBtn);
+
+    threadPreview.appendChild(wrap);
+    threadPreview.hidden = false;
+  };
+
+  const syncThreadComposerState = () => {
+    if (!threadText || !threadSubmit) return;
+    const hasText = (threadText.value || '').trim().length > 0;
+    const hasImage = Boolean(threadDraftImage?.url);
+    threadSubmit.disabled = !hasText && !hasImage;
+
+    if (threadCounts) {
+      threadCounts.textContent = `${hasImage ? 1 : 0}/1 image · ${threadText.value.length}/500`;
+    }
+    if (threadImageButton) {
+      threadImageButton.classList.toggle('is-active', hasImage);
+    }
+
+    renderThreadComposerPreview();
+  };
+
+  const resetThreadComposer = ({ keepReplyTarget = false } = {}) => {
+    if (threadText) threadText.value = '';
+    if (threadImageInput) threadImageInput.value = '';
+    if (threadError) threadError.textContent = '';
+    clearThreadDraftImage();
+    if (!keepReplyTarget) {
+      setThreadReplyTarget(null);
+    }
+    syncThreadComposerState();
+  };
+
+  const createThreadCommentMarkup = (comment, { isReply = false } = {}) => {
+    const article = document.createElement('article');
+    article.className = `lb-thread-comment${isReply ? ' lb-thread-comment--reply' : ''}`;
+    article.dataset.threadCommentId = comment.id;
+    article.dataset.threadIsReply = String(Boolean(isReply));
+    article.dataset.threadParentId = comment.parentId || '';
+
+    const row = document.createElement('div');
+    row.className = 'lb-thread-comment__row';
+
+    const avatar = document.createElement('span');
+    avatar.className = 'lb-thread-comment__avatar';
+    avatar.setAttribute('aria-hidden', 'true');
+    if (comment.avatarSrc) {
+      avatar.style.backgroundImage = `url("${comment.avatarSrc}")`;
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
+      avatar.style.backgroundRepeat = 'no-repeat';
+    }
+    row.appendChild(avatar);
+
+    const body = document.createElement('div');
+
+    const head = document.createElement('div');
+    head.className = 'lb-thread-comment__head';
+
+    const meta = document.createElement('p');
+    meta.className = 'lb-thread-comment__meta';
+    const user = document.createElement('span');
+    user.className = 'lb-thread-comment__user';
+    user.textContent = comment.handle;
+    const snapshot = comment.snapshot || getSnapshotForHandle(comment.handle);
+    const snapshotChips = renderSnapshotChips(snapshot);
+    const dot = document.createElement('span');
+    dot.className = 'lb-thread-comment__dot';
+    dot.textContent = '·';
+    const time = document.createElement('span');
+    time.className = 'lb-thread-comment__time';
+    time.textContent = formatRelativeMinutes(comment.createdAt);
+    meta.append(user);
+    if (snapshotChips) meta.append(snapshotChips);
+    meta.append(dot, time);
+
+    head.appendChild(meta);
+
+    const menuWrap = document.createElement('div');
+    menuWrap.className = 'lb-thread-comment__menuWrap';
+    const menuButton = document.createElement('button');
+    menuButton.className = 'lb-thread-comment__menuBtn';
+    menuButton.type = 'button';
+    menuButton.dataset.threadMenuToggle = comment.id;
+    menuButton.setAttribute('aria-label', 'Comment actions');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.textContent = '⋯';
+
+    const menu = document.createElement('div');
+    menu.className = 'lb-thread-comment__menu';
+    menu.dataset.threadMenu = comment.id;
+    menu.hidden = true;
+
+    const menuItem = document.createElement('button');
+    const isOwnComment = comment.handle === getCurrentUserHandle();
+    menuItem.className = 'lb-thread-comment__menuItem';
+    menuItem.type = 'button';
+    menuItem.dataset.threadMenuAction = isOwnComment ? 'delete' : 'report';
+    menuItem.dataset.threadMenuCommentId = comment.id;
+    menuItem.textContent = isOwnComment ? 'Delete' : 'Report';
+    menu.appendChild(menuItem);
+
+    menuWrap.append(menuButton, menu);
+    head.appendChild(menuWrap);
+    body.appendChild(head);
+
+    if (comment.text) {
+      const text = document.createElement('p');
+      text.className = 'lb-thread-comment__text';
+      text.textContent = comment.text;
+      body.appendChild(text);
+    }
+
+    if (comment.imageUrl) {
+      const image = document.createElement('img');
+      image.className = 'lb-thread-comment__image';
+      image.src = comment.imageUrl;
+      image.alt = `${comment.handle} comment image`;
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      body.appendChild(image);
+    }
+
+    row.appendChild(body);
+    article.appendChild(row);
+
+    const actions = document.createElement('div');
+    actions.className = 'lb-thread-comment__actions';
+    const railActionPathMap = {
+      heart: 'M12 20.6c-.2 0-.3-.1-.4-.2l-1.8-1.7C5.1 14.5 2 11.7 2 8.2 2 5.4 4.2 3.2 7 3.2c1.6 0 3.2.8 4.1 2.1.9-1.3 2.5-2.1 4.1-2.1 2.8 0 5 2.2 5 5 0 3.5-3.1 6.3-7.8 10.5l-1.8 1.7c-.2.1-.4.2-.6.2z',
+      reply: 'M4 5.5c0-1.4 1.1-2.5 2.5-2.5h11c1.4 0 2.5 1.1 2.5 2.5v8c0 1.4-1.1 2.5-2.5 2.5H10l-4.6 3.6c-.5.4-1.2 0-1.2-.7V16H6.5C5.1 16 4 14.9 4 13.5v-8z',
+      save: 'M7 3.5h10a2 2 0 0 1 2 2V21l-7-4-7 4V5.5a2 2 0 0 1 2-2z',
+    };
+    const signalActionIconMap = {
+      tip: '☕',
+      poke: '👀',
+      crush: '💘',
+    };
+
+    const replyCount = getReplyCountForComment(comment);
+    const isExpanded = !isReply && replyCount > 0 ? isThreadRepliesExpanded(activeThreadPostId, comment.id) : false;
+    if (!isReply && replyCount > 0) {
+      article.classList.add('lb-thread-comment--parent', 'lb-thread-comment--hasReplies');
+      if (isExpanded) {
+        article.classList.add('lb-thread-comment--expanded');
+      }
+    }
+
+    const actionsState = comment.actions || buildInitialCommentActions();
+    const actionOrder = ['heart', 'reply', 'save', 'tip', 'poke', 'crush'];
+    actionOrder.forEach((actionType) => {
+      const button = document.createElement('button');
+      button.className = 'lb-thread-comment__action';
+      button.type = 'button';
+      button.dataset.threadAction = actionType;
+      button.dataset.threadActionCommentId = comment.id;
+      button.setAttribute('aria-label', actionType === 'reply' ? `Reply to ${comment.handle}` : `${actionType} comment`);
+
+      if (actionType === 'heart' || actionType === 'reply' || actionType === 'save') {
+        button.classList.add('lb-thread-comment__action--rail');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'lb-rail-action__iconSvg lb-thread-comment__actionIcon');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.setAttribute('focusable', 'false');
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', railActionPathMap[actionType]);
+        svg.appendChild(path);
+
+        if (actionType === 'heart' || actionType === 'save') {
+          const gradientId = `lbThreadActionGradient-${actionType}-${comment.id}`;
+          createActionGradient(svg, actionType === 'heart' ? 'react' : 'save', gradientId);
+          path.dataset.gradientId = gradientId;
+          if (actionsState[actionType]?.selected) {
+            path.style.fill = `url(#${gradientId})`;
+          }
+        }
+
+        button.appendChild(svg);
+      } else {
+        button.classList.add('lb-thread-comment__action--signal');
+        const icon = document.createElement('span');
+        icon.className = 'lb-signal-action__icon lb-thread-comment__actionIcon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = signalActionIconMap[actionType] || '•';
+        button.appendChild(icon);
+      }
+
+      const count = document.createElement('span');
+      count.className = 'lb-thread-comment__actionCount';
+      const countValue = actionType === 'reply' ? replyCount : (actionsState[actionType]?.count || 0);
+      count.textContent = String(countValue);
+      count.hidden = countValue <= 0;
+      button.appendChild(count);
+
+      if (actionType !== 'reply' && actionsState[actionType]?.selected) {
+        button.classList.add('is-engaged');
+      }
+
+      actions.appendChild(button);
+    });
+
+    body.appendChild(actions);
+
+    if (!isReply && replyCount > 0) {
+      const toggle = document.createElement('button');
+      toggle.className = 'lb-thread-comment__repliesToggle';
+      toggle.type = 'button';
+      toggle.dataset.threadRepliesToggle = comment.id;
+      toggle.dataset.threadRepliesCount = String(replyCount);
+      const repliesRegionId = `thread-replies-${activeThreadPostId}-${comment.id}`;
+      toggle.setAttribute('aria-controls', repliesRegionId);
+      toggle.setAttribute('aria-expanded', String(isExpanded));
+      toggle.textContent = isExpanded
+        ? 'Hide replies'
+        : `View ${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}`;
+      body.appendChild(toggle);
+    }
+
+    if (!isReply && Array.isArray(comment.replies) && comment.replies.length) {
+      const repliesWrap = document.createElement('div');
+      repliesWrap.className = 'lb-thread-comment__replies';
+      const repliesRegionId = `thread-replies-${activeThreadPostId}-${comment.id}`;
+      repliesWrap.id = repliesRegionId;
+      repliesWrap.classList.toggle('is-expanded', isExpanded);
+      repliesWrap.hidden = !isExpanded;
+      comment.replies.forEach((reply) => {
+        repliesWrap.appendChild(createThreadCommentMarkup(reply, { isReply: true }));
+      });
+      article.appendChild(repliesWrap);
+    }
+
+    return article;
+  };
+
+  const renderThreadComments = () => {
+    if (!threadCommentsList || !threadCommentsEmpty || !activeThreadPostId) return;
+    const comments = getThreadCommentsForPost(activeThreadPostId);
+    threadCommentsList.innerHTML = '';
+
+    if (!comments.length) {
+      threadCommentsEmpty.hidden = false;
+      return;
+    }
+
+    threadCommentsEmpty.hidden = true;
+    comments.forEach((comment) => {
+      threadCommentsList.appendChild(createThreadCommentMarkup(comment));
+    });
+  };
+
+  const closeThreadCommentMenus = () => {
+    if (!threadCommentsList) return;
+    const openMenus = Array.from(threadCommentsList.querySelectorAll('[data-thread-menu]'));
+    openMenus.forEach((menu) => {
+      menu.hidden = true;
+    });
+    const toggles = Array.from(threadCommentsList.querySelectorAll('[data-thread-menu-toggle]'));
+    toggles.forEach((toggle) => {
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  const updateReplyActionCountForPost = (postId, incrementBy = 1) => {
+    if (!postId || incrementBy === 0) return;
+    const cards = Array.from(document.querySelectorAll(`.lb-post-card[data-post-id="${postId}"], [data-post-card][data-post-id="${postId}"]`));
+    cards.forEach((card) => {
+      const replyButton = card.querySelector('.lb-rail-action[data-action-type="reply"]');
+      if (!replyButton) return;
+      const currentCount = parseCountValue(replyButton.dataset.actionCount);
+      setStandardActionCount(replyButton, Math.max(0, currentCount + incrementBy));
+    });
+  };
+
+  const seedThreadDemoForPost = (postId) => {
+    if (postId !== 'post_123') return;
+    const comments = getThreadCommentsForPost(postId);
+    if (comments.length) return;
+
+    const now = Date.now();
+    comments.push({
+      id: 'comment_seed_parent_1',
+      handle: '@teaoracle',
+      createdAt: now - (18 * 60 * 1000),
+      text: 'I asked one follow-up and the whole story unraveled. Trust your first read.',
+      imageUrl: '',
+      imageName: '',
+      actions: {
+        heart: { count: 3, selected: false },
+        save: { count: 1, selected: false },
+        tip: { count: 0, selected: false },
+        poke: { count: 0, selected: false },
+        crush: { count: 0, selected: false },
+      },
+      parentId: '',
+      replies: [
+        {
+          id: 'comment_seed_reply_1',
+          handle: '@bytebestie',
+          createdAt: now - (11 * 60 * 1000),
+          text: '@teaoracle exactly. the details never match when the vibe is fake.',
+          imageUrl: '',
+          imageName: '',
+          actions: buildInitialCommentActions(),
+          parentId: 'comment_seed_parent_1',
+          replies: [],
+        },
+        {
+          id: 'comment_seed_reply_2',
+          handle: '@girldetective',
+          createdAt: now - (6 * 60 * 1000),
+          text: 'Clocked this too fast.',
+          imageUrl: '',
+          imageName: '',
+          actions: {
+            heart: { count: 1, selected: false },
+            save: { count: 0, selected: false },
+            tip: { count: 0, selected: false },
+            poke: { count: 0, selected: false },
+            crush: { count: 0, selected: false },
+          },
+          parentId: 'comment_seed_parent_1',
+          replies: [],
+        },
+      ],
+    });
+  };
+
+  const closeThreadView = ({ restoreFocus = true } = {}) => {
+    if (!threadViewRoot) return;
+    threadViewRoot.hidden = true;
+    closeThreadCommentMenus();
+    if (feedShell) feedShell.hidden = false;
+    activeThreadPostId = '';
+    activeThreadReplyToCommentId = '';
+    activeThreadReplyToHandle = '';
+    activeThreadReplyToIsReply = false;
+    if (threadPostWrap) threadPostWrap.innerHTML = '';
+    resetThreadComposer();
+    if (restoreFocus && activeThreadTrigger instanceof HTMLElement) {
+      activeThreadTrigger.focus();
+    }
+    activeThreadTrigger = null;
+  };
+
+  const openThreadViewForPost = (postCard, trigger = null) => {
+    if (!threadViewRoot || !threadPostWrap || !postCard) return;
+    const postId = getPostKey(postCard);
+    activeThreadPostId = postId;
+    activeThreadTrigger = trigger instanceof HTMLElement ? trigger : null;
+    resetThreadRepliesExpandedForPost(postId);
+    seedThreadDemoForPost(postId);
+
+    threadPostWrap.innerHTML = '';
+    const clonedPost = postCard.cloneNode(true);
+    clonedPost.classList.add('lb-thread-view__postCard');
+    threadPostWrap.appendChild(clonedPost);
+    hydratePostSnapshots(clonedPost);
+
+    if (feedShell) feedShell.hidden = true;
+    threadViewRoot.hidden = false;
+    setThreadReplyTarget(null);
+    resetThreadComposer({ keepReplyTarget: true });
+    renderThreadComments();
+
+    requestAnimationFrame(() => {
+      threadBackButton?.focus();
+    });
+  };
+
+  const ensureReactionAddChip = (reactionRow) => {
+    if (!reactionRow) return;
+    if (reactionRow.querySelector('[data-add-reaction]')) return;
+    const addChip = document.createElement('button');
+    addChip.type = 'button';
+    addChip.className = 'lb-reaction-chip lb-reaction-chip--add';
+    addChip.dataset.addReaction = 'true';
+    addChip.setAttribute('aria-label', 'Add reaction');
+    addChip.setAttribute('title', 'Add reaction');
+    addChip.innerHTML = `
+      <span class="lb-reaction-chip__plusFace" aria-hidden="true">
+        <span class="lb-reaction-chip__face">☺</span>
+        <span class="lb-reaction-chip__plus">+</span>
+      </span>
+    `;
+    reactionRow.prepend(addChip);
+  };
+
+  const getReactionAriaLabel = (reaction) => {
+    const prefix = reaction.label || (reaction.isSticker ? 'Sticker' : reaction.emoji || 'Reaction');
+    return `${prefix} reaction count ${reaction.count}`;
+  };
+
+  const createReactionChipElement = (reaction) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'lb-reaction-chip';
+    chip.dataset.reactionId = reaction.id;
+    chip.dataset.reactionKey = reaction.id;
+
+    if (reaction.type === 'image' && reaction.stickerSrc) {
+      chip.classList.toggle('lb-reaction-chip--sticker', Boolean(reaction.usesStickerSizing));
+      chip.classList.toggle('lb-reaction-chip--imageEmoji', !reaction.usesStickerSizing);
+      if (reaction.usesStickerSizing) {
+        chip.dataset.stickerLabel = reaction.label || '';
+        chip.dataset.stickerSrc = resolveReactionAssetSrc(reaction.stickerSrc) || '';
+      }
+      const image = document.createElement('img');
+      image.src = resolveReactionAssetSrc(reaction.stickerSrc);
+      image.alt = reaction.label || 'Reaction sticker';
+      chip.appendChild(image);
+    } else {
+      const emoji = document.createElement('span');
+      emoji.className = 'lb-reaction-chip__emoji';
+      emoji.setAttribute('aria-hidden', 'true');
+      emoji.textContent = reaction.emoji || '🙂';
+      chip.appendChild(emoji);
+    }
+
+    const count = document.createElement('span');
+    count.className = 'lb-reaction-chip__count';
+    count.textContent = String(reaction.count);
+    chip.appendChild(count);
+    return chip;
+  };
+
+  const applyReactionChipState = (chip, reaction) => {
+    if (!chip || !reaction) return;
+    chip.dataset.reactionId = reaction.id;
+    chip.dataset.reactionKey = reaction.id;
+    const isImageReaction = reaction.type === 'image';
+    chip.classList.toggle('lb-reaction-chip--sticker', Boolean(isImageReaction && reaction.usesStickerSizing));
+    chip.classList.toggle('lb-reaction-chip--imageEmoji', Boolean(isImageReaction && !reaction.usesStickerSizing));
+    if (isImageReaction && reaction.usesStickerSizing) {
+      chip.dataset.stickerLabel = reaction.label || '';
+      chip.dataset.stickerSrc = reaction.stickerSrc ? resolveReactionAssetSrc(reaction.stickerSrc) : (chip.querySelector('img')?.getAttribute('src') || '');
+      if (isCoarsePointer && !chip.querySelector('.lb-chip-expand')) {
+        const expandBtn = document.createElement('button');
+        expandBtn.type = 'button';
+        expandBtn.className = 'lb-chip-expand';
+        expandBtn.setAttribute('aria-label', 'Preview sticker');
+        expandBtn.textContent = '⤢';
+        expandBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const src = chip.dataset.stickerSrc || '';
+          const label = chip.dataset.stickerLabel || '';
+          if (src) openStickerModal(src, label);
+        });
+        chip.appendChild(expandBtn);
+      }
+    }
+    chip.classList.toggle('is-engaged', Boolean(reaction.viewerSelected));
+    chip.setAttribute('aria-label', getReactionAriaLabel(reaction));
+
+    if (isImageReaction) {
+      let image = chip.querySelector('img');
+      if (!image) {
+        chip.querySelector('.lb-reaction-chip__emoji')?.remove();
+        image = document.createElement('img');
+        image.alt = reaction.label || 'Reaction sticker';
+        chip.insertBefore(image, chip.firstChild);
+      }
+      if (reaction.stickerSrc) {
+        image.src = resolveReactionAssetSrc(reaction.stickerSrc);
+      }
+      image.alt = reaction.label || 'Reaction sticker';
+    } else {
+      chip.querySelector('img')?.remove();
+      let emoji = chip.querySelector('.lb-reaction-chip__emoji');
+      if (!emoji) {
+        emoji = document.createElement('span');
+        emoji.className = 'lb-reaction-chip__emoji';
+        emoji.setAttribute('aria-hidden', 'true');
+        chip.insertBefore(emoji, chip.firstChild);
+      }
+      emoji.textContent = reaction.emoji || reaction.value || '🙂';
+    }
+
+    const countNode = chip.querySelector('.lb-reaction-chip__count');
+    if (countNode) countNode.textContent = String(reaction.count);
+  };
+
+  const renderReactionPickerOptions = () => {
+    if (!reactionPickerGrid) return;
+    reactionPickerGrid.innerHTML = '';
+
+    reactionCategoryOrder.forEach((category) => {
+      const assets = reactionAssets.filter((asset) => asset.category === category.id);
+      if (!assets.length) return;
+
+      const section = document.createElement('section');
+      section.className = 'lb-reaction-picker__category';
+      section.setAttribute('aria-label', category.label);
+      section.dataset.reactionPickerCategory = category.id;
+
+      const title = document.createElement('h4');
+      title.className = 'lb-reaction-picker__categoryTitle';
+      title.textContent = category.label;
+      section.appendChild(title);
+
+      const row = document.createElement('div');
+      row.className = 'lb-reaction-picker__categoryRow';
+
+      assets.forEach((asset) => {
+        const button = document.createElement('button');
+        button.className = 'lb-reaction-picker__option';
+        button.type = 'button';
+        button.dataset.pickerReactionId = asset.id;
+        if (asset.type === 'emoji') {
+          button.dataset.pickerReactionEmoji = asset.value || '';
+        }
+        button.setAttribute('aria-label', asset.label || 'Reaction');
+        button.setAttribute('title', asset.label || 'Reaction');
+
+        if (asset.type === 'image') {
+          const isCustomSticker = usesStickerSizing(asset);
+          if (isCustomSticker) {
+            button.classList.add('lb-reaction-picker__option--customSticker');
+          }
+          const image = document.createElement('img');
+          image.className = 'lb-reaction-picker__optionImage';
+          if (isCustomSticker) {
+            image.classList.add('lb-reaction-picker__optionImage--customSticker');
+          }
+          image.src = resolveReactionAssetSrc(asset.src);
+          image.alt = asset.label || 'Reaction sticker';
+          button.appendChild(image);
+        } else {
+          button.textContent = asset.value || '🙂';
+        }
+
+        row.appendChild(button);
+      });
+
+      section.appendChild(row);
+      reactionPickerGrid.appendChild(section);
+    });
+  };
+
+  const setActiveReactionPickerTab = (tabId) => {
+    activeReactionPickerTab = reactionCategoryOrder.some((entry) => entry.id === tabId) ? tabId : 'standard';
+
+    reactionTabButtons.forEach((button) => {
+      const isActive = button.dataset.reactionTab === activeReactionPickerTab;
+      button.classList.toggle('is-active', isActive);
+      button.setAttribute('aria-selected', String(isActive));
+      button.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+
+    const sections = Array.from(reactionPickerGrid?.querySelectorAll('[data-reaction-picker-category]') || []);
+    sections.forEach((section) => {
+      section.hidden = section.dataset.reactionPickerCategory !== activeReactionPickerTab;
+    });
+  };
+
+  const closeReactionPicker = ({ restoreFocus = true } = {}) => {
+    if (!reactionPickerRoot) return;
+    reactionPickerRoot.hidden = true;
+    if (!restoreFocus) return;
+    const postCard = document.querySelector(`.lb-post-card[data-post-id="${activeReactionPostId}"], [data-post-card][data-post-id="${activeReactionPostId}"]`);
+    const addChip = postCard?.querySelector('[data-add-reaction]');
+    if (addChip instanceof HTMLElement) addChip.focus();
+    activeReactionPostId = '';
+  };
+
+  const openReactionPickerForPost = (postCard) => {
+    if (!reactionPickerRoot || !postCard) return;
+    activeReactionPostId = getPostKey(postCard);
+    reactionPickerRoot.hidden = false;
+    setActiveReactionPickerTab(activeReactionPickerTab);
+    const firstOption = reactionPickerGrid?.querySelector('[data-reaction-picker-category]:not([hidden]) [data-picker-reaction-id], [data-reaction-picker-category]:not([hidden]) [data-picker-reaction-key]');
+    requestAnimationFrame(() => firstOption?.focus());
+  };
+
+  const hydrateReactionStrips = () => {
+    const postCards = Array.from(document.querySelectorAll('.lb-post-card'));
+    postCards.forEach((postCard, postIndex) => {
+      const postId = getPostKey(postCard, `post_${postIndex + 1}`);
+      const reactionRow = postCard.querySelector('[data-reaction-chips]');
+      if (!reactionRow) return;
+      ensureReactionAddChip(reactionRow);
+
+      const reactionState = new Map();
+      const chips = Array.from(reactionRow.querySelectorAll('.lb-reaction-chip:not([data-add-reaction])'));
+      chips.forEach((chip, index) => {
+        const countNode = chip.querySelector('.lb-reaction-chip__count');
+        const rawCount = Number.parseInt(countNode?.textContent || '0', 10);
+        const count = Number.isFinite(rawCount) ? Math.max(0, rawCount) : 0;
+        const rawReactionId = chip.dataset.reactionId || chip.dataset.reactionKey || '';
+        const reactionId = getCanonicalReactionId(rawReactionId)
+          || ((chip.classList.contains('lb-reaction-chip--sticker') || chip.classList.contains('lb-reaction-chip--imageEmoji'))
+            ? `sticker_${index + 1}`
+            : `emoji_${index + 1}`);
+        const asset = reactionAssetById.get(reactionId);
+        const isImageReaction = chip.classList.contains('lb-reaction-chip--sticker')
+          || chip.classList.contains('lb-reaction-chip--imageEmoji')
+          || asset?.type === 'image';
+        const usesStickerSizingForReaction = asset ? usesStickerSizing(asset) : chip.classList.contains('lb-reaction-chip--sticker');
+        const stickerSrc = chip.querySelector('img')?.getAttribute('src') || asset?.src || '';
+        const emoji = chip.querySelector('.lb-reaction-chip__emoji')?.textContent?.trim() || asset?.value || '';
+        const reaction = {
+          id: reactionId,
+          category: asset?.category || 'standard',
+          type: asset?.type || (isImageReaction ? 'image' : 'emoji'),
+          value: asset?.value || emoji,
+          src: asset?.src || stickerSrc,
+          label: asset?.label || (isImageReaction ? 'Sticker' : emoji || 'Reaction'),
+          emoji,
+          count,
+          isSticker: isImageReaction,
+          usesStickerSizing: usesStickerSizingForReaction,
+          stickerSrc,
+          viewerSelected: false,
+        };
+        reactionState.set(reactionId, reaction);
+        setPostReactionCountRecord(postId, reactionId, count);
+        applyReactionChipState(chip, reaction);
+      });
+
+      postReactionState.set(postId, reactionState);
+      reactionRow.hidden = reactionRow.children.length === 0;
+    });
+  };
+
+  const toggleExistingReaction = (postCard, chip) => {
+    if (!postCard || !chip) return;
+    const postId = getPostKey(postCard);
+    const reactionId = getCanonicalReactionId(chip.dataset.reactionId || chip.dataset.reactionKey || '');
+    if (!reactionId) return;
+    const reactions = postReactionState.get(postId);
+    if (!reactions) return;
+    const reaction = reactions.get(reactionId);
+    if (!reaction) return;
+
+    if (reactionInteractionMode === 'increment_only') {
+      reaction.viewerSelected = true;
+      reaction.count += 1;
+    } else if (reaction.viewerSelected) {
+      reaction.viewerSelected = false;
+      reaction.count = Math.max(0, reaction.count - 1);
+    } else {
+      reaction.viewerSelected = true;
+      reaction.count += 1;
+    }
+
+    setPostReactionCountRecord(postId, reactionId, reaction.count);
+    applyReactionChipState(chip, reaction);
+  };
+
+  const applyPickedReaction = (rawReactionId, fallbackEmoji = '') => {
+    if (!activeReactionPostId) return;
+    const reactionId = getCanonicalReactionId(rawReactionId);
+    if (!reactionId) return;
+    const postCard = document.querySelector(`.lb-post-card[data-post-id="${activeReactionPostId}"], [data-post-card][data-post-id="${activeReactionPostId}"]`);
+    if (!postCard) return;
+    const reactionRow = postCard.querySelector('[data-reaction-chips]');
+    if (!reactionRow) return;
+    const reactions = postReactionState.get(activeReactionPostId) || new Map();
+    postReactionState.set(activeReactionPostId, reactions);
+    const asset = reactionAssetById.get(reactionId);
+
+    let reaction = reactions.get(reactionId);
+    if (reaction) {
+      if (reactionInteractionMode === 'increment_only') {
+        reaction.viewerSelected = true;
+        reaction.count += 1;
+      } else if (!reaction.viewerSelected) {
+        reaction.viewerSelected = true;
+        reaction.count += 1;
+      }
+    } else {
+      reaction = {
+        id: reactionId,
+        category: asset?.category || 'standard',
+        type: asset?.type || 'emoji',
+        value: asset?.value || fallbackEmoji || '🙂',
+        src: asset?.src || '',
+        label: asset?.label || 'Reaction',
+        emoji: asset?.value || fallbackEmoji || '🙂',
+        count: 1,
+        isSticker: asset?.type === 'image',
+        usesStickerSizing: usesStickerSizing(asset),
+        stickerSrc: asset?.src || '',
+        viewerSelected: true,
+      };
+      reactions.set(reactionId, reaction);
+    }
+
+    let chip = reactionRow.querySelector(`.lb-reaction-chip[data-reaction-id="${reaction.id}"], .lb-reaction-chip[data-reaction-key="${reaction.id}"]`);
+    if (!chip && reaction.stickerSrc) {
+      const resolvedSrc = resolveReactionAssetSrc(reaction.stickerSrc);
+      chip = Array.from(reactionRow.querySelectorAll('.lb-reaction-chip--sticker, .lb-reaction-chip--imageEmoji'))
+        .find((c) => c.dataset.stickerSrc === resolvedSrc || c.querySelector('img')?.getAttribute('src') === resolvedSrc) || null;
+      if (chip) {
+        chip.dataset.reactionId = reaction.id;
+        chip.dataset.reactionKey = reaction.id;
+      }
+    }
+    if (!chip) {
+      chip = createReactionChipElement(reaction);
+      reactionRow.appendChild(chip);
+    }
+    setPostReactionCountRecord(activeReactionPostId, reactionId, reaction.count);
+    applyReactionChipState(chip, reaction);
+  };
+
+  window.lbReactionAssets = reactionAssets;
+  window.lbGetPostReactionCounts = (postId) => getPostReactionCountRecords(postId);
+  window.lbGetAllPostReactionCounts = () => Array.from(postReactionCountState.values())
+    .flatMap((reactionCounts) => Array.from(reactionCounts.values()));
+  window.lbSelectReactionForPost = (postId, reactionId, fallbackEmoji = '') => {
+    const postCard = document.querySelector(`.lb-post-card[data-post-id="${postId}"]`);
+    if (!postCard) return;
+    activeReactionPostId = postId;
+    applyPickedReaction(reactionId, fallbackEmoji);
+  };
+
+  const hydrateAccountSettings = () => {
+    if (!accountSettingsForm) return;
+
+    const displayName = readStoredValue('lb_display_name');
+    const username = readStoredValue('lb_username');
+    const email = readStoredValue('lb_account_email');
+    const pronouns = readStoredValue('lb_pronouns');
+    const shortBio = readStoredValue('lb_short_bio');
+    const recoveryEmail = readStoredValue('lb_recovery_email');
+
+    if (accountDisplayNameInput) accountDisplayNameInput.value = displayName;
+    if (accountPronounsInput) accountPronounsInput.value = pronouns;
+    if (accountShortBioInput) accountShortBioInput.value = shortBio;
+    if (accountUsernameInput) accountUsernameInput.value = username ? `@${username.replace(/^@+/, '')}` : '@username';
+    if (accountEmailInput) accountEmailInput.value = email || 'you@email.com';
+    if (accountRecoveryEmailInput) accountRecoveryEmailInput.value = recoveryEmail;
+  };
+
+  const hydrateTipsSupportLinks = () => {
+    const stored = readStoredSupportLinks();
+    if (stored) {
+      menuState.supportLinks = stored;
+    }
+
+    if (tipCashAppInput) tipCashAppInput.value = menuState.supportLinks.cashApp;
+    if (tipVenmoInput) tipVenmoInput.value = menuState.supportLinks.venmo;
+    if (tipPayPalInput) tipPayPalInput.value = menuState.supportLinks.paypal;
+  };
+
+  const menuFocusableSelector =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  const getMenuFocusables = () => {
+    if (!menuDrawer) return [];
+    return Array.from(menuDrawer.querySelectorAll(menuFocusableSelector));
+  };
+
+  const isMenuOpen = () => Boolean(menuRoot && !menuRoot.hidden && menuRoot.classList.contains('is-open'));
+  const isSignalOpen = () => Boolean(signalRoot && !signalRoot.hidden);
+  const isReactionPickerOpen = () => Boolean(reactionPickerRoot && !reactionPickerRoot.hidden);
+  const isTipModalOpen = () => Boolean(tipModalRoot && !tipModalRoot.hidden);
+  const isLabelPickerOpen = () => Boolean(labelPickerRoot && !labelPickerRoot.hidden);
+
+  const resetMenuToMainState = ({ collapseAccordions = true } = {}) => {
+    if (menuDrawer) menuDrawer.classList.remove('is-subscreen');
+    if (menuScreenRoot) menuScreenRoot.hidden = true;
+    menuViews.forEach((view) => {
+      view.hidden = true;
+    });
+    if (menuScreenTitle) menuScreenTitle.textContent = 'Menu';
+    if (collapseAccordions) {
+      setAccordion('', false);
+    }
+  };
+
+  const openMenu = () => {
+    if (!menuRoot || !menuDrawer) return;
+    if (menuCloseTimer) {
+      window.clearTimeout(menuCloseTimer);
+      menuCloseTimer = null;
+    }
+    lastFocusedElement = document.activeElement;
+    resetMenuToMainState({ collapseAccordions: true });
+    menuRoot.hidden = false;
+    menuTrigger?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      menuRoot.classList.add('is-open');
+      const focusables = getMenuFocusables();
+      (focusables[0] || menuDrawer).focus();
+    });
+  };
+
+  const renderSignalPreview = () => {
+    if (!signalPreview) return;
+    signalPreview.innerHTML = '';
+    if (!signalImages.length) {
+      signalPreview.hidden = true;
+      return;
+    }
+
+    signalImages.forEach((item, index) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'lb-compose__thumbWrap';
+
+      const img = document.createElement('img');
+      img.className = 'lb-compose__thumb';
+      img.src = item.url;
+      img.alt = 'Selected signal upload';
+      wrap.appendChild(img);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'lb-compose__thumbRemove';
+      removeBtn.type = 'button';
+      removeBtn.setAttribute('aria-label', `Remove image ${index + 1}`);
+      removeBtn.dataset.removeSignalImage = String(index);
+      removeBtn.textContent = '×';
+      wrap.appendChild(removeBtn);
+
+      signalPreview.appendChild(wrap);
+    });
+
+    signalPreview.hidden = false;
+  };
+
+  const syncSignalState = () => {
+    if (!signalText || !signalSend) return;
+    const hasMessage = (signalText.value || '').trim().length > 0;
+    const hasImage = signalImages.length > 0;
+    const signalCharLimit = Number.parseInt(signalText.getAttribute('maxlength') || '1000', 10) || 1000;
+    signalSend.disabled = !hasMessage && !hasImage;
+    if (signalCounts) signalCounts.textContent = `${signalImages.length}/2 images · ${signalText.value.length}/${signalCharLimit}`;
+    if (signalImageBtn) signalImageBtn.classList.toggle('is-active', signalImages.length > 0);
+    if (signalLabelBtn) signalLabelBtn.classList.toggle('is-active', signalLabelIds.length > 0);
+    renderSignalLabelChips();
+    renderSignalPreview();
+  };
+
+  const formatSignalLocalTime = () => {
+    const stamp = new Intl.DateTimeFormat(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+    }).format(new Date());
+    return `Posting from your local time · ${stamp}`;
+  };
+
+  const openSignal = () => {
+    if (!signalRoot) return;
+    signalRoot.hidden = false;
+    if (signalTime) signalTime.textContent = formatSignalLocalTime();
+    if (signalError) signalError.textContent = '';
+    syncSignalState();
+    requestAnimationFrame(() => signalText?.focus());
+  };
+
+  const closeSignal = () => {
+    if (!signalRoot) return;
+    if (!labelPickerRoot?.hidden && activeLabelContext === 'signal') {
+      closeLabelPicker({ restoreFocus: false });
+    }
+    signalRoot.hidden = true;
+    if (signalText) signalText.value = '';
+    if (signalImageInput) signalImageInput.value = '';
+    signalImages.forEach((item) => URL.revokeObjectURL(item.url));
+    signalImages = [];
+    signalLabelIds = [];
+    if (signalError) signalError.textContent = '';
+    syncSignalState();
+    signalOpenButton?.focus();
+  };
+
+  const setTipButtonState = (button, state) => {
+    if (!button) return;
+    setSignalActionCount(button, state.tipCount);
+    button.classList.toggle('is-engaged', Boolean(state.viewerHasTipped));
+    button.setAttribute('aria-pressed', String(Boolean(state.viewerHasTipped)));
+  };
+
+  const hydrateTipButtons = () => {
+    const postCards = Array.from(document.querySelectorAll('.lb-post-card'));
+    postCards.forEach((postCard, index) => {
+      const postId = getPostKey(postCard, `post-${index + 1}`);
+      const tipButton = postCard.querySelector('.lb-signal-action[data-signal-type="tip"]');
+      if (!tipButton) return;
+      const tipCount = parseCountValue(tipButton.dataset.signalCount);
+      const state = { tipCount, viewerHasTipped: false };
+      postTipState.set(postId, state);
+      setTipButtonState(tipButton, state);
+    });
+  };
+
+  const closeTipModal = ({ restoreFocus = true } = {}) => {
+    if (!tipModalRoot) return;
+    tipModalRoot.hidden = true;
+    if (restoreFocus && activeTipTarget) {
+      let focusTarget = null;
+      if (activeTipTarget.kind === 'post') {
+        focusTarget = document.querySelector(`.lb-post-card[data-post-id="${activeTipTarget.postId}"] .lb-signal-action[data-signal-type="tip"], [data-post-card][data-post-id="${activeTipTarget.postId}"] .lb-signal-action[data-signal-type="tip"]`);
+      } else if (activeTipTarget.kind === 'comment') {
+        focusTarget = document.querySelector(`[data-thread-action="tip"][data-thread-action-comment-id="${activeTipTarget.commentId}"]`);
+      }
+      if (focusTarget instanceof HTMLElement) focusTarget.focus();
+    }
+    activeTipTarget = null;
+  };
+
+  const openTipModalShared = (handle) => {
+    if (!tipModalRoot) return;
+    const supportLinks = buildSupportLinksForHandle(handle);
+
+    if (tipModalTitle) tipModalTitle.textContent = `Tip ${handle}`;
+    if (tipModalEmptyHandle) tipModalEmptyHandle.textContent = handle;
+
+    if (tipModalProviders) {
+      tipModalProviders.innerHTML = '';
+      supportLinks.forEach((provider) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'lb-tip-modal__providerBtn';
+        button.dataset.tipProvider = provider.key;
+        button.textContent = provider.label;
+        tipModalProviders.appendChild(button);
+      });
+    }
+
+    const hasLinks = supportLinks.length > 0;
+    if (tipModalEmpty) tipModalEmpty.hidden = hasLinks;
+    if (tipModalProviders) tipModalProviders.hidden = !hasLinks;
+    if (tipModalSub) tipModalSub.hidden = !hasLinks;
+    if (tipModalFine) tipModalFine.hidden = !hasLinks;
+    if (tipModalNote) tipModalNote.hidden = !hasLinks;
+
+    tipModalRoot.hidden = false;
+    const firstProvider = tipModalProviders?.querySelector('button');
+    requestAnimationFrame(() => {
+      if (firstProvider instanceof HTMLElement) {
+        firstProvider.focus();
+      } else {
+        const closeButton = tipModalRoot.querySelector('[data-tip-close]');
+        closeButton?.focus();
+      }
+    });
+  };
+
+  const openTipModalForPost = (postCard) => {
+    if (!tipModalRoot || !postCard) return;
+    const postId = getPostKey(postCard);
+    const handle = getPostHandle(postCard);
+    activeTipTarget = { kind: 'post', postId };
+    openTipModalShared(handle);
+  };
+
+  const openTipModalForComment = (commentId, handle) => {
+    if (!tipModalRoot) return;
+    activeTipTarget = { kind: 'comment', postId: activeThreadPostId, commentId };
+    openTipModalShared(handle);
+  };
+
+  const toggleTipForPost = (postCard) => {
+    openTipModalForPost(postCard);
+  };
+
+  const closeMenu = ({ restoreFocus = true } = {}) => {
+    if (!menuRoot) return;
+    menuRoot.classList.remove('is-open');
+    menuTrigger?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    resetMenuToMainState({ collapseAccordions: true });
+    const completeClose = () => {
+      menuRoot.hidden = true;
+      menuCloseTimer = null;
+      if (restoreFocus && lastFocusedElement instanceof HTMLElement) {
+        lastFocusedElement.focus();
+      }
+    };
+    menuCloseTimer = window.setTimeout(completeClose, 260);
+  };
+
+  const handleMenuItem = (type) => {
+    if (!type) return;
+    closeMenu();
+    if (type === 'logout') {
+      console.info('Loverbyte MVP placeholder: log out action');
+      return;
+    }
+    console.info(`Loverbyte MVP placeholder: open ${type}`);
+  };
+
+  const setAccordion = (target, shouldOpen) => {
+    menuToggles.forEach((toggle) => {
+      const key = toggle.dataset.menuToggle;
+      const panel = menuPanels.find((entry) => entry.dataset.menuPanel === key);
+      const isTarget = key === target;
+      const expanded = isTarget && shouldOpen;
+      toggle.setAttribute('aria-expanded', String(expanded));
+      if (panel) panel.hidden = !expanded;
+    });
+  };
+
+  const menuViewTitles = {
+    'account-settings': 'Account Settings',
+    'privacy-safety': 'Privacy & Safety',
+    'tips-support-links': 'Tips & Support Links',
+    'blocked-users': 'Blocked Users',
+    faq: 'FAQ',
+    'contact-support': 'Contact Support',
+    'report-problem': 'Report a Problem',
+    'terms-policies': 'Terms & Policies',
+    'house-rules': 'House Rules',
+    'how-loverbyte-works': 'How Loverbyte Works',
+    'dating-safety-tips': 'Dating Safety Tips',
+    'tips-better-posts': 'Tips for Better Posts',
+  };
+
+  const openMenuScreen = (screenKey) => {
+    if (!menuDrawer || !menuScreenRoot) return;
+    const targetView = menuViews.find((view) => view.dataset.menuView === screenKey);
+    if (!targetView) return;
+
+    menuDrawer.classList.add('is-subscreen');
+    menuScreenRoot.hidden = false;
+    menuViews.forEach((view) => {
+      view.hidden = view !== targetView;
+    });
+
+    if (menuScreenTitle) {
+      menuScreenTitle.textContent = menuViewTitles[screenKey] || 'Menu';
+    }
+
+    requestAnimationFrame(() => {
+      const focusables = getMenuFocusables();
+      (focusables[0] || menuDrawer).focus();
+    });
+  };
+
+  const closeMenuScreen = () => {
+    if (!menuDrawer || !menuScreenRoot) return;
+    resetMenuToMainState({ collapseAccordions: false });
+    requestAnimationFrame(() => {
+      const firstToggle = menuToggles[0];
+      firstToggle?.focus();
+    });
+  };
+
+  setAccordion('', false);
+
+  menuTrigger?.addEventListener('click', () => {
+    if (isMenuOpen()) {
+      closeMenu();
+      return;
+    }
+    openMenu();
+  });
+
+  menuBackdrop?.addEventListener('click', () => closeMenu());
+  menuClose?.addEventListener('click', () => closeMenu());
+
+  menuItems.forEach((item) => {
+    item.addEventListener('click', () => handleMenuItem(item.dataset.menuItem));
+  });
+
+  menuToggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const key = toggle.dataset.menuToggle;
+      if (!key) return;
+      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+      setAccordion(key, !isExpanded);
+    });
+  });
+
+  menuSubitems.forEach((subitem) => {
+    subitem.addEventListener('click', () => {
+      const key = subitem.dataset.menuSubitem;
+      if (!key) return;
+      openMenuScreen(key);
+    });
+  });
+
+  menuOpenScreenButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const target = button.dataset.openScreen;
+      if (!target) return;
+      openMenuScreen(target);
+    });
+  });
+
+  menuBackBtn?.addEventListener('click', closeMenuScreen);
+
+  accountSettingsForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const payload = {
+      displayName: String(accountDisplayNameInput?.value || '').trim(),
+      pronouns: String(accountPronounsInput?.value || '').trim(),
+      shortBio: String(accountShortBioInput?.value || '').trim(),
+      recoveryEmail: String(accountRecoveryEmailInput?.value || '').trim(),
+    };
+
+    try {
+      sessionStorage.setItem('lb_display_name', payload.displayName);
+      sessionStorage.setItem('lb_pronouns', payload.pronouns);
+      sessionStorage.setItem('lb_short_bio', payload.shortBio);
+      sessionStorage.setItem('lb_recovery_email', payload.recoveryEmail);
+      sessionStorage.setItem('lb_account_settings', JSON.stringify(payload));
+    } catch (error) {
+      console.warn('Loverbyte MVP placeholder: unable to persist account settings', error);
+    }
+
+    // Explicitly keep username/email locked in MVP.
+
+    if (accountSettingsNote) {
+      accountSettingsNote.textContent = 'Changes saved.';
+    }
+  });
+
+  tipsSupportForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!tipsSupportForm) return;
+
+    const formData = new FormData(tipsSupportForm);
+    const cashApp = String(formData.get('cashApp') || '').trim();
+    const venmo = String(formData.get('venmo') || '').trim();
+    const paypal = String(formData.get('paypal') || '').trim();
+    const linkValues = [cashApp, venmo, paypal];
+    const hasInvalidLink = linkValues.some((value) => value && !/^https?:\/\//i.test(value));
+    if (hasInvalidLink) {
+      if (tipsSupportNote) tipsSupportNote.textContent = 'Add a valid support link.';
+      return;
+    }
+
+    menuState.supportLinks = {
+      cashApp,
+      venmo,
+      paypal,
+    };
+    try {
+      const serialized = JSON.stringify(menuState.supportLinks);
+      sessionStorage.setItem('lb_support_links', serialized);
+      localStorage.setItem('lb_support_links', serialized);
+    } catch (error) {
+      console.warn('Loverbyte MVP placeholder: unable to persist support links', error);
+    }
+
+    if (tipsSupportNote) {
+      tipsSupportNote.textContent = 'Support links saved.';
+    }
+  });
+
+  const composeRoot = document.querySelector('[data-compose]');
+  const composeOpen = document.querySelector('.lb-user-entry__trigger');
+  const composeClose = document.querySelector('[data-compose-close]');
+  const composeCancel = document.querySelector('[data-compose-cancel]');
+  const composeText = document.querySelector('[data-compose-text]');
+  const composeImageBtn = document.querySelector('[data-compose-image]');
+  const composeEmojiBtn = document.querySelector('[data-compose-emoji]');
+  const composeLabelBtn = document.querySelector('[data-compose-label]');
+  const composeImageInput = document.querySelector('[data-compose-image-input]');
+  const composeCounts = document.querySelector('[data-compose-counts]');
+  const composeError = document.querySelector('[data-compose-error]');
+  const composePreview = document.querySelector('[data-compose-preview]');
+  const composePost = document.querySelector('[data-compose-post]');
+  const composeLabels = document.querySelector('[data-compose-labels]');
+  const labelPickerRoot = document.querySelector('[data-label-picker]');
+  const labelPickerClose = document.querySelector('[data-label-picker-close]');
+  const labelPickerDone = document.querySelector('[data-label-done]');
+  const labelCounter = document.querySelector('[data-label-counter]');
+  const labelGroups = document.querySelector('[data-label-groups]');
+  const samplePostLabelRow = document.querySelector('[data-post-labels]');
+
+  const postLabels = [
+    { id: 'rate-my-date-fit', label: 'Rate My Date Fit', group: 'Rate & Review' },
+    { id: 'roast-my-profile', label: 'Roast My Profile', group: 'Rate & Review' },
+    { id: 'spot-dem-flags', label: 'Spot Dem Flags', group: 'Rate & Review' },
+    { id: 'aita', label: 'AITA?', group: 'Rate & Review' },
+    { id: 'crush-worthy', label: 'Crush-Worthy?', group: 'Rate & Review' },
+    { id: 'soft-launch', label: 'Soft Launch', group: 'Rate & Review' },
+    { id: 'hard-launch', label: 'Hard Launch', group: 'Rate & Review' },
+    { id: 'felt-cute-might-delete', label: 'Felt Cute, Might Delete Later', group: 'Rate & Review' },
+    { id: 'situationship', label: 'Situationship', group: 'Dating Situations' },
+    { id: 'married-but-single', label: 'Married But Single', group: 'Dating Situations' },
+    { id: 'waiting-to-be-wed', label: 'Waiting to Be Wed', group: 'Dating Situations' },
+    { id: 'dead-bedroom', label: 'Dead Bedroom', group: 'Dating Situations' },
+    { id: 'ethical-non-monogamy', label: 'Ethical Non-Monogamy', group: 'Dating Situations' },
+    { id: 'poly-life', label: 'Poly Life', group: 'Dating Situations' },
+    { id: 'work-love-balance', label: 'Work-Love Balance', group: 'Dating Situations' },
+    { id: 'never-have-i-ever', label: 'Never Have I Ever', group: 'Games' },
+    { id: 'truth-or-dare', label: 'Truth or Dare', group: 'Games' },
+    { id: 'two-truths-a-lie', label: 'Two Truths & A Lie', group: 'Games' },
+    { id: 'find-my-match', label: 'Find My Match', group: 'Games' },
+    { id: 'ama', label: 'AMA', group: 'Games' },
+    { id: 'ask-women', label: 'Ask Women', group: 'Games' },
+    { id: 'ask-men', label: 'Ask Men', group: 'Games' },
+    { id: 'would-you-rather', label: 'Would You Rather...', group: 'Games' },
+    { id: 'unpopular-opinion', label: 'Unpopular Opinion', group: 'Debates' },
+    { id: 'hot-take', label: 'Hot Take', group: 'Debates' },
+    { id: 'cmv', label: 'CMV', group: 'Debates' },
+    { id: 'til', label: 'TIL', group: 'Debates' },
+    { id: 'eli5', label: 'ELI5', group: 'Debates' },
+    { id: 'i-know-youre-lying', label: 'I Know You’re Lying', group: 'Debates' },
+    { id: 'storytime', label: 'Storytime', group: 'Storytime / Eras' },
+    { id: 'update', label: 'Update', group: 'Storytime / Eras' },
+    { id: 'healing-era', label: 'Healing Era', group: 'Storytime / Eras' },
+    { id: 'soft-life-era', label: 'Soft Life Era', group: 'Storytime / Eras' },
+    { id: 'lgbtq-parade', label: 'LGBTQ+ Parade', group: 'Community & Culture' },
+    { id: 'swirl-life', label: 'Swirl Life', group: 'Community & Culture' },
+    { id: 'sisterhood', label: 'Sisterhood', group: 'Community & Culture' },
+    { id: 'brotherhood', label: 'Brotherhood', group: 'Community & Culture' },
+    { id: 'pick-me', label: 'Pick Me', group: 'Community & Culture' },
+    { id: 'simp', label: 'Simp', group: 'Community & Culture' },
+    { id: 'new-to-loverbyte', label: 'New to Loverbyte', group: 'Community & Culture' },
+    { id: 'new-to-loverbyte-first-byte', label: 'New to Loverbyte - first byte', group: 'Community & Culture' },
+    { id: 'dear-future-wifey', label: 'Dear Future Wifey', group: 'Letters' },
+    { id: 'dear-future-hubby', label: 'Dear Future Hubby', group: 'Letters' },
+  ];
+
+  const labelById = new Map(postLabels.map((item) => [item.id, item]));
+  const labelGroupsOrder = [
+    'Rate & Review',
+    'Dating Situations',
+    'Games',
+    'Debates',
+    'Storytime / Eras',
+    'Community & Culture',
+    'Letters',
+  ];
+
+  signalOpenButton?.addEventListener('click', openSignal);
+  signalCloseBackdrop?.addEventListener('click', closeSignal);
+  signalCancelButtons.forEach((button) => button.addEventListener('click', closeSignal));
+  feedSignals?.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-signal-empty-open]');
+    if (!trigger) return;
+    openSignal();
+  });
+  signalText?.addEventListener('input', () => {
+    if (signalError) signalError.textContent = '';
+    syncSignalState();
+  });
+  signalImageBtn?.addEventListener('click', () => {
+    signalImageInput?.click();
+  });
+  signalEmojiBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (signalText) openEmojiTray(signalEmojiBtn, signalText);
+  });
+  signalLabelBtn?.addEventListener('click', () => {
+    if (signalError) signalError.textContent = '';
+    openLabelPicker('signal');
+  });
+  signalImageInput?.addEventListener('change', () => {
+    const selectedFiles = Array.from(signalImageInput.files || []);
+    if (!selectedFiles.length) return;
+
+    const nextImages = [...signalImages];
+    if (signalError) signalError.textContent = '';
+    let overflowed = false;
+
+    selectedFiles.forEach((file) => {
+      if (nextImages.length >= 2) {
+        overflowed = true;
+        return;
+      }
+
+      const fileType = String(file.type || '').toLowerCase();
+      if (fileType.startsWith('video/')) {
+        if (signalError) signalError.textContent = 'Videos are not supported yet.';
+        return;
+      }
+
+      if (!fileType.startsWith('image/')) {
+        if (signalError) signalError.textContent = 'Images only for now.';
+        return;
+      }
+
+      if (!allowedImageMimeTypes.includes(fileType)) {
+        if (signalError) signalError.textContent = 'Images only for now.';
+        return;
+      }
+
+      nextImages.push({ file, url: URL.createObjectURL(file) });
+    });
+
+    if (overflowed && signalError && !signalError.textContent) {
+      signalError.textContent = 'You can add up to 2 images.';
+    }
+
+    signalImages.forEach((item) => URL.revokeObjectURL(item.url));
+    signalImages = nextImages;
+    if (signalImageInput) signalImageInput.value = '';
+    syncSignalState();
+  });
+  signalPreview?.addEventListener('click', (event) => {
+    const removeBtn = event.target.closest('[data-remove-signal-image]');
+    if (!removeBtn) return;
+    const index = Number.parseInt(removeBtn.dataset.removeSignalImage || '-1', 10);
+    if (!Number.isInteger(index) || index < 0 || index >= signalImages.length) return;
+
+    URL.revokeObjectURL(signalImages[index].url);
+    signalImages.splice(index, 1);
+    if (signalError) signalError.textContent = '';
+    syncSignalState();
+  });
+  signalLabels?.addEventListener('click', (event) => {
+    const remove = event.target.closest('[data-remove-label-id]');
+    if (!remove) return;
+    const id = remove.dataset.removeLabelId || '';
+    if (!id) return;
+    signalLabelIds = signalLabelIds.filter((entry) => entry !== id);
+    if (signalError) signalError.textContent = '';
+    if (isLabelPickerOpen() && activeLabelContext === 'signal') {
+      renderLabelPicker();
+    }
+    syncSignalState();
+  });
+  signalSend?.addEventListener('click', () => {
+    if (!signalText || !signalSend || signalSend.disabled) return;
+    const message = signalText.value.trim();
+    const postedAt = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const createdAt = Date.now();
+    const signalLabelsSnapshot = [...signalLabelIds];
+    const signalImageSnapshot = signalImages.map((item) => ({
+      url: URL.createObjectURL(item.file),
+      name: item.file.name || 'signal-image',
+    }));
+    const teaSignal = {
+      id: `signal-${createdAt}`,
+      postType: 'teaSignal',
+      handle: getCurrentUserHandle(),
+      message,
+      labels: signalLabelsSnapshot,
+      images: signalImageSnapshot,
+      localTime: postedAt,
+      createdAt,
+      expiresAt: createdAt + 24 * 60 * 60 * 1000,
+    };
+    signalFeedState.signals.unshift(teaSignal);
+    renderFeedByDay();
+
+    console.info('Loverbyte MVP placeholder: tea signal posted', {
+      handle: teaSignal.handle,
+      message,
+      labels: teaSignal.labels,
+      imageCount: teaSignal.images.length,
+      postedAt,
+      postType: teaSignal.postType,
+      expiresAt: teaSignal.expiresAt,
+    });
+    closeSignal();
+  });
+
+  tipCloseTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => closeTipModal());
+  });
+
+  tipModalProviders?.addEventListener('click', (event) => {
+    const providerButton = event.target.closest('[data-tip-provider]');
+    if (!providerButton) return;
+    const provider = providerButton.dataset.tipProvider || '';
+    const url = String(menuState.supportLinks[provider] || '').trim();
+    if (!url) return;
+
+    window.open(url, '_blank', 'noopener,noreferrer');
+
+    if (activeTipTarget?.kind === 'post') {
+      const { postId } = activeTipTarget;
+      const postCard = document.querySelector(`.lb-post-card[data-post-id="${postId}"], [data-post-card][data-post-id="${postId}"]`);
+      const tipButton = postCard?.querySelector('.lb-signal-action[data-signal-type="tip"]');
+      if (postCard && tipButton) {
+        const currentState = postTipState.get(postId) || {
+          tipCount: parseCountValue(tipButton.dataset.signalCount),
+          viewerHasTipped: false,
+        };
+        if (!currentState.viewerHasTipped) {
+          const nextState = { tipCount: currentState.tipCount + 1, viewerHasTipped: true };
+          postTipState.set(postId, nextState);
+          setTipButtonState(tipButton, nextState);
+          showMiniToast('Tip counted ☕');
+        }
+      }
+    } else if (activeTipTarget?.kind === 'comment') {
+      const { postId, commentId } = activeTipTarget;
+      const lookup = getThreadCommentLookup(postId, commentId);
+      if (lookup) {
+        lookup.comment.actions = lookup.comment.actions || buildInitialCommentActions();
+        const actionState = lookup.comment.actions['tip'];
+        if (actionState && !actionState.selected) {
+          actionState.selected = true;
+          actionState.count += 1;
+          renderThreadComments();
+          showMiniToast('Tip counted ☕');
+        }
+      }
+    }
+
+    closeTipModal({ restoreFocus: false });
+  });
+
+  reactionPickerCloseTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => closeReactionPicker());
+  });
+
+  reactionTabButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const tabId = button.dataset.reactionTab || 'standard';
+      setActiveReactionPickerTab(tabId);
+      const firstOption = reactionPickerGrid?.querySelector('[data-reaction-picker-category]:not([hidden]) [data-picker-reaction-id], [data-reaction-picker-category]:not([hidden]) [data-picker-reaction-key]');
+      firstOption?.focus();
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (isThreadViewOpen() && threadCommentsList && !event.target.closest('.lb-thread-comment__menuWrap')) {
+      closeThreadCommentMenus();
+    }
+
+    const replyAction = event.target.closest('.lb-rail-action[data-action-type="reply"]');
+    if (replyAction) {
+      const postCard = replyAction.closest('.lb-post-card, [data-post-card]');
+      if (postCard) {
+        openThreadViewForPost(postCard, replyAction);
+      }
+      return;
+    }
+
+    const addChip = event.target.closest('[data-add-reaction]');
+    if (addChip) {
+      const postCard = addChip.closest('.lb-post-card, [data-post-card]');
+      if (postCard) openReactionPickerForPost(postCard);
+      return;
+    }
+
+    const reactionChip = event.target.closest('.lb-reaction-chip[data-reaction-id], .lb-reaction-chip[data-reaction-key]');
+    if (!reactionChip) return;
+    const postCard = reactionChip.closest('.lb-post-card, [data-post-card]');
+    if (!postCard) return;
+    toggleExistingReaction(postCard, reactionChip);
+  });
+
+  reactionPickerGrid?.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-picker-reaction-id], [data-picker-reaction-key]');
+    if (!option) return;
+    const reactionId = getCanonicalReactionId(option.dataset.pickerReactionId || option.dataset.pickerReactionKey || '');
+    const emoji = option.dataset.pickerReactionEmoji || option.textContent?.trim() || '🙂';
+    if (!reactionId) return;
+    applyPickedReaction(reactionId, emoji);
+    closeReactionPicker();
+  });
+
+  // Pointer capability flags
+  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+
+  // Mobile sticker modal
+  let stickerModalEl = null;
+
+  const removeStickerModal = () => {
+    if (stickerModalEl) {
+      stickerModalEl.remove();
+      stickerModalEl = null;
+    }
+  };
+
+  const openStickerModal = (src, label) => {
+    removeStickerModal();
+    const modal = document.createElement('div');
+    modal.className = 'lb-sticker-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', label || 'Sticker preview');
+
+    const box = document.createElement('div');
+    box.className = 'lb-sticker-modal__box';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'lb-sticker-modal__close';
+    closeBtn.setAttribute('aria-label', 'Close sticker preview');
+    closeBtn.textContent = '×';
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeStickerModal();
+    });
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = label || 'Sticker';
+    img.className = 'lb-sticker-modal__img';
+
+    box.appendChild(closeBtn);
+    box.appendChild(img);
+
+    if (label) {
+      const labelEl = document.createElement('span');
+      labelEl.className = 'lb-sticker-modal__label';
+      labelEl.textContent = label;
+      box.appendChild(labelEl);
+    }
+
+    modal.appendChild(box);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) removeStickerModal();
+    });
+    document.body.appendChild(modal);
+    stickerModalEl = modal;
+  };
+
+  if (isCoarsePointer) {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && stickerModalEl) removeStickerModal();
+    });
+  }
+
+  // Image lightbox
+  let lightboxEl = null;
+  const closeLightbox = () => {
+    if (lightboxEl) { lightboxEl.remove(); lightboxEl = null; }
+  };
+  const openLightbox = (src, alt) => {
+    closeLightbox();
+    const overlay = document.createElement('div');
+    overlay.className = 'lb-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', alt || 'Image preview');
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = alt || '';
+    img.className = 'lb-lightbox__img';
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'lb-lightbox__close';
+    closeBtn.setAttribute('aria-label', 'Close image');
+    closeBtn.textContent = '×';
+    closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(img);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeLightbox(); });
+    document.body.appendChild(overlay);
+    lightboxEl = overlay;
+  };
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightboxEl) closeLightbox();
+  });
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest('.lb-post-card__media img, .lb-tea-card__media img');
+    if (img) openLightbox(img.src, img.alt);
+  });
+
+  // Emoji tray (post composer + thread comment composer)
+  const EMOJI_LIST = [
+    '😂','😭','🥺','😍','🤩','😎','🥰','😘','😏','😤',
+    '🙄','😩','😫','🥱','😤','🤯','😱','😳','🤭','😬',
+    '❤️','🧡','💛','💚','💙','💜','🖤','🤍','💗','💖',
+    '🔥','✨','💫','⚡','🌙','🌟','🎉','👀','👏','🙏','🙌',
+  ];
+  let emojiTrayEl = null;
+  let activeEmojiTextarea = null;
+
+  const closeEmojiTray = () => {
+    if (emojiTrayEl) {
+      emojiTrayEl.remove();
+      emojiTrayEl = null;
+      activeEmojiTextarea = null;
+    }
+  };
+
+  const openEmojiTray = (anchorBtn, textarea) => {
+    if (emojiTrayEl && activeEmojiTextarea === textarea) {
+      closeEmojiTray();
+      return;
+    }
+    closeEmojiTray();
+    activeEmojiTextarea = textarea;
+
+    const tray = document.createElement('div');
+    tray.className = 'lb-emoji-tray';
+    tray.setAttribute('role', 'listbox');
+    tray.setAttribute('aria-label', 'Pick an emoji');
+
+    EMOJI_LIST.forEach((emoji) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lb-emoji-tray__btn';
+      btn.setAttribute('aria-label', emoji);
+      btn.textContent = emoji;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const ta = activeEmojiTextarea;
+        if (!ta) return;
+        const start = ta.selectionStart ?? ta.value.length;
+        const end = ta.selectionEnd ?? ta.value.length;
+        ta.value = ta.value.slice(0, start) + emoji + ta.value.slice(end);
+        const cursor = start + emoji.length;
+        ta.selectionStart = cursor;
+        ta.selectionEnd = cursor;
+        ta.focus();
+        ta.dispatchEvent(new Event('input', { bubbles: true }));
+        closeEmojiTray();
+      });
+      tray.appendChild(btn);
+    });
+
+    document.body.appendChild(tray);
+    emojiTrayEl = tray;
+
+    // Position above the anchor button
+    const btnRect = anchorBtn.getBoundingClientRect();
+    const trayRect = tray.getBoundingClientRect();
+    let left = btnRect.left;
+    let top = btnRect.top - trayRect.height - 6;
+    left = Math.max(8, Math.min(left, window.innerWidth - trayRect.width - 8));
+    top = Math.max(8, top);
+    tray.style.left = `${left}px`;
+    tray.style.top = `${top}px`;
+  };
+
+  document.addEventListener('click', (e) => {
+    if (emojiTrayEl && !emojiTrayEl.contains(e.target)) closeEmojiTray();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && emojiTrayEl) closeEmojiTray();
+  });
+
+  // Desktop sticker hover preview
+  let stickerPreviewEl = null;
+
+  const removeStickerPreview = () => {
+    if (stickerPreviewEl) {
+      stickerPreviewEl.remove();
+      stickerPreviewEl = null;
+    }
+  };
+
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.addEventListener('pointerover', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      const chip = event.target.closest('.lb-reaction-chip--sticker');
+      if (!chip) {
+        removeStickerPreview();
+        return;
+      }
+      const src = chip.dataset.stickerSrc || '';
+      const label = chip.dataset.stickerLabel || '';
+      if (!src) return;
+
+      removeStickerPreview();
+
+      const preview = document.createElement('div');
+      preview.className = 'lb-sticker-preview';
+      preview.style.visibility = 'hidden';
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = label || 'Sticker';
+      preview.appendChild(img);
+
+      if (label) {
+        const labelEl = document.createElement('span');
+        labelEl.className = 'lb-sticker-preview__label';
+        labelEl.textContent = label;
+        preview.appendChild(labelEl);
+      }
+
+      document.body.appendChild(preview);
+      stickerPreviewEl = preview;
+
+      const chipRect = chip.getBoundingClientRect();
+      const positionPreview = () => {
+        if (!stickerPreviewEl) return;
+        const previewRect = stickerPreviewEl.getBoundingClientRect();
+        let left = chipRect.left + chipRect.width / 2 - previewRect.width / 2;
+        let top = chipRect.top - previewRect.height - 8;
+        left = Math.max(8, Math.min(left, window.innerWidth - previewRect.width - 8));
+        top = Math.max(8, top);
+        stickerPreviewEl.style.left = `${left}px`;
+        stickerPreviewEl.style.top = `${top}px`;
+        stickerPreviewEl.style.visibility = '';
+      };
+
+      img.onload = positionPreview;
+      img.onerror = positionPreview;
+      if (img.complete) positionPreview();
+
+      chip.addEventListener('pointerleave', removeStickerPreview, { once: true });
+    });
+
+    document.addEventListener('click', removeStickerPreview);
+    window.addEventListener('scroll', removeStickerPreview, { capture: true, passive: true });
+    window.addEventListener('resize', removeStickerPreview, { passive: true });
+  }
+
+  threadBackButton?.addEventListener('click', () => {
+    closeThreadView();
+  });
+
+  threadCancelReply?.addEventListener('click', () => {
+    setThreadReplyTarget(null);
+    threadText?.focus();
+  });
+
+  threadCommentsList?.addEventListener('click', (event) => {
+    if (!activeThreadPostId) return;
+
+    const repliesToggle = event.target.closest('[data-thread-replies-toggle]');
+    if (repliesToggle) {
+      const commentId = repliesToggle.dataset.threadRepliesToggle || '';
+      if (!commentId) return;
+      const isExpanded = isThreadRepliesExpanded(activeThreadPostId, commentId);
+      setThreadRepliesExpanded(activeThreadPostId, commentId, !isExpanded);
+      renderThreadComments();
+      return;
+    }
+
+    const menuToggle = event.target.closest('[data-thread-menu-toggle]');
+    if (menuToggle) {
+      const commentId = menuToggle.dataset.threadMenuToggle || '';
+      const menu = threadCommentsList.querySelector(`[data-thread-menu="${commentId}"]`);
+      const willOpen = Boolean(menu?.hidden);
+      closeThreadCommentMenus();
+      if (menu) {
+        menu.hidden = !willOpen;
+        menuToggle.setAttribute('aria-expanded', String(willOpen));
+      }
+      return;
+    }
+
+    const menuAction = event.target.closest('[data-thread-menu-action]');
+    if (menuAction) {
+      const action = menuAction.dataset.threadMenuAction || '';
+      const commentId = menuAction.dataset.threadMenuCommentId || '';
+      const lookup = getThreadCommentLookup(activeThreadPostId, commentId);
+      closeThreadCommentMenus();
+      if (!lookup) return;
+
+      if (action === 'delete') {
+        let removedCount = 1;
+        if (lookup.parent) {
+          lookup.parent.replies = (lookup.parent.replies || []).filter((reply) => reply.id !== lookup.comment.id);
+          if (!lookup.parent.replies.length) {
+            setThreadRepliesExpanded(activeThreadPostId, lookup.parent.id, false);
+          }
+        } else {
+          const comments = getThreadCommentsForPost(activeThreadPostId);
+          removedCount += getReplyCountForComment(lookup.comment);
+          const nextComments = comments.filter((comment) => comment.id !== lookup.comment.id);
+          threadCommentState.set(activeThreadPostId, nextComments);
+          setThreadRepliesExpanded(activeThreadPostId, lookup.comment.id, false);
+        }
+        if (activeThreadReplyToCommentId === commentId) {
+          setThreadReplyTarget(null);
+        }
+        updateReplyActionCountForPost(activeThreadPostId, -removedCount);
+        renderThreadComments();
+        return;
+      }
+
+      if (action === 'report') {
+        showMiniToast('Report received.');
+      }
+      return;
+    }
+
+    const actionButton = event.target.closest('[data-thread-action]');
+    if (!actionButton) {
+      closeThreadCommentMenus();
+      return;
+    }
+
+    const actionType = actionButton.dataset.threadAction || '';
+    const commentId = actionButton.dataset.threadActionCommentId || '';
+    const lookup = getThreadCommentLookup(activeThreadPostId, commentId);
+    if (!lookup) return;
+
+    if (actionType === 'reply') {
+      const parentId = lookup.parent ? lookup.parent.id : lookup.comment.id;
+      setThreadReplyTarget({
+        id: lookup.comment.id,
+        parentId,
+        handle: lookup.comment.handle,
+        createdAt: lookup.comment.createdAt,
+        text: lookup.comment.text,
+        imageUrl: lookup.comment.imageUrl,
+        isReply: Boolean(lookup.parent),
+      });
+      threadText?.focus();
+      return;
+    }
+
+    if (actionType === 'tip') {
+      openTipModalForComment(commentId, lookup.comment.handle);
+      return;
+    }
+
+    lookup.comment.actions = lookup.comment.actions || buildInitialCommentActions();
+    const actionState = lookup.comment.actions[actionType];
+    if (!actionState) return;
+    if (actionState.selected) {
+      actionState.selected = false;
+      actionState.count = Math.max(0, actionState.count - 1);
+    } else {
+      actionState.selected = true;
+      actionState.count += 1;
+    }
+    renderThreadComments();
+  });
+
+  threadImageButton?.addEventListener('click', () => {
+    threadImageInput?.click();
+  });
+
+  threadEmojiButton?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (threadText) openEmojiTray(threadEmojiButton, threadText);
+  });
+
+  threadText?.addEventListener('input', () => {
+    if (threadError) threadError.textContent = '';
+    syncThreadComposerState();
+  });
+
+  threadImageInput?.addEventListener('change', () => {
+    const selectedFiles = Array.from(threadImageInput.files || []);
+    const file = selectedFiles[0];
+    if (threadError) threadError.textContent = '';
+
+    if (!file) {
+      syncThreadComposerState();
+      return;
+    }
+
+    if (!threadAllowedImageMimeTypes.includes(file.type)) {
+      if (threadError) threadError.textContent = 'Images only for now. JPG, PNG, or WebP.';
+      if (threadImageInput) threadImageInput.value = '';
+      return;
+    }
+
+    if (threadDraftImage?.url) {
+      URL.revokeObjectURL(threadDraftImage.url);
+    }
+    threadDraftImage = {
+      url: URL.createObjectURL(file),
+      name: file.name || 'comment-image',
+    };
+    if (threadImageInput) threadImageInput.value = '';
+    syncThreadComposerState();
+  });
+
+  threadPreview?.addEventListener('click', (event) => {
+    const removeButton = event.target.closest('[data-thread-remove-image]');
+    if (!removeButton) return;
+    clearThreadDraftImage();
+    if (threadError) threadError.textContent = '';
+    syncThreadComposerState();
+  });
+
+  threadSubmit?.addEventListener('click', () => {
+    if (!activeThreadPostId || !threadText || !threadSubmit || threadSubmit.disabled) return;
+    const rawText = String(threadText.value || '').trim();
+    const hasImage = Boolean(threadDraftImage?.url);
+    if (!rawText && !hasImage) return;
+
+    let text = rawText;
+    if (activeThreadReplyToIsReply && activeThreadReplyToHandle && text && !text.startsWith(`${activeThreadReplyToHandle} `) && !text.startsWith(`${activeThreadReplyToHandle},`) && !text.startsWith(activeThreadReplyToHandle)) {
+      text = `${activeThreadReplyToHandle} ${text}`;
+    }
+
+    const nextComment = {
+      id: `comment_${Math.random().toString(36).slice(2, 10)}`,
+      handle: getCurrentUserHandle(),
+      snapshot: getSnapshotForHandle(getCurrentUserHandle()),
+      createdAt: Date.now(),
+      text,
+      imageUrl: hasImage ? threadDraftImage.url : '',
+      imageName: hasImage ? threadDraftImage.name : '',
+      actions: buildInitialCommentActions(),
+      parentId: '',
+      replies: [],
+    };
+
+    const comments = getThreadCommentsForPost(activeThreadPostId);
+    if (activeThreadReplyToCommentId) {
+      const lookup = getThreadCommentLookup(activeThreadPostId, activeThreadReplyToCommentId);
+      if (lookup) {
+        const parentComment = lookup.parent || lookup.comment;
+        parentComment.replies = Array.isArray(parentComment.replies) ? parentComment.replies : [];
+        nextComment.parentId = parentComment.id;
+        parentComment.replies.push(nextComment);
+        setThreadRepliesExpanded(activeThreadPostId, parentComment.id, true);
+      } else {
+        comments.push(nextComment);
+      }
+    } else {
+      comments.push(nextComment);
+    }
+
+    threadDraftImage = null;
+    updateReplyActionCountForPost(activeThreadPostId, 1);
+    resetThreadComposer();
+    renderThreadComments();
+  });
+
+  syncThreadComposerState();
+
+  if (!composeRoot || !composeOpen || !composeText || !composePost) {
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isThreadViewOpen()) {
+        event.preventDefault();
+        closeThreadView();
+        return;
+      }
+
+      if (event.key === 'Escape' && isReactionPickerOpen()) {
+        event.preventDefault();
+        closeReactionPicker();
+        return;
+      }
+
+      if (event.key === 'Escape' && isTipModalOpen()) {
+        event.preventDefault();
+        closeTipModal();
+        return;
+      }
+
+      if (event.key === 'Escape' && isSignalOpen()) {
+        event.preventDefault();
+        closeSignal();
+        return;
+      }
+
+      if (!isMenuOpen()) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMenu();
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        const focusables = getMenuFocusables();
+        if (!focusables.length) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement;
+
+        if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+    return;
+  }
+
+  let images = [];
+  let selectedLabelIds = [];
+
+  const hydratePostLabelStyles = () => {
+    if (!samplePostLabelRow) return;
+    Array.from(samplePostLabelRow.querySelectorAll('.lb-post-card__labelChip')).forEach((chip) => {
+      const id = chip.dataset.labelId || '';
+      const label = labelById.get(id);
+      if (label) {
+        chip.dataset.labelGroup = label.group;
+      }
+    });
+  };
+
+  const getActiveSelectedLabels = () => (activeLabelContext === 'signal' ? signalLabelIds : selectedLabelIds);
+
+  const setActiveSelectedLabels = (nextValue) => {
+    if (activeLabelContext === 'signal') {
+      signalLabelIds = nextValue;
+      return;
+    }
+    selectedLabelIds = nextValue;
+  };
+
+  const renderSelectedLabelChips = (container, values) => {
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!values.length) {
+      container.hidden = true;
+      return;
+    }
+
+    values.forEach((id) => {
+      const label = labelById.get(id);
+      if (!label) return;
+      const chip = document.createElement('span');
+      chip.className = 'lb-compose__labelChip';
+      chip.textContent = label.label;
+      chip.dataset.labelGroup = label.group;
+
+      const remove = document.createElement('button');
+      remove.className = 'lb-compose__labelRemove';
+      remove.type = 'button';
+      remove.dataset.removeLabelId = id;
+      remove.setAttribute('aria-label', `Remove ${label.label}`);
+      remove.textContent = '×';
+      chip.appendChild(remove);
+      container.appendChild(chip);
+    });
+
+    container.hidden = false;
+  };
+
+  const renderComposerLabelChips = () => {
+    renderSelectedLabelChips(composeLabels, selectedLabelIds);
+  };
+
+  const renderSignalLabelChips = () => {
+    renderSelectedLabelChips(signalLabels, signalLabelIds);
+  };
+
+  const syncLabelCounter = () => {
+    if (!labelCounter) return;
+    const activeLabels = getActiveSelectedLabels();
+    labelCounter.textContent = `${activeLabels.length}/2 selected`;
+    labelCounter.classList.toggle('is-full', activeLabels.length >= 2);
+  };
+
+  const renderLabelPicker = () => {
+    if (!labelGroups) return;
+    labelGroups.innerHTML = '';
+
+    labelGroupsOrder.forEach((groupName) => {
+      const groupLabels = postLabels.filter((item) => item.group === groupName);
+      if (!groupLabels.length) return;
+
+      const group = document.createElement('section');
+      group.className = 'lb-label-group';
+
+      const title = document.createElement('p');
+      title.className = 'lb-label-group__title';
+      title.textContent = groupName;
+      group.appendChild(title);
+
+      const chips = document.createElement('div');
+      chips.className = 'lb-label-group__chips';
+
+      groupLabels.forEach((item) => {
+        const chip = document.createElement('button');
+        chip.className = 'lb-label-picker__chip';
+        chip.type = 'button';
+        chip.dataset.labelId = item.id;
+        chip.dataset.labelGroup = item.group;
+        chip.textContent = item.label;
+        chip.classList.toggle('is-selected', getActiveSelectedLabels().includes(item.id));
+        chips.appendChild(chip);
+      });
+
+      group.appendChild(chips);
+      labelGroups.appendChild(group);
+    });
+
+    syncLabelCounter();
+  };
+
+  const openLabelPicker = (context = 'compose') => {
+    if (!labelPickerRoot) return;
+    activeLabelContext = context;
+    renderLabelPicker();
+    labelPickerRoot.hidden = false;
+  };
+
+  const closeLabelPicker = ({ restoreFocus = true } = {}) => {
+    if (!labelPickerRoot) return;
+    labelPickerRoot.hidden = true;
+    if (!restoreFocus) return;
+    if (activeLabelContext === 'signal') {
+      signalLabelBtn?.focus();
+      return;
+    }
+    composeLabelBtn?.focus();
+  };
+
+  const applyLabelsToSamplePost = (labelIds) => {
+    if (!samplePostLabelRow) return;
+    samplePostLabelRow.innerHTML = '';
+
+    labelIds.forEach((id) => {
+      const label = labelById.get(id);
+      if (!label) return;
+      const chip = document.createElement('span');
+      chip.className = 'lb-post-card__labelChip';
+      chip.dataset.labelId = label.id;
+      chip.dataset.labelGroup = label.group;
+      chip.textContent = label.label;
+      samplePostLabelRow.appendChild(chip);
+    });
+
+    samplePostLabelRow.hidden = labelIds.length === 0;
+  };
+
+  const syncComposerState = () => {
+    const text = (composeText.value || '').trim();
+    const hasContent = text.length > 0 || images.length > 0;
+    composePost.disabled = !hasContent;
+    if (composeCounts) composeCounts.textContent = `${images.length}/2 images · ${composeText.value.length}/1500`;
+    if (composeImageBtn) composeImageBtn.classList.toggle('is-active', images.length > 0);
+    if (composeLabelBtn) composeLabelBtn.classList.toggle('is-active', selectedLabelIds.length > 0);
+    renderComposerLabelChips();
+
+    if (composePreview) {
+      composePreview.innerHTML = '';
+      if (images.length > 0) {
+        images.forEach((item, index) => {
+          const wrap = document.createElement('div');
+          wrap.className = 'lb-compose__thumbWrap';
+
+          const img = document.createElement('img');
+          img.className = 'lb-compose__thumb';
+          img.src = item.url;
+          img.alt = 'Selected upload';
+          wrap.appendChild(img);
+
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'lb-compose__thumbRemove';
+          removeBtn.type = 'button';
+          removeBtn.setAttribute('aria-label', `Remove image ${index + 1}`);
+          removeBtn.dataset.removeImage = String(index);
+          removeBtn.textContent = '×';
+          wrap.appendChild(removeBtn);
+
+          composePreview.appendChild(wrap);
+        });
+        composePreview.hidden = false;
+      } else {
+        composePreview.hidden = true;
+      }
+    }
+  };
+
+  const clearComposer = () => {
+    images.forEach((item) => URL.revokeObjectURL(item.url));
+    images = [];
+    selectedLabelIds = [];
+    composeText.value = '';
+    if (composeImageInput) composeImageInput.value = '';
+    if (composeError) composeError.textContent = '';
+    if (labelPickerRoot) labelPickerRoot.hidden = true;
+    syncComposerState();
+  };
+
+  const openComposer = () => {
+    composeRoot.hidden = false;
+    requestAnimationFrame(() => composeText.focus());
+  };
+
+  const closeComposer = () => {
+    composeRoot.hidden = true;
+    clearComposer();
+  };
+
+  composeOpen.addEventListener('click', openComposer);
+  composeClose?.addEventListener('click', closeComposer);
+  composeCancel?.addEventListener('click', closeComposer);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isThreadViewOpen()) {
+      event.preventDefault();
+      closeThreadView();
+      return;
+    }
+
+    if (event.key === 'Escape' && isReactionPickerOpen()) {
+      event.preventDefault();
+      closeReactionPicker();
+      return;
+    }
+
+    if (event.key === 'Escape' && isTipModalOpen()) {
+      event.preventDefault();
+      closeTipModal();
+      return;
+    }
+
+    if (event.key === 'Escape' && isLabelPickerOpen()) {
+      event.preventDefault();
+      closeLabelPicker();
+      return;
+    }
+
+    if (event.key === 'Escape' && isSignalOpen()) {
+      event.preventDefault();
+      closeSignal();
+      return;
+    }
+
+    if (isMenuOpen()) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMenu();
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        const focusables = getMenuFocusables();
+        if (!focusables.length) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement;
+
+        if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+        return;
+      }
+    }
+
+    if (event.key === 'Escape' && !composeRoot.hidden) {
+      closeComposer();
+    }
+  });
+
+  composeImageBtn?.addEventListener('click', () => {
+    composeImageInput?.click();
+  });
+
+  composeEmojiBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (composeText) openEmojiTray(composeEmojiBtn, composeText);
+  });
+
+  composeLabelBtn?.addEventListener('click', () => {
+    if (composeError) composeError.textContent = '';
+    openLabelPicker('compose');
+  });
+
+  labelPickerClose?.addEventListener('click', closeLabelPicker);
+  labelPickerDone?.addEventListener('click', closeLabelPicker);
+
+  labelGroups?.addEventListener('click', (event) => {
+    const chip = event.target.closest('[data-label-id]');
+    if (!chip) return;
+    const id = chip.dataset.labelId || '';
+    if (!id || !labelById.has(id)) return;
+
+    const activeError = activeLabelContext === 'signal' ? signalError : composeError;
+    let activeLabels = [...getActiveSelectedLabels()];
+
+    if (activeLabels.includes(id)) {
+      activeLabels = activeLabels.filter((entry) => entry !== id);
+      if (activeError) activeError.textContent = '';
+    } else {
+      if (activeLabels.length >= 2) {
+        if (activeError) activeError.textContent = 'Two labels max. Don’t make the post wear too many necklaces.';
+        return;
+      }
+      activeLabels.push(id);
+      if (activeError) activeError.textContent = '';
+    }
+
+    setActiveSelectedLabels(activeLabels);
+    renderLabelPicker();
+    if (activeLabelContext === 'signal') {
+      syncSignalState();
+    } else {
+      syncComposerState();
+    }
+  });
+
+  composeLabels?.addEventListener('click', (event) => {
+    const remove = event.target.closest('[data-remove-label-id]');
+    if (!remove) return;
+    const id = remove.dataset.removeLabelId || '';
+    if (!id) return;
+    selectedLabelIds = selectedLabelIds.filter((entry) => entry !== id);
+    if (composeError) composeError.textContent = '';
+    if (isLabelPickerOpen() && activeLabelContext === 'compose') {
+      renderLabelPicker();
+    }
+    syncComposerState();
+  });
+
+  composeImageInput?.addEventListener('change', () => {
+    const selectedFiles = Array.from(composeImageInput.files || []);
+    if (!selectedFiles.length) return;
+
+    const nextImages = [...images];
+    if (composeError) composeError.textContent = '';
+    let overflowed = false;
+
+    selectedFiles.forEach((file) => {
+      if (nextImages.length >= 2) {
+        overflowed = true;
+        return;
+      }
+
+      const fileType = String(file.type || '').toLowerCase();
+      if (fileType.startsWith('video/')) {
+        if (composeError) composeError.textContent = 'Videos are not supported yet.';
+        return;
+      }
+
+      if (!fileType.startsWith('image/')) {
+        if (composeError) composeError.textContent = 'Images only for now.';
+        return;
+      }
+
+      if (!allowedImageMimeTypes.includes(fileType)) {
+        if (composeError) composeError.textContent = 'Images only for now.';
+        return;
+      }
+
+      nextImages.push({ file, url: URL.createObjectURL(file) });
+    });
+
+    if (overflowed && composeError && !composeError.textContent) {
+      composeError.textContent = 'You can add up to 2 images.';
+    }
+
+    images.forEach((item) => URL.revokeObjectURL(item.url));
+    images = nextImages;
+    if (composeImageInput) composeImageInput.value = '';
+    syncComposerState();
+  });
+
+  composeText.addEventListener('input', () => {
+    if (composeError) composeError.textContent = '';
+    syncComposerState();
+  });
+
+  composePreview?.addEventListener('click', (event) => {
+    const removeBtn = event.target.closest('[data-remove-image]');
+    if (!removeBtn) return;
+    const index = Number.parseInt(removeBtn.dataset.removeImage || '-1', 10);
+    if (!Number.isInteger(index) || index < 0 || index >= images.length) return;
+
+    URL.revokeObjectURL(images[index].url);
+    images.splice(index, 1);
+    if (composeError) composeError.textContent = '';
+    syncComposerState();
+  });
+
+  composePost.addEventListener('click', () => {
+    if (composePost.disabled) return;
+
+    const postBody = (composeText.value || '').trim();
+    const postId = `post_${Date.now()}`;
+    const postImages = images.map((item) => URL.createObjectURL(item.file));
+    const postLabelIds = [...selectedLabelIds];
+
+    const labelsHTML = postLabelIds.map((id) => {
+      const label = labelById.get(id);
+      return label
+        ? `<span class="lb-post-card__labelChip" data-label-id="${label.id}" data-label-group="${label.group}">${label.label}</span>`
+        : '';
+    }).join('');
+
+    const imagesHTML = postImages.length
+      ? `<div class="lb-post-card__media">${postImages.map((src) =>
+          `<img src="${src}" alt="Post image" loading="lazy" decoding="async" />`
+        ).join('')}</div>`
+      : '';
+
+    const card = document.createElement('article');
+    card.className = 'lb-post-card';
+    if (post.pinned) card.classList.add('lb-post-card--pinned');
+    card.dataset.postCard = '';
+    card.dataset.postId = postId;
+    const pinnedStripHTML = post.pinned && post.pinnedLabel
+      ? `<div class="lb-post-card__pinnedStrip" aria-label="Pinned post">${post.pinnedLabel}</div>`
+      : '';
+    card.innerHTML = `
+      ${pinnedStripHTML}
+      <header class="lb-post-card__head">
+        <div class="lb-post-card__identity">
+          <a class="lb-post-card__author" href="#" aria-label="Open @username profile">
+            <span class="lb-post-card__avatar" aria-hidden="true"></span>
+            <span class="lb-post-card__handle">@username</span>
+          </a>
+        </div>
+        <p class="lb-post-card__time">now</p>
+      </header>
+      <div class="lb-post-card__labels" data-post-labels ${postLabelIds.length ? '' : 'hidden'}>${labelsHTML}</div>
+      <div class="lb-post-card__bodyWrap">
+        <div class="lb-post-card__contentCol">
+          ${postBody ? `<p class="lb-post-card__body">${postBody}</p>` : ''}
+          ${imagesHTML}
+          <div class="lb-post-footer__reactions" data-reaction-chips></div>
+        </div>
+        <div class="lb-post-footer__standardRail" role="group" aria-label="Standard interactions">
+          <button class="lb-rail-action" type="button" data-action-type="react" data-action-count="0" aria-label="React">
+            <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 20.6c-.2 0-.3-.1-.4-.2l-1.8-1.7C5.1 14.5 2 11.7 2 8.2 2 5.4 4.2 3.2 7 3.2c1.6 0 3.2.8 4.1 2.1.9-1.3 2.5-2.1 4.1-2.1 2.8 0 5 2.2 5 5 0 3.5-3.1 6.3-7.8 10.5l-1.8 1.7c-.2.1-.4.2-.6.2z"></path>
+            </svg>
+            <span class="lb-rail-action__count" data-action-count-label hidden></span>
+          </button>
+          <button class="lb-rail-action" type="button" data-action-type="reply" data-action-count="0" aria-label="Reply">
+            <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M4 5.5c0-1.4 1.1-2.5 2.5-2.5h11c1.4 0 2.5 1.1 2.5 2.5v8c0 1.4-1.1 2.5-2.5 2.5H10l-4.6 3.6c-.5.4-1.2 0-1.2-.7V16H6.5C5.1 16 4 14.9 4 13.5v-8z"></path>
+            </svg>
+            <span class="lb-rail-action__count" data-action-count-label hidden></span>
+          </button>
+          <button class="lb-rail-action" type="button" data-action-type="save" data-action-count="0" aria-label="Save">
+            <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M7 3.5h10a2 2 0 0 1 2 2V21l-7-4-7 4V5.5a2 2 0 0 1 2-2z"></path>
+            </svg>
+            <span class="lb-rail-action__count" data-action-count-label hidden></span>
+          </button>
+        </div>
+      </div>
+      <footer class="lb-post-footer" data-post-footer>
+        <div class="lb-post-footer__row lb-post-footer__row--signals" role="group" aria-label="Loverbyte signal actions">
+          <button class="lb-signal-action" type="button" data-signal-type="tip" data-signal-count="0">
+            <span class="lb-signal-action__icon" aria-hidden="true">☕</span>
+            <span class="lb-signal-action__label" data-signal-label></span>
+          </button>
+          <button class="lb-signal-action" type="button" data-signal-type="poke" data-signal-count="0">
+            <span class="lb-signal-action__icon" aria-hidden="true">👀</span>
+            <span class="lb-signal-action__label" data-signal-label></span>
+          </button>
+          <button class="lb-signal-action" type="button" data-signal-type="crush" data-signal-count="0">
+            <span class="lb-signal-action__icon" aria-hidden="true">💘</span>
+            <span class="lb-signal-action__label" data-signal-label></span>
+          </button>
+        </div>
+      </footer>
+    `;
+
+    Array.from(card.querySelectorAll('.lb-rail-action[data-action-type="react"], .lb-rail-action[data-action-type="save"]'))
+      .forEach((button, i) => {
+        const actionType = button.dataset.actionType;
+        const iconSvg = button.querySelector('.lb-rail-action__iconSvg');
+        const iconPath = iconSvg?.querySelector('path');
+        if (!iconSvg || !iconPath) return;
+        const gradientId = `lbActionGradient-${actionType}-${postId}-${i}`;
+        createActionGradient(iconSvg, actionType, gradientId);
+        iconPath.dataset.gradientId = gradientId;
+        setEngagementActionState(button, false);
+        button.addEventListener('click', () => {
+          const willEngage = !button.classList.contains('is-engaged');
+          const currentCount = parseCountValue(button.dataset.actionCount);
+          setStandardActionCount(button, willEngage ? currentCount + 1 : Math.max(0, currentCount - 1));
+          setEngagementActionState(button, willEngage);
+        });
+      });
+
+    Array.from(card.querySelectorAll('.lb-signal-action[data-signal-type]')).forEach((button) => {
+      const type = button.dataset.signalType || '';
+      const labelEl = button.querySelector('[data-signal-label]');
+      if (labelEl) labelEl.textContent = formatSignalActionLabel(type, 0);
+      if (type !== 'tip') {
+        button.classList.remove('is-engaged');
+        button.setAttribute('aria-pressed', 'false');
+      }
+      button.addEventListener('click', () => {
+        if (type === 'tip') { toggleTipForPost(card); return; }
+        const willEngage = !button.classList.contains('is-engaged');
+        const currentCount = parseCountValue(button.dataset.signalCount);
+        setSignalActionCount(button, willEngage ? currentCount + 1 : Math.max(0, currentCount - 1));
+        button.classList.toggle('is-engaged', willEngage);
+        button.setAttribute('aria-pressed', String(willEngage));
+      });
+    });
+
+    const reactionRow = card.querySelector('[data-reaction-chips]');
+    if (reactionRow) ensureReactionAddChip(reactionRow);
+
+    const tipButton = card.querySelector('.lb-signal-action[data-signal-type="tip"]');
+    if (tipButton) {
+      const tipState = { tipCount: 0, viewerHasTipped: false };
+      postTipState.set(postId, tipState);
+      setTipButtonState(tipButton, tipState);
+    }
+
+    if (feedDefault) feedDefault.insertBefore(card, feedDefault.querySelector('.lb-post-card'));
+    closeComposer();
+  });
+
+  // ─── Crush Dating Card Modal (loverbyte-feed-demo only) ──────────────────
+  const crushCardModal  = document.querySelector('[data-crush-card-modal]');
+  const crushCardIframe = document.querySelector('[data-crush-card-iframe]');
+
+  const closeCrushCardModal = () => {
+    if (!crushCardModal) return;
+    crushCardModal.hidden = true;
+    if (crushCardIframe) crushCardIframe.src = '';   // stop iframe, free resources
+    if (activeCrushCardButton instanceof HTMLElement) activeCrushCardButton.focus();
+    activeCrushCardPostId = '';
+    activeCrushCardButton = null;
+  };
+
+  const openCrushCardModal = (postCard, crushBtn, cardSrc) => {
+    if (!crushCardModal || !crushCardIframe || !cardSrc) return;
+    activeCrushCardPostId = getPostKey(postCard);
+    activeCrushCardButton = crushBtn;
+    crushCardIframe.src = cardSrc;
+    crushCardModal.hidden = false;
+  };
+
+  // Close triggers: backdrop + X button
+  Array.from(document.querySelectorAll('[data-crush-card-close]')).forEach((el) => {
+    el.addEventListener('click', () => closeCrushCardModal());
+  });
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && crushCardModal && !crushCardModal.hidden) closeCrushCardModal();
+  });
+
+  // Message listener — only increments Crush count after card's Send button fires
+  window.addEventListener('message', (event) => {
+    if (!event.data || event.data.type !== 'lb-crush-sent') return;
+    if (!activeCrushCardPostId) return;
+    const postCard = document.querySelector(
+      `.lb-post-card[data-post-id="${activeCrushCardPostId}"], [data-post-card][data-post-id="${activeCrushCardPostId}"]`
+    );
+    const crushBtn = postCard?.querySelector('.lb-signal-action[data-signal-type="crush"]');
+    if (crushBtn && !crushBtn.classList.contains('is-engaged')) {
+      const currentCount = parseCountValue(crushBtn.dataset.signalCount);
+      setSignalActionCount(crushBtn, currentCount + 1);
+      crushBtn.classList.add('is-engaged');
+      crushBtn.setAttribute('aria-pressed', 'true');
+      showMiniToast('Crush sent 💘');
+    }
+    closeCrushCardModal();
+  });
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // ─── Demo seed renderer ───────────────────────────────────────────────────
+  // Reads window.LB_DEMO_POSTS (set by demo-feed-content.js) and appends each
+  // post to the feed below any hardcoded HTML cards. UI-composed posts always
+  // appear above via insertBefore, so ordering is: composed → HTML → seeded.
+
+  const renderDemoPost = (post) => {
+    const postId = String(post.id || `demo_${Date.now()}_${Math.random().toString(36).slice(2)}`);
+    const postLabelIds = Array.isArray(post.labels) ? post.labels : [];
+    const postImages = Array.isArray(post.images) ? post.images : [];
+    const counts = post.counts || {};
+
+    const labelsHTML = postLabelIds.map((id) => {
+      const label = labelById.get(id);
+      return label
+        ? `<span class="lb-post-card__labelChip" data-label-id="${label.id}" data-label-group="${label.group}">${label.label}</span>`
+        : '';
+    }).join('');
+
+    const imagesHTML = postImages.length
+      ? `<div class="lb-post-card__media">${postImages.map((src) =>
+          `<img src="${src}" alt="Post image" loading="lazy" decoding="async" />`
+        ).join('')}</div>`
+      : '';
+
+    const card = document.createElement('article');
+    card.className = 'lb-post-card';
+    if (post.pinned) card.classList.add('lb-post-card--pinned');
+    card.dataset.postCard = '';
+    card.dataset.postId = postId;
+    const pinnedStripHTML = post.pinned && post.pinnedLabel
+      ? `<div class="lb-post-card__pinnedStrip" aria-label="Pinned post">${post.pinnedLabel}</div>`
+      : '';
+    card.innerHTML = `
+      ${pinnedStripHTML}
+      <header class="lb-post-card__head">
+        <div class="lb-post-card__identity">
+          <a class="lb-post-card__author" href="#" aria-label="Open ${post.handle || '@username'} profile">
+            <span class="lb-post-card__avatar" aria-hidden="true"></span>
+            <span class="lb-post-card__handle">${post.handle || '@username'}</span>
+          </a>
+        </div>
+        <p class="lb-post-card__time">${post.time || ''}</p>
+      </header>
+      <div class="lb-post-card__labels" data-post-labels ${postLabelIds.length ? '' : 'hidden'}>${labelsHTML}</div>
+      <div class="lb-post-card__bodyWrap">
+        <div class="lb-post-card__contentCol">
+          ${post.body ? '<p class="lb-post-card__body"></p>' : ''}
+          ${imagesHTML}
+          <div class="lb-post-footer__reactions" data-reaction-chips></div>
+        </div>
+        <div class="lb-post-footer__standardRail" role="group" aria-label="Standard interactions">
+          <button class="lb-rail-action" type="button" data-action-type="react" data-action-count="0" aria-label="React">
+            <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 20.6c-.2 0-.3-.1-.4-.2l-1.8-1.7C5.1 14.5 2 11.7 2 8.2 2 5.4 4.2 3.2 7 3.2c1.6 0 3.2.8 4.1 2.1.9-1.3 2.5-2.1 4.1-2.1 2.8 0 5 2.2 5 5 0 3.5-3.1 6.3-7.8 10.5l-1.8 1.7c-.2.1-.4.2-.6.2z"></path>
+            </svg>
+            <span class="lb-rail-action__count" data-action-count-label hidden></span>
+          </button>
+          <button class="lb-rail-action" type="button" data-action-type="reply" data-action-count="0" aria-label="Reply">
+            <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M4 5.5c0-1.4 1.1-2.5 2.5-2.5h11c1.4 0 2.5 1.1 2.5 2.5v8c0 1.4-1.1 2.5-2.5 2.5H10l-4.6 3.6c-.5.4-1.2 0-1.2-.7V16H6.5C5.1 16 4 14.9 4 13.5v-8z"></path>
+            </svg>
+            <span class="lb-rail-action__count" data-action-count-label hidden></span>
+          </button>
+          <button class="lb-rail-action" type="button" data-action-type="save" data-action-count="0" aria-label="Save">
+            <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M7 3.5h10a2 2 0 0 1 2 2V21l-7-4-7 4V5.5a2 2 0 0 1 2-2z"></path>
+            </svg>
+            <span class="lb-rail-action__count" data-action-count-label hidden></span>
+          </button>
+        </div>
+      </div>
+      <footer class="lb-post-footer" data-post-footer>
+        <div class="lb-post-footer__row lb-post-footer__row--signals" role="group" aria-label="Loverbyte signal actions">
+          <button class="lb-signal-action" type="button" data-signal-type="tip" data-signal-count="0">
+            <span class="lb-signal-action__icon" aria-hidden="true">☕</span>
+            <span class="lb-signal-action__label" data-signal-label></span>
+          </button>
+          <button class="lb-signal-action" type="button" data-signal-type="poke" data-signal-count="0">
+            <span class="lb-signal-action__icon" aria-hidden="true">👀</span>
+            <span class="lb-signal-action__label" data-signal-label></span>
+          </button>
+          <button class="lb-signal-action" type="button" data-signal-type="crush" data-signal-count="0">
+            <span class="lb-signal-action__icon" aria-hidden="true">💘</span>
+            <span class="lb-signal-action__label" data-signal-label></span>
+          </button>
+        </div>
+      </footer>
+    `;
+
+    // Set body text safely — textContent preserves \n with white-space: pre-wrap
+    if (post.body) {
+      const bodyEl = card.querySelector('.lb-post-card__body');
+      if (bodyEl) bodyEl.textContent = post.body;
+    }
+
+    // Avatar
+    if (post.avatarSrc) {
+      const avatarEl = card.querySelector('.lb-post-card__avatar');
+      if (avatarEl) {
+        avatarEl.style.backgroundImage = `url("${post.avatarSrc}")`;
+        avatarEl.style.backgroundSize = 'cover';
+        avatarEl.style.backgroundPosition = 'center';
+        avatarEl.style.backgroundRepeat = 'no-repeat';
+        avatarEl.classList.add('has-photo');
+      }
+    }
+
+    // Snapshot chips — use shared renderSnapshotChips() so structured format
+    // { romanticallyOpen, openBadge, datingDirection, ageBand, locationState, relationshipGoal }
+    // works consistently for all seeded authors (Kendra, Jake, Kelly, Isabel, etc.)
+    if (post.snapshot) {
+      const identity = card.querySelector('.lb-post-card__identity');
+      const chips = renderSnapshotChips(post.snapshot);
+      if (identity && chips) identity.appendChild(chips);
+    }
+
+    // Wire react/save gradient + toggle
+    Array.from(card.querySelectorAll('.lb-rail-action[data-action-type="react"], .lb-rail-action[data-action-type="save"]'))
+      .forEach((button, i) => {
+        const actionType = button.dataset.actionType;
+        const iconSvg = button.querySelector('.lb-rail-action__iconSvg');
+        const iconPath = iconSvg?.querySelector('path');
+        if (!iconSvg || !iconPath) return;
+        const gradientId = `lbActionGradient-${actionType}-${postId}-${i}`;
+        createActionGradient(iconSvg, actionType, gradientId);
+        iconPath.dataset.gradientId = gradientId;
+        setEngagementActionState(button, false);
+        button.addEventListener('click', () => {
+          const willEngage = !button.classList.contains('is-engaged');
+          const currentCount = parseCountValue(button.dataset.actionCount);
+          setStandardActionCount(button, willEngage ? currentCount + 1 : Math.max(0, currentCount - 1));
+          setEngagementActionState(button, willEngage);
+        });
+      });
+
+    // Wire reply toggle
+    const replyBtn = card.querySelector('.lb-rail-action[data-action-type="reply"]');
+    if (replyBtn) {
+      replyBtn.addEventListener('click', () => {
+        const currentCount = parseCountValue(replyBtn.dataset.actionCount);
+        setStandardActionCount(replyBtn, currentCount + 1);
+      });
+    }
+
+    // Wire signal buttons (tip / poke / crush)
+    Array.from(card.querySelectorAll('.lb-signal-action[data-signal-type]')).forEach((button) => {
+      const type = button.dataset.signalType || '';
+      const labelEl = button.querySelector('[data-signal-label]');
+      if (labelEl) labelEl.textContent = formatSignalActionLabel(type, 0);
+      if (type !== 'tip') {
+        button.classList.remove('is-engaged');
+        button.setAttribute('aria-pressed', 'false');
+      }
+      button.addEventListener('click', () => {
+        if (type === 'tip') { toggleTipForPost(card); return; }
+        // Crush with Dating Card: open modal instead of instant toggle
+        if (type === 'crush' && post.crushCardSrc) {
+          openCrushCardModal(card, button, post.crushCardSrc);
+          return;
+        }
+        const willEngage = !button.classList.contains('is-engaged');
+        const currentCount = parseCountValue(button.dataset.signalCount);
+        setSignalActionCount(button, willEngage ? currentCount + 1 : Math.max(0, currentCount - 1));
+        button.classList.toggle('is-engaged', willEngage);
+        button.setAttribute('aria-pressed', String(willEngage));
+      });
+    });
+
+    // Reaction add-chip
+    const reactionRow = card.querySelector('[data-reaction-chips]');
+    if (reactionRow) ensureReactionAddChip(reactionRow);
+
+    // Seed pre-written reactions from post data
+    if (Array.isArray(post.reactions) && post.reactions.length && reactionRow) {
+      const reactionState = new Map();
+      post.reactions.forEach((rxDef) => {
+        const asset = reactionAssetById.get(rxDef.id);
+        const count = Number.isFinite(Number(rxDef.count)) ? Number(rxDef.count) : 0;
+        const isImage = rxDef.type === 'image' || asset?.type === 'image';
+        const stickerSrc = rxDef.stickerSrc || asset?.src || '';
+        const emoji = rxDef.emoji || asset?.value || '';
+        const usesStickerSizingForRx = isImage ? (asset ? usesStickerSizing(asset) : true) : false;
+        const reaction = {
+          id: rxDef.id,
+          category: asset?.category || rxDef.category || 'standard',
+          type: isImage ? 'image' : 'emoji',
+          value: emoji,
+          src: stickerSrc,
+          label: rxDef.label || asset?.label || emoji || 'Reaction',
+          emoji,
+          count,
+          isSticker: isImage,
+          usesStickerSizing: usesStickerSizingForRx,
+          stickerSrc,
+          viewerSelected: false,
+        };
+        const chip = createReactionChipElement(reaction);
+        applyReactionChipState(chip, reaction);
+        const addChipBtn = reactionRow.querySelector('[data-add-reaction]');
+        if (addChipBtn) reactionRow.insertBefore(chip, addChipBtn);
+        else reactionRow.appendChild(chip);
+        reactionState.set(rxDef.id, reaction);
+        setPostReactionCountRecord(postId, rxDef.id, count);
+      });
+      postReactionState.set(postId, reactionState);
+      reactionRow.hidden = false;
+    }
+
+    // Tip state + starting tip count
+    const tipButton = card.querySelector('.lb-signal-action[data-signal-type="tip"]');
+    if (tipButton) {
+      const tipCount = Number.isFinite(Number(counts.tip)) ? Number(counts.tip) : 0;
+      const tipState = { tipCount, viewerHasTipped: false };
+      postTipState.set(postId, tipState);
+      setTipButtonState(tipButton, tipState);
+    }
+
+    // Apply starting engagement counts
+    const reactButton = card.querySelector('.lb-rail-action[data-action-type="react"]');
+    const saveButton  = card.querySelector('.lb-rail-action[data-action-type="save"]');
+    const pokeButton  = card.querySelector('.lb-signal-action[data-signal-type="poke"]');
+    const crushButton = card.querySelector('.lb-signal-action[data-signal-type="crush"]');
+    if (reactButton  && Number(counts.react)  > 0) setStandardActionCount(reactButton,  Number(counts.react));
+    if (replyBtn     && Number(counts.reply)  > 0) setStandardActionCount(replyBtn,      Number(counts.reply));
+    if (saveButton   && Number(counts.save)   > 0) setStandardActionCount(saveButton,    Number(counts.save));
+    if (pokeButton   && Number(counts.poke)   > 0) setSignalActionCount(pokeButton,      Number(counts.poke));
+    if (crushButton  && Number(counts.crush)  > 0) setSignalActionCount(crushButton,     Number(counts.crush));
+
+    return card;
+  };
+
+  const seedDemoPosts = () => {
+    const demoPosts = Array.isArray(window.LB_DEMO_POSTS) ? window.LB_DEMO_POSTS : [];
+    if (!demoPosts.length || !feedDefault) return;
+
+    // Remove any previously seeded demo cards before re-rendering
+    feedDefault.querySelectorAll('[data-demo-post]').forEach((el) => el.remove());
+
+    // Filter to posts matching the current day (posts with no day field show on all days)
+    const dayPosts = demoPosts.filter((p) => !p.day || p.day === selectedDay);
+
+    const seedPost = (post) => {
+      const card = renderDemoPost(post);
+      card.dataset.demoPost = 'true';
+      feedDefault.appendChild(card);
+      if (Array.isArray(post.comments) && post.comments.length) {
+        const postId = String(post.id || '');
+        if (postId) {
+          const stored = getThreadCommentsForPost(postId);
+          if (!stored.length) post.comments.forEach((c) => stored.push(c));
+        }
+      }
+    };
+
+    // Pinned posts go above ALL existing feed content (including static HTML cards)
+    // Build pinned cards in order, then prepend as a group so Luna stays first
+    const pinnedCards = dayPosts.filter((p) => p.pinned).map((post) => {
+      const card = renderDemoPost(post);
+      card.dataset.demoPost = 'true';
+      return card;
+    });
+    // Insert in reverse so prepending lands them in correct order (Luna first)
+    pinnedCards.reverse().forEach((card) => feedDefault.prepend(card));
+
+    // Regular seeded posts append after everything
+    dayPosts.filter((p) => !p.pinned).forEach(seedPost);
+  };
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const initDemoCurrentUser = () => {
+    const handleEls = [
+      document.querySelector('.lb-user-entry__handle'),
+      document.querySelector('.lb-compose__handle'),
+    ];
+    handleEls.forEach((el) => {
+      if (el) el.textContent = DEMO_CURRENT_USER.handle;
+    });
+
+    const avatarEls = [
+      document.querySelector('.lb-user-entry__avatarCore'),
+      document.querySelector('.lb-compose__avatar'),
+    ];
+    avatarEls.forEach((el) => {
+      if (!el) return;
+      el.style.backgroundImage = `url("${DEMO_CURRENT_USER.avatarUrl}")`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.classList.add('has-photo');
+    });
+  };
+
+  initDemoCurrentUser();
+  hydratePostLabelStyles();
+  hydratePostSnapshots();
+  renderReactionPickerOptions();
+  setActiveReactionPickerTab(activeReactionPickerTab);
+  hydrateReactionStrips();
+  hydrateTipButtons();
+  renderComposerLabelChips();
+  renderSignalLabelChips();
+  renderLabelPicker();
+  syncComposerState();
+  hydrateAccountSettings();
+  hydrateTipsSupportLinks();
+  seedDemoPosts();
+  syncSignalState();
+
+  (() => {
+    const bell = document.querySelector('[data-notif-bell]');
+    const badge = document.querySelector('[data-notif-badge]');
+    const panel = document.querySelector('[data-notif-panel]');
+    const closes = document.querySelectorAll('[data-notif-close]');
+    if (!bell || !panel) return;
+
+    const openPanel = () => {
+      panel.hidden = false;
+      if (badge) badge.hidden = true;
+      bell.classList.add('lb-feed-notif__bell--open');
+    };
+
+    const closePanel = () => {
+      panel.hidden = true;
+      bell.classList.remove('lb-feed-notif__bell--open');
+    };
+
+    bell.addEventListener('click', () => {
+      panel.hidden ? openPanel() : closePanel();
+    });
+
+    closes.forEach((el) => el.addEventListener('click', closePanel));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) closePanel();
+    });
+  })();
+})();

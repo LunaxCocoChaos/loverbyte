@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte Edit Profile</title>
+    <link rel="stylesheet" href="./edit-profile.css" />
+  </head>
+  <body>
+    <main class="lb-edit-page" aria-label="Edit Profile page">
+      <div class="lb-edit-page__stars" aria-hidden="true"></div>
+      <div class="lb-edit-page__glow lb-edit-page__glow--pink" aria-hidden="true"></div>
+      <div class="lb-edit-page__glow lb-edit-page__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-edit-shell">
+        <header class="lb-edit-topbar" aria-label="Edit profile header">
+          <button class="lb-edit-topbar__back" type="button" data-edit-back aria-label="Back to profile">←</button>
+          <h1 class="lb-edit-topbar__title">Edit Profile</h1>
+          <button class="lb-edit-topbar__save" type="submit" form="editProfileForm" data-edit-save disabled>Save</button>
+        </header>
+
+        <form id="editProfileForm" class="lb-edit-form" novalidate>
+          <section class="lb-edit-card" aria-label="Profile basics">
+            <header class="lb-edit-card__head">
+              <h2>Profile Basics</h2>
+            </header>
+
+            <div class="lb-field lb-field--photo">
+              <label class="lb-field__label">Profile photo</label>
+              <div class="lb-photo-row">
+                <div class="lb-photo-previewWrap" aria-hidden="true">
+                  <img class="lb-photo-preview" data-profile-photo-preview src="" alt="" hidden />
+                  <span class="lb-photo-fallback" data-profile-photo-fallback>CO</span>
+                </div>
+                <div class="lb-photo-actions">
+                  <button class="lb-btn lb-btn--glass" type="button" data-change-photo>Change photo</button>
+                  <button class="lb-btn lb-btn--ghost" type="button" data-remove-photo>Remove photo</button>
+                </div>
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/heic,image/heif" hidden data-photo-input />
+              </div>
+            </div>
+
+            <label class="lb-field" for="displayNameInput">
+              <span class="lb-field__label">Display Name</span>
+              <input id="displayNameInput" name="displayName" maxlength="40" placeholder="How you want people to see your name" data-field="displayName" required />
+              <span class="lb-field__meta" data-display-name-meta>0/40</span>
+            </label>
+
+            <label class="lb-field" for="usernameInput">
+              <span class="lb-field__label">Username</span>
+              <input id="usernameInput" name="username" data-field="username" placeholder="@username" />
+            </label>
+
+            <label class="lb-field" for="bioInput">
+              <span class="lb-field__label">Bio</span>
+              <textarea id="bioInput" name="bio" maxlength="180" placeholder="Give people the trailer, not the documentary." data-field="bio"></textarea>
+              <span class="lb-field__meta" data-bio-meta>0/180</span>
+            </label>
+          </section>
+
+          <section class="lb-edit-card" aria-label="Identity">
+            <header class="lb-edit-card__head">
+              <h2>Identity</h2>
+            </header>
+
+            <label class="lb-field" for="pronounsSelect">
+              <span class="lb-field__label">Pronouns <span class="lb-optional">Optional</span></span>
+              <select id="pronounsSelect" name="pronouns" data-field="pronouns">
+                <option value="">Select pronouns</option>
+                <option value="she_her">She/her</option>
+                <option value="he_him">He/him</option>
+                <option value="they_them">They/them</option>
+                <option value="she_they">She/they</option>
+                <option value="he_they">He/they</option>
+                <option value="any">Any pronouns</option>
+                <option value="self_describe">Self-describe</option>
+                <option value="prefer_not">Prefer not to say</option>
+              </select>
+            </label>
+
+            <label class="lb-field" for="pronounsCustomInput" data-pronouns-custom-wrap hidden>
+              <span class="lb-field__label">Self-described pronouns</span>
+              <input id="pronounsCustomInput" maxlength="40" placeholder="Type your pronouns" data-field="pronounsCustom" />
+            </label>
+
+            <label class="lb-field" for="genderSelect">
+              <span class="lb-field__label">Gender <span class="lb-optional">Optional</span></span>
+              <select id="genderSelect" name="gender" data-field="gender">
+                <option value="">Select gender</option>
+                <option value="woman">Woman</option>
+                <option value="man">Man</option>
+                <option value="nonbinary">Nonbinary</option>
+                <option value="trans_woman">Trans woman</option>
+                <option value="trans_man">Trans man</option>
+                <option value="genderqueer_fluid">Genderqueer / gender-fluid</option>
+                <option value="self_describe">Self-describe</option>
+                <option value="prefer_not">Prefer not to say</option>
+              </select>
+            </label>
+
+            <label class="lb-field" for="genderCustomInput" data-gender-custom-wrap hidden>
+              <span class="lb-field__label">Self-described gender</span>
+              <input id="genderCustomInput" maxlength="40" placeholder="Type your gender" data-field="genderCustom" />
+            </label>
+
+            <div class="lb-field">
+              <span class="lb-field__label">Age display</span>
+              <label class="lb-toggleRow" for="showAgeToggle">
+                <span>Show age range on profile</span>
+                <span class="lb-toggle">
+                  <input id="showAgeToggle" type="checkbox" data-field="showAgeRange" />
+                  <span class="lb-toggle__ui" aria-hidden="true"></span>
+                </span>
+              </label>
+              <p class="lb-age-preview" data-age-preview hidden>Age range preview: <strong data-age-band-preview>30s</strong></p>
+            </div>
+          </section>
+
+          <section class="lb-edit-card" aria-label="Work and voice">
+            <header class="lb-edit-card__head">
+              <h2>Work / Voice</h2>
+            </header>
+
+            <label class="lb-field" for="occupationInput">
+              <span class="lb-field__label">Occupation / Role <span class="lb-optional">Optional</span></span>
+              <input id="occupationInput" maxlength="60" placeholder="Creator, coach, therapist, founder, chaos analyst…" data-field="occupation" />
+              <span class="lb-field__meta" data-occupation-meta>0/60</span>
+            </label>
+
+            <div class="lb-field">
+              <label class="lb-toggleRow" for="showOccupationToggle">
+                <span>Show occupation on profile</span>
+                <span class="lb-toggle">
+                  <input id="showOccupationToggle" type="checkbox" data-field="showOccupation" />
+                  <span class="lb-toggle__ui" aria-hidden="true"></span>
+                </span>
+              </label>
+              <span class="lb-field__hint">Optional. Useful if your work, voice, or services are part of why you’re here.</span>
+            </div>
+          </section>
+
+          <section class="lb-edit-card" aria-label="Links">
+            <header class="lb-edit-card__head">
+              <h2>Links</h2>
+            </header>
+
+            <section class="lb-links-subsection" aria-label="Connect link">
+              <h3 class="lb-links-subsection__title">Connect Link</h3>
+              <div class="lb-links-grid">
+                <label class="lb-field" for="connectLinkLabelInput">
+                  <span class="lb-field__label">Connect link label</span>
+                  <input id="connectLinkLabelInput" maxlength="40" placeholder="Website / Instagram / Portfolio / Booking" data-field="connectLinkLabel" />
+                </label>
+
+                <label class="lb-field" for="connectLinkUrlInput">
+                  <span class="lb-field__label">Connect link URL</span>
+                  <input id="connectLinkUrlInput" inputmode="url" placeholder="https://..." data-field="connectLinkUrl" />
+                  <span class="lb-field__error" data-error-for="connectLinkUrl"></span>
+                </label>
+              </div>
+            </section>
+
+            <section class="lb-links-subsection" aria-label="Tip links">
+              <h3 class="lb-links-subsection__title">Tip Links</h3>
+              <div class="lb-links-grid">
+                <label class="lb-field" for="cashAppTipInput">
+                  <span class="lb-field__label">Cash App</span>
+                  <input id="cashAppTipInput" placeholder="$username or https://cash.app/$username" data-field="cashAppLinkOrHandle" />
+                  <span class="lb-field__error" data-error-for="cashAppLinkOrHandle"></span>
+                </label>
+
+                <label class="lb-field" for="venmoTipInput">
+                  <span class="lb-field__label">Venmo</span>
+                  <input id="venmoTipInput" placeholder="@username or https://venmo.com/username" data-field="venmoLinkOrHandle" />
+                  <span class="lb-field__error" data-error-for="venmoLinkOrHandle"></span>
+                </label>
+
+                <label class="lb-field" for="paypalTipInput">
+                  <span class="lb-field__label">PayPal</span>
+                  <input id="paypalTipInput" inputmode="url" placeholder="https://paypal.me/username" data-field="paypalLink" />
+                  <span class="lb-field__error" data-error-for="paypalLink"></span>
+                </label>
+              </div>
+              <p class="lb-field__hint">Add your Cash App, Venmo, or PayPal so people can support you when your posts, replies, or advice hit.</p>
+            </section>
+          </section>
+
+          <section class="lb-edit-card" aria-label="Dating card" data-dating-card-module>
+            <header class="lb-edit-card__head">
+              <h2>Dating Card</h2>
+            </header>
+            <div data-dating-card-body></div>
+          </section>
+
+          <p class="lb-form-status" data-form-status aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="./edit-profile.js"></script>
+  </body>
+</html>

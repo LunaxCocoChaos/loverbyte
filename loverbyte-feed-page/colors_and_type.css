@@ -1,0 +1,240 @@
+/* ============================================================
+   LOVERBYTE — Core Tokens
+   Colors + Type foundations. Import this anywhere.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap');
+
+:root {
+  /* ---------- Brand palette ---------- */
+  --lb-black:        #07070A;   /* page background, jet black */
+  --lb-ink:          #0B0B12;   /* slightly raised surface */
+  --lb-ink-2:        #14141F;   /* card / nav surface */
+  --lb-ink-3:        #1C1C2A;   /* hairline, divider tint */
+
+  --lb-luna-pink:    #FF4FBF;   /* primary accent */
+  --lb-glow-pink:    #FFB2E6;   /* soft pink, glow + highlight */
+  --lb-digital-blue: #4F66FF;   /* secondary accent */
+  --lb-nerdy-teal:   #00E0D3;   /* tertiary, used for labels + 'conversation' */
+
+  --lb-white:        #FFFFFF;
+  --lb-white-90:     rgba(255,255,255,0.90);
+  --lb-white-70:     rgba(255,255,255,0.70);
+  --lb-white-55:     rgba(255,255,255,0.55);
+  --lb-white-30:     rgba(255,255,255,0.30);
+  --lb-white-12:     rgba(255,255,255,0.12);
+  --lb-white-06:     rgba(255,255,255,0.06);
+
+  /* ---------- Semantic foreground ---------- */
+  --fg-1: var(--lb-white);
+  --fg-2: var(--lb-white-70);
+  --fg-3: var(--lb-white-55);
+  --fg-muted: var(--lb-white-30);
+
+  /* ---------- Semantic surfaces ---------- */
+  --bg-page:    var(--lb-black);
+  --bg-surface: var(--lb-ink-2);
+  --bg-raised:  var(--lb-ink-3);
+  --hairline:   rgba(255,255,255,0.08);
+
+  /* ---------- Brand gradients ---------- */
+  --grad-headline: linear-gradient(92deg, #FFB2E6 0%, #FF4FBF 38%, #4F66FF 100%);
+  --grad-soft:     linear-gradient(135deg, rgba(255,79,191,0.55) 0%, rgba(79,102,255,0.55) 100%);
+  --grad-atmos:    radial-gradient(60% 50% at 50% 40%, rgba(255,79,191,0.22) 0%, rgba(79,102,255,0.14) 45%, transparent 70%);
+
+  /* ---------- Type families ---------- */
+  --font-ui:       'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-display:  'Bricolage Grotesque', 'Space Grotesk', serif;
+
+  /* ---------- Type scale ---------- */
+  --text-xs:    12px;
+  --text-sm:    14px;
+  --text-base:  16px;
+  --text-lg:    18px;
+  --text-xl:    20px;
+  --text-2xl:   28px;
+  --text-3xl:   40px;
+  --text-4xl:   56px;
+  --text-5xl:   72px;
+  --text-6xl:   88px;
+
+  --tracking-tight:  -0.025em;
+  --tracking-normal: -0.01em;
+  --tracking-wide:    0.18em;   /* eyebrow / label */
+
+  --leading-tight:  1.05;
+  --leading-snug:   1.2;
+  --leading-normal: 1.55;
+
+  /* ---------- Spacing ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* ---------- Shadows / glows ---------- */
+  --shadow-card:        0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 40px rgba(0,0,0,0.45);
+  --glow-pink-sm:       0 0 24px rgba(255,79,191,0.35);
+  --glow-pink-md:       0 0 48px rgba(255,79,191,0.45), 0 0 0 1px rgba(255,79,191,0.55) inset;
+  --glow-blue-sm:       0 0 32px rgba(79,102,255,0.35);
+  --glow-teal-sm:       0 0 18px rgba(0,224,211,0.35);
+
+  /* Pill button — pink border, raised feel */
+  --shadow-pill-rest:
+    0 0 0 1px rgba(255,79,191,0.85) inset,
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 6px 20px rgba(255,79,191,0.18),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+  --shadow-pill-hover:
+    0 0 0 1px rgba(255,178,230,1) inset,
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 10px 28px rgba(255,79,191,0.32),
+    0 1px 0 rgba(255,255,255,0.10) inset;
+}
+
+/* ============================================================
+   SEMANTIC TYPE STYLES
+   ============================================================ */
+
+html, body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+  color: var(--fg-1);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.lb-display, h1.lb-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-5xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.lb-h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-4xl); line-height: 1.08; letter-spacing: var(--tracking-tight); }
+.lb-h2 { font-family: var(--font-display); font-weight: 600; font-size: var(--text-3xl); line-height: 1.15; letter-spacing: var(--tracking-tight); }
+.lb-h3 { font-family: var(--font-ui);      font-weight: 600; font-size: var(--text-2xl); line-height: 1.25; letter-spacing: var(--tracking-normal); }
+
+.lb-body  { font-family: var(--font-ui); font-weight: 400; font-size: var(--text-base); line-height: var(--leading-normal); color: var(--fg-2); }
+.lb-lede  { font-family: var(--font-ui); font-weight: 400; font-size: var(--text-lg);   line-height: 1.5;  color: var(--fg-2); }
+.lb-small { font-family: var(--font-ui); font-weight: 500; font-size: var(--text-sm);   color: var(--fg-3); }
+
+.lb-eyebrow {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--lb-nerdy-teal);
+}
+
+.lb-label {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+/* Gradient text helper — crisp, not muddy */
+.lb-grad-text {
+  background: var(--grad-headline);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================
+   SHARED HORIZONTAL SCROLLER
+   ============================================================ */
+
+.lb-horizontal-scroller {
+  --lb-scroller-fade-width: 24px;
+  --lb-scroller-fade-height: 50px;
+  --lb-scroller-fade-top: 0px;
+  --lb-scroller-fade-bg: rgba(11, 11, 15, 0.92);
+  position: relative;
+}
+
+.lb-horizontal-scroller__track {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.lb-horizontal-scroller__track::-webkit-scrollbar {
+  display: none;
+}
+
+.lb-horizontal-scroller__hint {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .lb-horizontal-scroller::before,
+  .lb-horizontal-scroller::after {
+    content: "";
+    position: absolute;
+    top: var(--lb-scroller-fade-top);
+    width: var(--lb-scroller-fade-width);
+    height: var(--lb-scroller-fade-height);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+    z-index: 2;
+  }
+
+  .lb-horizontal-scroller::before {
+    left: 0;
+    background: linear-gradient(to right, var(--lb-scroller-fade-bg), rgba(11, 11, 15, 0));
+  }
+
+  .lb-horizontal-scroller::after {
+    right: 0;
+    background: linear-gradient(to left, var(--lb-scroller-fade-bg), rgba(11, 11, 15, 0));
+  }
+
+  .lb-horizontal-scroller.is-scrollable:not(.is-at-start)::before {
+    opacity: 0.95;
+  }
+
+  .lb-horizontal-scroller.is-scrollable:not(.is-at-end)::after {
+    opacity: 0.95;
+  }
+
+  .lb-horizontal-scroller__hint {
+    display: block;
+    margin: 6px 4px 0;
+    font-size: 11px;
+    letter-spacing: .04em;
+    color: rgba(0,224,211,.76);
+    transition: opacity .22s ease;
+  }
+
+  .lb-horizontal-scroller.has-scrolled .lb-horizontal-scroller__hint {
+    opacity: .28;
+  }
+}

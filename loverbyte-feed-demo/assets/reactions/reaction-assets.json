@@ -1,0 +1,380 @@
+[
+  {
+    "id": "standard_heart",
+    "category": "standard",
+    "type": "emoji",
+    "value": "❤️",
+    "label": "Heart"
+  },
+  {
+    "id": "standard_laughing",
+    "category": "standard",
+    "type": "emoji",
+    "value": "😂",
+    "label": "Laughing"
+  },
+  {
+    "id": "standard_crying",
+    "category": "standard",
+    "type": "emoji",
+    "value": "😭",
+    "label": "Crying"
+  },
+  {
+    "id": "standard_angry",
+    "category": "standard",
+    "type": "emoji",
+    "value": "😡",
+    "label": "Angry"
+  },
+  {
+    "id": "standard_shocked",
+    "category": "standard",
+    "type": "emoji",
+    "value": "😮",
+    "label": "Shocked"
+  },
+  {
+    "id": "standard_sad",
+    "category": "standard",
+    "type": "emoji",
+    "value": "😢",
+    "label": "Sad"
+  },
+  {
+    "id": "standard_thumbs_up",
+    "category": "standard",
+    "type": "emoji",
+    "value": "👍",
+    "label": "Thumbs up"
+  },
+  {
+    "id": "standard_thumbs_down",
+    "category": "standard",
+    "type": "emoji",
+    "value": "👎",
+    "label": "Thumbs down"
+  },
+  {
+    "id": "byte_receipts",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🧾",
+    "label": "Receipts"
+  },
+  {
+    "id": "byte_ghosting",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "👻",
+    "label": "Ghosting"
+  },
+  {
+    "id": "byte_drama",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🍿",
+    "label": "Drama"
+  },
+  {
+    "id": "byte_trash",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🗑️",
+    "label": "Trash"
+  },
+  {
+    "id": "byte_delusional",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🤡",
+    "label": "Delusional"
+  },
+  {
+    "id": "byte_cold",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🧊",
+    "label": "Cold"
+  },
+  {
+    "id": "byte_flirty",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🫦",
+    "label": "Flirty"
+  },
+  {
+    "id": "byte_chemistry",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🔥",
+    "label": "Chemistry"
+  },
+  {
+    "id": "byte_heartbreak",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "💔",
+    "label": "Heartbreak"
+  },
+  {
+    "id": "byte_watching",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "👀",
+    "label": "Watching"
+  },
+  {
+    "id": "byte_dead",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "💀",
+    "label": "Dead"
+  },
+  {
+    "id": "byte_clock_it",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🤏",
+    "label": "Clock it"
+  },
+  {
+    "id": "byte_clock_it_dark",
+    "category": "byte_tea_coded",
+    "type": "emoji",
+    "value": "🤏🏾",
+    "label": "Clock it"
+  },
+  {
+    "id": "pop_arms_over_head_stressed",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/arms-over-head-stressed.webp",
+    "label": "Arms over head stressed"
+  },
+  {
+    "id": "pop_cardi_b_confused_disgusted",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/cardi-b-confused-disgusted.png",
+    "label": "Cardi b confused disgusted"
+  },
+  {
+    "id": "pop_diamond_grillz_glam_doll",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/diamond-grillz-glam-doll.jpg",
+    "label": "Diamond grillz glam doll"
+  },
+  {
+    "id": "pop_disappointed_hands_on_hips",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/disappointed-hands-on-hips.jpg",
+    "label": "Disappointed hands on hips"
+  },
+  {
+    "id": "pop_disgusted_face_doll_headwrap",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/disgusted-face-doll-headwrap.webp",
+    "label": "Disgusted face doll headwrap"
+  },
+  {
+    "id": "pop_disgusted_face_doll_straight_hair",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/disgusted-face-doll-straight-hair.jpg",
+    "label": "Disgusted face doll straight hair"
+  },
+  {
+    "id": "pop_doll_bed_smartphone_running_mascara",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/doll-bed-smartphone-running-mascara.jpg",
+    "label": "Doll bed smartphone running mascara"
+  },
+  {
+    "id": "pop_doll_fire_explosion_tongue",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/doll-fire-explosion-tongue.jpg",
+    "label": "Doll fire explosion tongue"
+  },
+  {
+    "id": "pop_doll_peeking_through_bushes",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/doll-peeking-through-bushes..jpg",
+    "label": "Doll peeking through bushes"
+  },
+  {
+    "id": "pop_green_sweatsuit_suv_exit",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/green-sweatsuit-suv-exit.jpg",
+    "label": "Green sweatsuit suv exit"
+  },
+  {
+    "id": "pop_horrified_vintage_doll",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/horrified-vintage-doll.jpg",
+    "label": "Horrified vintage doll"
+  },
+  {
+    "id": "pop_megan_thee_stallion_disgusted",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/megan-thee-stallion-disgusted..png",
+    "label": "Megan thee stallion disgusted"
+  },
+  {
+    "id": "pop_mona_lisa_baddie_peace_sign",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/mona-lisa-baddie-peace-sign.png",
+    "label": "Mona lisa baddie peace sign"
+  },
+  {
+    "id": "pop_nene_leakes_laughing",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/nene-leakes-laughing.png",
+    "label": "Nene leakes laughing"
+  },
+  {
+    "id": "pop_office_doll_gun_at_printer",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/office-doll-gun-at-printer.jpg",
+    "label": "Office doll gun at printer"
+  },
+  {
+    "id": "pop_party_doll_dancing_purple_cup",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/party-doll-dancing-purple-cup.jpg",
+    "label": "Party doll dancing purple cup"
+  },
+  {
+    "id": "pop_porsha_williams_awkward_smile",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/porsha-williams-awkward-smile.png",
+    "label": "Porsha williams awkward smile"
+  },
+  {
+    "id": "pop_ray_j_shifting_hat",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/ray-j-shifting-hat.png",
+    "label": "Ray j shifting hat"
+  },
+  {
+    "id": "pop_shocked_doll_clutching_pearls",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/shocked-doll-clutching-pearls..jpg",
+    "label": "Shocked doll clutching pearls"
+  },
+  {
+    "id": "pop_shocked_man_tie_gasp",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/shocked-man-tie-gasp.png",
+    "label": "Shocked man tie gasp"
+  },
+  {
+    "id": "pop_skeptical_kid_yellow_shirt",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/skeptical-kid-yellow-shirt.png",
+    "label": "Skeptical kid yellow shirt"
+  },
+  {
+    "id": "pop_stressed_doll_smoking_dr_pepper",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/stressed-doll-smoking-dr-pepper.jpg",
+    "label": "Stressed doll smoking dr pepper"
+  },
+  {
+    "id": "pop_stressed_doll_smoking_whiskey",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/stressed-doll-smoking-whiskey.jpg",
+    "label": "Stressed doll smoking whiskey"
+  },
+  {
+    "id": "pop_suit_briefcase_railing_jump",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/suit-briefcase-railing-jump.webp",
+    "label": "Suit briefcase railing jump"
+  },
+  {
+    "id": "pop_sunglasses_shocked_reaction",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/sunglasses-shocked-reaction.jpg",
+    "label": "Sunglasses shocked reaction"
+  },
+  {
+    "id": "pop_teacup_gun_unbothered",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/teacup-gun-unbothered..webp",
+    "label": "Teacup gun unbothered"
+  },
+  {
+    "id": "pop_teyana_taylor_disgusted_shock",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/teyana-taylor-disgusted-shock.png",
+    "label": "Teyana taylor disgusted shock"
+  },
+  {
+    "id": "pop_that_part_receding_hairline",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/that-part-receding-hairline.webp",
+    "label": "That part receding hairline"
+  },
+  {
+    "id": "pop_toddler_doll_afro_puffs_side_eye",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/toddler-doll-afro-puffs-side-eye.jpg",
+    "label": "Toddler doll afro puffs side eye"
+  },
+  {
+    "id": "pop_unimpressed_kid_gavin",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/unimpressed-kid-gavin.png",
+    "label": "Unimpressed kid gavin"
+  },
+  {
+    "id": "pop_vintage_doll_disgusted_lips",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/vintage-doll-disgusted-lips.jpg",
+    "label": "Vintage doll disgusted lips"
+  },
+  {
+    "id": "pop_wine_glass_side_eye",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/wine-glass-side-eye.webp",
+    "label": "Wine glass side eye"
+  },
+  {
+    "id": "pop_woman_bonnet_covering_mouth",
+    "category": "pop_culture_coded",
+    "type": "image",
+    "src": "/assets/Stickers:emojis/ Pop Culture Coded W:names/woman-bonnet-covering-mouth.png",
+    "label": "Woman bonnet covering mouth"
+  }
+]

@@ -1,0 +1,141 @@
+{
+  "standard": [
+    {
+      "key": "heart",
+      "emoji": "❤️",
+      "file": "Standard/heart.png"
+    },
+    {
+      "key": "laugh",
+      "emoji": "😂",
+      "file": "Standard/laugh.png"
+    },
+    {
+      "key": "sob",
+      "emoji": "😭",
+      "file": "Standard/sob.png"
+    },
+    {
+      "key": "angry",
+      "emoji": "😡",
+      "file": "Standard/angry.png"
+    },
+    {
+      "key": "surprised",
+      "emoji": "😮",
+      "file": "Standard/surprised.png"
+    },
+    {
+      "key": "cry",
+      "emoji": "😢",
+      "file": "Standard/cry.png"
+    },
+    {
+      "key": "thumbs_up",
+      "emoji": "👍",
+      "file": "Standard/thumbs_up.png"
+    },
+    {
+      "key": "thumbs_down",
+      "emoji": "👎",
+      "file": "Standard/thumbs_down.png"
+    },
+    {
+      "key": "raised_hands",
+      "emoji": "🙌",
+      "file": "Standard/raised_hands.png"
+    },
+    {
+      "key": "heart_eyes",
+      "emoji": "😍",
+      "file": "Standard/heart_eyes.png"
+    }
+  ],
+  "pop_culture_coded": [
+    {
+      "key": "red_flag",
+      "emoji": "🚩",
+      "file": "pop culture coded/red_flag.png"
+    },
+    {
+      "key": "yellow_circle",
+      "emoji": "🟡",
+      "file": "pop culture coded/yellow_circle.png"
+    },
+    {
+      "key": "green_circle",
+      "emoji": "🟢",
+      "file": "pop culture coded/green_circle.png"
+    },
+    {
+      "key": "tea",
+      "emoji": "☕",
+      "file": "pop culture coded/tea.png"
+    },
+    {
+      "key": "receipt",
+      "emoji": "🧾",
+      "file": "pop culture coded/receipt.png"
+    },
+    {
+      "key": "ghost",
+      "emoji": "👻",
+      "file": "pop culture coded/ghost.png"
+    },
+    {
+      "key": "popcorn",
+      "emoji": "🍿",
+      "file": "pop culture coded/popcorn.png"
+    },
+    {
+      "key": "trash",
+      "emoji": "🗑️",
+      "file": "pop culture coded/trash.png"
+    },
+    {
+      "key": "clown",
+      "emoji": "🤡",
+      "file": "pop culture coded/clown.png"
+    },
+    {
+      "key": "ice_cube",
+      "emoji": "🧊",
+      "file": "pop culture coded/ice_cube.png"
+    },
+    {
+      "key": "lips",
+      "emoji": "🫦",
+      "file": "pop culture coded/lips.png"
+    },
+    {
+      "key": "fire",
+      "emoji": "🔥",
+      "file": "pop culture coded/fire.png"
+    },
+    {
+      "key": "broken_heart",
+      "emoji": "💔",
+      "file": "pop culture coded/broken_heart.png"
+    },
+    {
+      "key": "eyes",
+      "emoji": "👀",
+      "file": "pop culture coded/eyes.png"
+    },
+    {
+      "key": "skull",
+      "emoji": "💀",
+      "file": "pop culture coded/skull.png"
+    },
+    {
+      "key": "pinch",
+      "emoji": "🤏",
+      "file": "pop culture coded/pinch.png"
+    },
+    {
+      "key": "pinch_dark",
+      "emoji": "🤏🏾",
+      "file": "pop culture coded/pinch_dark.png"
+    }
+  ]
+}

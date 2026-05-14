@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte Profile</title>
+    <link rel="stylesheet" href="../loverbyte-feed-page/colors_and_type.css" />
+    <link rel="stylesheet" href="./profile-own.css" />
+    <link rel="stylesheet" href="../loverbyte-feed-page/feed.css" />
+  </head>
+  <body>
+    <main class="lb-profile-page" aria-label="Loverbyte own profile page">
+      <div class="lb-profile-page__stars" aria-hidden="true"></div>
+      <div class="lb-profile-page__glow lb-profile-page__glow--pink" aria-hidden="true"></div>
+      <div class="lb-profile-page__glow lb-profile-page__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-profile-shell">
+        <header class="lb-profile-topbar" aria-label="Profile top bar">
+          <button
+            class="lb-profile-topbar__iconBtn"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="lbMenuDrawer"
+          >
+            <span class="lb-icon-menu" aria-hidden="true"></span>
+          </button>
+
+          <a class="lb-profile-topbar__brand" href="#" aria-label="Loverbyte home">
+            <img src="../loverbyte-feed-page/assets/loverbyte-wordmark-nav.png" alt="Loverbyte" />
+          </a>
+
+          <div class="lb-profile-topbar__actions">
+            <button class="lb-profile-topbar__signalBtn" type="button" aria-label="You Up?" data-signal-open>
+              <span class="lb-icon-youup" aria-hidden="true">
+                <span class="lb-icon-youup__moon"></span>
+                <span class="lb-icon-youup__sparkle lb-icon-youup__sparkle--a"></span>
+                <span class="lb-icon-youup__sparkle lb-icon-youup__sparkle--b"></span>
+              </span>
+            </button>
+          </div>
+        </header>
+
+        <article class="lb-profile-header">
+          <div class="lb-profile-header__top">
+            <div class="lb-profile-header__identity">
+              <h1 class="lb-profile-header__name" data-profile-name>Coco</h1>
+              <p class="lb-profile-header__metaLine" data-profile-meta-line>
+                <span class="lb-profile-header__metaUsername">@coco</span>
+              </p>
+              <p class="lb-profile-header__bio" data-profile-bio>Pop culture brain, soft heart, strong opinions.</p>
+
+              <div class="lb-profile-header__romance" data-profile-romance-row hidden></div>
+
+              <div class="lb-profile-header__links">
+                <a class="lb-link-pill" href="#" aria-label="Open connect link" data-connect-link hidden>
+                  <span aria-hidden="true">🔗</span>
+                  <span data-connect-link-label>Website</span>
+                </a>
+                <button class="lb-link-pill lb-link-pill--tip" type="button" aria-label="Tip your bytender" data-tip-link-button hidden>
+                  <span aria-hidden="true">☕</span>
+                  <span>Tip Your Bytetender</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="lb-profile-header__avatarWrap" aria-hidden="true">
+              <span class="lb-profile-header__avatar" data-profile-avatar></span>
+            </div>
+          </div>
+
+          <p class="lb-profile-header__stats" data-profile-stats>1,284 followers <span aria-hidden="true">·</span> 19 following</p>
+
+          <div class="lb-profile-header__actions">
+            <button class="lb-profile-btn lb-profile-btn--secondary" type="button" data-copy-profile-link>Copy profile link</button>
+            <button class="lb-profile-btn lb-profile-btn--follow" type="button" data-follow-btn aria-pressed="false">Follow</button>
+          </div>
+        </article>
+
+        <section class="lb-profile-datingCard" data-dating-card aria-label="Dating Card">
+          <button class="lb-profile-datingCard__close" type="button" data-close-dating-card aria-label="Collapse Dating Card">×</button>
+          <iframe
+            class="lb-profile-datingCard__frame"
+            src="./profile/dating-card-v2/dating-card-v2.html"
+            title="Kelly's Dating Card"
+            frameborder="0"
+          ></iframe>
+        </section>
+
+
+        <section class="lb-profile-tabs" aria-label="Profile content tabs">
+          <div class="lb-profile-tabs__row" role="tablist" aria-label="Profile sections">
+            <button class="lb-profile-tabs__tab is-active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">Posts</button>
+            <button class="lb-profile-tabs__tab" type="button" role="tab" aria-selected="false" data-profile-tab="replies">Replies</button>
+          </div>
+
+          <div class="lb-profile-tabs__panel is-active" role="tabpanel" data-profile-panel="posts">
+            <p class="lb-profile-tabs__empty" data-profile-posts-empty>Your posts will live here.</p>
+            <article class="lb-post-card" data-post-card data-feed-post-template hidden aria-hidden="true">
+              <header class="lb-post-card__head">
+                <div class="lb-post-card__identity">
+                  <a class="lb-post-card__author" href="#" data-open-profile aria-label="Open @username profile">
+                    <span class="lb-post-card__avatar" aria-hidden="true"></span>
+                    <span class="lb-post-card__handle">@username</span>
+                  </a>
+                </div>
+                <div class="lb-profile-feedPost__headActions">
+                  <p class="lb-post-card__time">now</p>
+                </div>
+              </header>
+              <div class="lb-post-card__labels" data-post-labels hidden></div>
+              <div class="lb-post-card__bodyWrap">
+                <div class="lb-post-card__contentCol">
+                  <p class="lb-post-card__body"></p>
+                  <div class="lb-post-footer__reactions" data-reaction-chips>
+                    <button class="lb-reaction-chip lb-reaction-chip--add" type="button" data-add-reaction aria-label="Add reaction" title="Add reaction">
+                      <span class="lb-reaction-chip__plusFace" aria-hidden="true">
+                        <span class="lb-reaction-chip__face">☺</span>
+                        <span class="lb-reaction-chip__plus">+</span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div class="lb-post-footer__standardRail" role="group" aria-label="Standard interactions">
+                  <button class="lb-rail-action" type="button" data-action-type="react" data-action-count="0" aria-label="React">
+                    <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M12 20.6c-.2 0-.3-.1-.4-.2l-1.8-1.7C5.1 14.5 2 11.7 2 8.2 2 5.4 4.2 3.2 7 3.2c1.6 0 3.2.8 4.1 2.1.9-1.3 2.5-2.1 4.1-2.1 2.8 0 5 2.2 5 5 0 3.5-3.1 6.3-7.8 10.5l-1.8 1.7c-.2.1-.4.2-.6.2z"></path>
+                    </svg>
+                    <span class="lb-rail-action__count" data-action-count-label></span>
+                  </button>
+                  <button class="lb-rail-action" type="button" data-action-type="reply" data-action-count="0" aria-label="Reply">
+                    <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 5.5c0-1.4 1.1-2.5 2.5-2.5h11c1.4 0 2.5 1.1 2.5 2.5v8c0 1.4-1.1 2.5-2.5 2.5H10l-4.6 3.6c-.5.4-1.2 0-1.2-.7V16H6.5C5.1 16 4 14.9 4 13.5v-8z"></path>
+                    </svg>
+                    <span class="lb-rail-action__count" data-action-count-label></span>
+                  </button>
+                  <button class="lb-rail-action" type="button" data-action-type="save" data-action-count="0" aria-label="Save">
+                    <svg class="lb-rail-action__iconSvg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M7 3.5h10a2 2 0 0 1 2 2V21l-7-4-7 4V5.5a2 2 0 0 1 2-2z"></path>
+                    </svg>
+                    <span class="lb-rail-action__count" data-action-count-label></span>
+                  </button>
+                </div>
+              </div>
+              <footer class="lb-post-footer" data-post-footer>
+                <div class="lb-post-footer__row lb-post-footer__row--signals" role="group" aria-label="Loverbyte signal actions">
+                  <button class="lb-signal-action" type="button" data-signal-type="tip" data-signal-count="0">
+                    <span class="lb-signal-action__icon" aria-hidden="true">☕</span>
+                    <span class="lb-signal-action__label" data-post-signal-label></span>
+                  </button>
+                  <button class="lb-signal-action" type="button" data-signal-type="poke" data-signal-count="0">
+                    <span class="lb-signal-action__icon" aria-hidden="true">👀</span>
+                    <span class="lb-signal-action__label" data-post-signal-label></span>
+                  </button>
+                  <button class="lb-signal-action" type="button" data-signal-type="crush" data-signal-count="0">
+                    <span class="lb-signal-action__icon" aria-hidden="true">💘</span>
+                    <span class="lb-signal-action__label" data-post-signal-label></span>
+                  </button>
+                </div>
+              </footer>
+            </article>
+            <div class="lb-profile-postsList" data-profile-posts-list></div>
+          </div>
+          <div class="lb-profile-tabs__panel" role="tabpanel" hidden data-profile-panel="replies">
+            <div class="lb-profile-replies">
+              <p class="lb-profile-replies__empty" data-profile-replies-empty>
+                No replies yet.<br />
+                Your replies will show up here when you jump into the conversation.
+              </p>
+              <div class="lb-profile-replies__list" data-profile-replies-list></div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div class="lb-compose" data-profile-compose hidden>
+      <div class="lb-compose__backdrop" data-profile-compose-close></div>
+      <section class="lb-compose__sheet" role="dialog" aria-modal="true" aria-label="Create new post from profile">
+        <header class="lb-compose__head">
+          <button class="lb-compose__cancel" type="button" data-profile-compose-close>Cancel</button>
+          <h3 class="lb-compose__title">
+            <span class="lb-compose__statusDot" aria-hidden="true"></span>
+            <span>New Byte</span>
+            <img class="lb-compose__titleCup" src="../loverbyte-feed-page/assets/teacup-loverbyte-crop.png" alt="" aria-hidden="true" />
+          </h3>
+          <span class="lb-compose__spacer" aria-hidden="true"></span>
+        </header>
+
+        <div class="lb-compose__author">
+          <span class="lb-compose__avatar" data-profile-compose-sheet-avatar></span>
+          <p class="lb-compose__handle" data-profile-compose-sheet-handle>@username</p>
+        </div>
+
+        <label class="lb-compose__field" for="profileComposeText">
+          <textarea id="profileComposeText" maxlength="1000" placeholder="Drop a take, ask a question, start something…" data-profile-compose-text></textarea>
+        </label>
+
+        <div class="lb-compose__tools">
+          <div class="lb-compose__toolButtons">
+            <button class="lb-compose__toolBtn" type="button" data-profile-compose-image aria-label="Add image" title="Add image">
+              <span class="lb-compose__icon lb-compose__icon--image" aria-hidden="true"></span>
+            </button>
+            <button class="lb-compose__toolBtn" type="button" data-profile-compose-emoji aria-label="Add emoji" title="Add emoji">
+              <span class="lb-compose__icon lb-compose__icon--emoji" aria-hidden="true"></span>
+            </button>
+            <button class="lb-compose__toolBtn" type="button" data-profile-compose-label aria-label="Add label" title="Add label">
+              <span class="lb-compose__icon lb-compose__icon--tag" aria-hidden="true"></span>
+            </button>
+          </div>
+          <input type="file" accept="image/png,image/jpeg,image/webp,image/heic,image/heif" multiple hidden data-profile-compose-image-input />
+          <p class="lb-compose__meta" data-profile-compose-counts>0/2 images · 0/1000</p>
+        </div>
+        <div class="lb-compose__labels" data-profile-compose-labels hidden></div>
+        <p class="lb-compose__toolHint">Images only. No videos.</p>
+        <p class="lb-compose__error" data-profile-compose-error></p>
+        <div class="lb-compose__preview" data-profile-compose-preview hidden></div>
+        <footer class="lb-compose__foot">
+          <button class="lb-compose__post" type="button" data-profile-compose-post disabled>Post</button>
+        </footer>
+      </section>
+    </div>
+
+    <div class="lb-label-picker" data-label-picker hidden>
+      <div class="lb-label-picker__backdrop" data-label-picker-close></div>
+      <section class="lb-label-picker__panel" role="dialog" aria-modal="true" aria-label="Add labels">
+        <header class="lb-label-picker__head">
+          <div>
+            <h3 class="lb-label-picker__title">Add labels</h3>
+            <p class="lb-label-picker__copy">Pick up to 2 so people know what kind of tea they’re walking into.</p>
+          </div>
+          <p class="lb-label-picker__counter" data-label-counter>0/2 selected</p>
+        </header>
+        <div class="lb-label-picker__groups" data-label-groups></div>
+        <footer class="lb-label-picker__foot">
+          <button class="lb-label-picker__done" type="button" data-label-done>Done</button>
+        </footer>
+      </section>
+    </div>
+
+    <div class="lb-menu" data-menu hidden>
+      <div class="lb-menu__backdrop" data-menu-close></div>
+      <aside id="lbMenuDrawer" class="lb-menu__drawer" role="dialog" aria-modal="true" aria-label="Loverbyte menu" tabindex="-1" data-menu-drawer>
+        <header class="lb-menu__head">
+          <div class="lb-menu__brand">
+            <img src="../loverbyte-feed-page/assets/loverbyte-wordmark-nav.png" alt="Loverbyte" />
+            <p>Menu</p>
+          </div>
+          <button class="lb-menu__close" type="button" aria-label="Close menu" data-menu-close-btn>
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+
+        <nav class="lb-menu__list" aria-label="Utility menu">
+          <div class="lb-menu__section">
+            <button
+              class="lb-menu__item lb-menu__item--toggle"
+              type="button"
+              data-menu-toggle="settings"
+              aria-expanded="false"
+              aria-controls="menuPanelSettings"
+            >
+              <span class="lb-menu__itemIcon lb-menu__itemIcon--settings" aria-hidden="true"></span>
+              <span class="lb-menu__itemLabel">Settings &amp; Privacy</span>
+              <span class="lb-menu__chevron" aria-hidden="true">›</span>
+            </button>
+            <div id="menuPanelSettings" class="lb-menu__submenu" data-menu-panel="settings" hidden>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="account-settings">Account Settings</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="privacy-safety">Privacy &amp; Safety</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="tips-support-links">Tips &amp; Support Links</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="blocked-users">Blocked Users</button>
+            </div>
+          </div>
+
+          <div class="lb-menu__section">
+            <button
+              class="lb-menu__item lb-menu__item--toggle"
+              type="button"
+              data-menu-toggle="help"
+              aria-expanded="false"
+              aria-controls="menuPanelHelp"
+            >
+              <span class="lb-menu__itemIcon lb-menu__itemIcon--help" aria-hidden="true"></span>
+              <span class="lb-menu__itemLabel">Help &amp; Support</span>
+              <span class="lb-menu__chevron" aria-hidden="true">›</span>
+            </button>
+            <div id="menuPanelHelp" class="lb-menu__submenu" data-menu-panel="help" hidden>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="faq">FAQ</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="contact-support">Contact Support</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="report-problem">Report a Problem</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="terms-policies">Terms &amp; Policies</button>
+            </div>
+          </div>
+
+          <div class="lb-menu__section">
+            <button
+              class="lb-menu__item lb-menu__item--toggle"
+              type="button"
+              data-menu-toggle="rules"
+              aria-expanded="false"
+              aria-controls="menuPanelRules"
+            >
+              <span class="lb-menu__itemIcon lb-menu__itemIcon--rules" aria-hidden="true"></span>
+              <span class="lb-menu__itemLabel">House Rules &amp; Tips</span>
+              <span class="lb-menu__chevron" aria-hidden="true">›</span>
+            </button>
+            <div id="menuPanelRules" class="lb-menu__submenu" data-menu-panel="rules" hidden>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="house-rules">House Rules</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="how-loverbyte-works">How Loverbyte Works</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="dating-safety-tips">Dating Safety Tips</button>
+              <button class="lb-menu__subitem" type="button" data-menu-subitem="tips-better-posts">Tips for Better Posts</button>
+            </div>
+          </div>
+        </nav>
+
+        <section class="lb-menu-screen" data-menu-screen-root hidden>
+          <header class="lb-menu-screen__head">
+            <button class="lb-menu-screen__back" type="button" aria-label="Back to menu" data-menu-back>←</button>
+            <h3 class="lb-menu-screen__title" data-menu-screen-title>Menu</h3>
+          </header>
+
+          <div class="lb-menu-screen__body">
+            <section class="lb-menu-view" data-menu-view="account-settings" hidden>
+              <form class="lb-menu-form" data-menu-form="account-settings">
+                <section class="lb-menu-group">
+                  <div class="lb-menu-group__head">
+                    <p class="lb-menu-group__title">Editable Profile Info</p>
+                    <span class="lb-menu-group__badge">Editable</span>
+                  </div>
+                  <label class="lb-menu-field">
+                    <span>Display name</span>
+                    <input type="text" name="displayName" placeholder="Display name" data-account-display-name />
+                  </label>
+                  <label class="lb-menu-field">
+                    <span>Pronouns</span>
+                    <input type="text" name="pronouns" placeholder="She/her, He/him, They/them…" data-account-pronouns />
+                  </label>
+                  <label class="lb-menu-field">
+                    <span>Short bio</span>
+                    <textarea name="shortBio" rows="3" placeholder="A little about you…" data-account-short-bio></textarea>
+                  </label>
+                </section>
+
+                <section class="lb-menu-group">
+                  <p class="lb-menu-group__title">Locked Account Info</p>
+
+                  <label class="lb-menu-field lb-menu-field--locked">
+                    <span class="lb-menu-field__titleRow">
+                      <span>Username</span>
+                      <span class="lb-menu-lockPill" aria-label="Locked">Locked</span>
+                    </span>
+                    <div class="lb-menu-lockedInputWrap">
+                      <input
+                        type="text"
+                        name="username"
+                        placeholder="@username"
+                        data-account-username
+                        readonly
+                        aria-readonly="true"
+                      />
+                      <span class="lb-menu-lockIcon" aria-hidden="true">🔒</span>
+                    </div>
+                    <span class="lb-menu-hint">Username changes are locked during MVP.</span>
+                  </label>
+
+                  <label class="lb-menu-field lb-menu-field--locked">
+                    <span class="lb-menu-field__titleRow">
+                      <span>Email</span>
+                      <span class="lb-menu-lockPill" aria-label="Locked">Locked</span>
+                    </span>
+                    <div class="lb-menu-lockedInputWrap">
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="you@email.com"
+                        data-account-email
+                        readonly
+                        aria-readonly="true"
+                      />
+                      <span class="lb-menu-lockIcon" aria-hidden="true">🔒</span>
+                    </div>
+                    <span class="lb-menu-hint">Email changes are locked during MVP.</span>
+                  </label>
+                </section>
+
+                <section class="lb-menu-group">
+                  <p class="lb-menu-group__title">Recovery Contact</p>
+                  <label class="lb-menu-field">
+                    <span>Alternate email</span>
+                    <input type="email" name="recoveryEmail" placeholder="backup@email.com" data-account-recovery-email />
+                  </label>
+                  <p class="lb-menu-hint">Optional. Used only if we need another way to reach you.</p>
+                </section>
+                <button class="lb-menu-btn" type="submit">Save changes</button>
+                <p class="lb-menu-note" data-menu-form-note="account-settings"></p>
+              </form>
+            </section>
+
+            <section class="lb-menu-view" data-menu-view="privacy-safety" hidden>
+              <div class="lb-menu-card">
+                <p class="lb-menu-card__label">Romantic openness</p>
+                <label class="lb-menu-field">
+                  <span class="lb-sr-only">Romantic openness</span>
+                  <select data-setting="romantic-openness">
+                    <option value="yes-actively">Yes, actively</option>
+                    <option value="yes-casually">Yes, casually</option>
+                    <option value="maybe-vibe">Maybe, if the vibe is right</option>
+                    <option value="no-social">No, I’m just here socially</option>
+                    <option value="no-unavailable">No, I’m partnered / unavailable</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="lb-menu-card lb-menu-card--toggle">
+                <div>
+                  <p class="lb-menu-card__label">Dating Card Visibility</p>
+                  <p class="lb-menu-card__copy">Dating Card pinned to profile</p>
+                </div>
+                <label class="lb-menu-switch">
+                  <input type="checkbox" data-setting="dating-card-pinned" checked />
+                  <span class="lb-menu-switch__ui" aria-hidden="true"></span>
+                </label>
+              </div>
+
+              <div class="lb-menu-card">
+                <p class="lb-menu-card__label">Blocked Users</p>
+                <button class="lb-menu-linkBtn" type="button" data-open-screen="blocked-users">Manage blocked users</button>
+              </div>
+            </section>
+
+            <section class="lb-menu-view" data-menu-view="tips-support-links" hidden>
+              <form class="lb-menu-form" data-menu-form="tips-support-links">
+                <p class="lb-menu-card__copy">Add the ways people can support you when your posts, replies, or advice hit.</p>
+                <label class="lb-menu-field">
+                  <span>Cash App</span>
+                  <input type="url" name="cashApp" placeholder="$yourcashtag or Cash App link" />
+                </label>
+                <label class="lb-menu-field">
+                  <span>Venmo</span>
+                  <input type="url" name="venmo" placeholder="@username or Venmo link" />
+                </label>
+                <label class="lb-menu-field">
+                  <span>PayPal</span>
+                  <input type="url" name="paypal" placeholder="PayPal.me link or PayPal link" />
+                </label>
+                <p class="lb-menu-hint">These open external payment apps or websites. Loverbyte does not process payments.</p>
+                <button class="lb-menu-btn" type="submit">Save support links</button>
+                <p class="lb-menu-note" data-menu-form-note="tips-support-links"></p>
+              </form>
+            </section>
+
+            <section class="lb-menu-view" data-menu-view="blocked-users" hidden>
+              <div class="lb-menu-empty">
+                <h4>No blocked users yet.</h4>
+                <p>If someone ruins the vibe, manage them here.</p>
+              </div>
+            </section>
+
+            <section class="lb-menu-view" data-menu-view="faq" hidden>
+              <div class="lb-menu-empty"><h4>FAQ</h4><p>Coming soon.</p></div>
+            </section>
+            <section class="lb-menu-view" data-menu-view="contact-support" hidden>
+              <div class="lb-menu-empty"><h4>Contact Support</h4><p>Coming soon.<br />support@loverbyte.app</p></div>
+            </section>
+            <section class="lb-menu-view" data-menu-view="report-problem" hidden>
+              <div class="lb-menu-empty"><h4>Report a Problem</h4><p>Coming soon.</p></div>
+            </section>
+            <section class="lb-menu-view" data-menu-view="terms-policies" hidden>
+              <div class="lb-menu-empty"><h4>Terms &amp; Policies</h4><p>Coming soon.</p></div>
+            </section>
+            <section class="lb-menu-view" data-menu-view="house-rules" hidden>
+              <div class="lb-menu-empty"><h4>House Rules</h4><p>Coming soon.</p></div>
+            </section>
+            <section class="lb-menu-view" data-menu-view="how-loverbyte-works" hidden>
+              <div class="lb-menu-empty"><h4>How Loverbyte Works</h4><p>Coming soon.</p></div>
+            </section>
+            <section class="lb-menu-view" data-menu-view="dating-safety-tips" hidden>
+              <div class="lb-menu-empty"><h4>Dating Safety Tips</h4><p>Coming soon.</p></div>
+            </section>
+            <section class="lb-menu-view" data-menu-view="tips-better-posts" hidden>
+              <div class="lb-menu-empty"><h4>Tips for Better Posts</h4><p>Coming soon.</p></div>
+            </section>
+          </div>
+        </section>
+
+        <footer class="lb-menu__foot">
+          <button class="lb-menu__item lb-menu__item--logout" type="button" data-menu-item="logout">
+            <span class="lb-menu__itemIcon lb-menu__itemIcon--logout" aria-hidden="true"></span>
+            <span class="lb-menu__itemLabel">Log out</span>
+            <span class="lb-menu__chevron" aria-hidden="true">›</span>
+          </button>
+        </footer>
+      </aside>
+    </div>
+
+
+    <div class="lb-signal" data-signal hidden>
+      <div class="lb-signal__backdrop" data-signal-close></div>
+      <section class="lb-signal__sheet" role="dialog" aria-modal="true" aria-label="You Up tea signal modal">
+        <header class="lb-signal__head">
+          <h2 class="lb-signal__title">
+            <span>You Up?</span>
+            <span class="lb-signal__titleBadge">24h</span>
+          </h2>
+          <button class="lb-signal__cancelTop" type="button" data-signal-cancel aria-label="Close You Up modal">×</button>
+        </header>
+
+        <div class="lb-signal__intro">
+          <p class="lb-signal__copy">Send a 24-hour Tea Signal when you want the room to tap in now: a question, a vent, a late-night thought, a date debrief, or a “somebody come here real quick” moment. Like a story, but less balcony-watching and more “group chat, wake up.”😏</p>
+          <p class="lb-signal__example">Example: “Just got back from a date from hell and i need witnesses now....”</p>
+        </div>
+
+        <label class="lb-signal__field" for="signalText">
+          <textarea
+            id="signalText"
+            maxlength="280"
+            placeholder="Ask it, vent it, spill it, or call your people in…"
+            data-signal-text
+          ></textarea>
+        </label>
+
+        <div class="lb-signal__tools">
+          <div class="lb-signal__toolButtons">
+            <button class="lb-signal__toolBtn" type="button" data-signal-image aria-label="Add image" title="Add image">
+              <span class="lb-compose__icon lb-compose__icon--image" aria-hidden="true"></span>
+            </button>
+            <button class="lb-signal__toolBtn" type="button" data-signal-emoji aria-label="Add emoji" title="Add emoji">
+              <span class="lb-compose__icon lb-compose__icon--emoji" aria-hidden="true"></span>
+            </button>
+            <button class="lb-signal__toolBtn" type="button" data-signal-label aria-label="Add label" title="Add label">
+              <span class="lb-compose__icon lb-compose__icon--tag" aria-hidden="true"></span>
+            </button>
+          </div>
+          <input type="file" accept="image/png,image/jpeg,image/webp,image/heic,image/heif" multiple hidden data-signal-image-input />
+          <p class="lb-signal__metaCount" data-signal-counts>0/2 images · 0/280</p>
+        </div>
+        <div class="lb-signal__labels" data-signal-labels hidden></div>
+        <p class="lb-signal__toolHint">Images only. No videos.</p>
+        <p class="lb-signal__error" data-signal-error></p>
+        <div class="lb-signal__preview" data-signal-preview hidden></div>
+
+        <div class="lb-signal__metaBlock">
+          <p class="lb-signal__meta">This posts a live-ish callout to the feed.</p>
+          <p class="lb-signal__expiry">
+            <span class="lb-signal__expiryMoon" aria-hidden="true">✦</span>
+            <span>Visible for 24 hours.</span>
+          </p>
+          <p class="lb-signal__time" data-signal-time>Posting from your local time</p>
+        </div>
+
+        <footer class="lb-signal__foot">
+          <button class="lb-signal__send" type="button" data-signal-send disabled>Send Signal</button>
+          <button class="lb-signal__cancel" type="button" data-signal-cancel>Cancel</button>
+        </footer>
+      </section>
+    </div>
+
+    <div class="lb-reaction-picker" data-reaction-picker hidden>
+      <div class="lb-reaction-picker__backdrop" data-reaction-picker-close></div>
+      <section class="lb-reaction-picker__panel" role="dialog" aria-modal="true" aria-label="Add reaction">
+        <header class="lb-reaction-picker__head">
+          <h3 class="lb-reaction-picker__title">Add reaction</h3>
+          <button class="lb-reaction-picker__close" type="button" data-reaction-picker-close aria-label="Close reaction picker">×</button>
+        </header>
+        <div class="lb-reaction-picker__tabs" role="tablist" aria-label="Reaction categories">
+          <button class="lb-reaction-picker__tab is-active" type="button" role="tab" aria-selected="true" data-reaction-tab="standard">Standard</button>
+          <button class="lb-reaction-picker__tab" type="button" role="tab" aria-selected="false" data-reaction-tab="byte_tea_coded">Byte Tea Coded</button>
+          <button class="lb-reaction-picker__tab" type="button" role="tab" aria-selected="false" data-reaction-tab="pop_culture_coded">Pop Culture Coded</button>
+        </div>
+        <div class="lb-reaction-picker__grid" data-reaction-picker-grid></div>
+      </section>
+    </div>
+
+    <div class="lb-notifications" data-notifications hidden>
+      <div class="lb-notifications__backdrop" data-notification-close></div>
+      <section class="lb-notifications__sheet" role="dialog" aria-modal="true" aria-label="Notifications">
+        <header class="lb-notifications__head">
+          <h3>Notifications</h3>
+          <button type="button" aria-label="Close notifications" data-notification-close>×</button>
+        </header>
+        <ul class="lb-notifications__list"></ul>
+      </section>
+    </div>
+
+    <div class="lb-mini-toast" data-mini-toast hidden></div>
+
+    <div class="lb-tip-modal" data-tip-modal hidden>
+      <div class="lb-tip-modal__backdrop" data-tip-modal-close></div>
+      <section class=”lb-tip-modal__sheet” role=”dialog” aria-modal=”true” aria-label=”Tip options”>
+        <header class=”lb-tip-modal__head”>
+          <h3 class=”lb-tip-modal__title” data-tip-modal-title>Tip @username</h3>
+          <button class=”lb-tip-modal__close” type=”button” aria-label=”Close tip options” data-tip-modal-close>×</button>
+        </header>
+        <p class=”lb-tip-modal__copy”>If this take hit harder than a like, send a little love.</p>
+        <p class=”lb-tip-modal__sub” data-tip-modal-sub>Choose where to send the tea money:</p>
+        <div class=”lb-tip-modal__options” data-tip-modal-options></div>
+        <div class=”lb-tip-modal__empty” data-tip-modal-empty hidden>
+          <p class=”lb-tip-modal__emptyTitle”>Looks like the tip jar isn’t set up yet.</p>
+          <p class=”lb-tip-modal__emptyCopy”><span data-tip-modal-empty-handle>@username</span> hasn’t added Cash App, Venmo, or PayPal.</p>
+        </div>
+        <p class=”lb-tip-modal__note” data-tip-modal-fine>Loverbyte doesn’t process this payment or take a cut. You’ll be sent to an external app or site.</p>
+        <p class=”lb-tip-modal__note” data-tip-modal-note>Suggested note: “Found you on Loverbyte 💘”</p>
+      </section>
+    </div>
+
+    <script src="../loverbyte-feed-page/assets/reactions/reaction-library.js"></script>
+    <script src="./profile-own.js"></script>
+  </body>
+</html>

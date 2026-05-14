@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte Dating Card Prototype</title>
+    <link rel="stylesheet" href="../../../loverbyte-feed-page/colors_and_type.css" />
+    <link rel="stylesheet" href="./dating-card.css" />
+  </head>
+  <body>
+    <svg class="lb-dating-icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="lb-icon-target" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8"></circle>
+        <circle cx="12" cy="12" r="4"></circle>
+        <circle cx="12" cy="12" r="1.5"></circle>
+      </symbol>
+      <symbol id="lb-icon-link" viewBox="0 0 24 24">
+        <path d="M10 13.5l4-4"></path>
+        <path d="M7.4 16.1l-2.1 2.1a3 3 0 01-4.2-4.2l2.1-2.1a3 3 0 014.2 0"></path>
+        <path d="M16.6 7.9l2.1-2.1a3 3 0 114.2 4.2l-2.1 2.1a3 3 0 01-4.2 0"></path>
+      </symbol>
+      <symbol id="lb-icon-family" viewBox="0 0 24 24">
+        <circle cx="7" cy="8" r="2.1"></circle>
+        <circle cx="16.7" cy="7.5" r="1.8"></circle>
+        <path d="M3.7 17.5a3.4 3.4 0 013.4-3.4h1.9a3.4 3.4 0 013.4 3.4"></path>
+        <path d="M13.4 16.8a2.8 2.8 0 012.8-2.8h1.1a2.8 2.8 0 012.8 2.8"></path>
+      </symbol>
+      <symbol id="lb-icon-route" viewBox="0 0 24 24">
+        <path d="M6.5 18.8a2.3 2.3 0 100-4.6 2.3 2.3 0 000 4.6z"></path>
+        <path d="M17.5 9.1a2.3 2.3 0 100-4.6 2.3 2.3 0 000 4.6z"></path>
+        <path d="M8.8 16.5c3.9 0 3.9-8.7 7.8-8.7"></path>
+      </symbol>
+      <symbol id="lb-icon-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="3.3"></circle>
+        <path d="M5.6 19.3a6.4 6.4 0 0112.8 0"></path>
+      </symbol>
+    </svg>
+
+    <main class="lb-dating-prototype" aria-label="Loverbyte Dating Card prototype">
+      <section class="lb-dating-card" aria-label="Dating Card">
+        <div class="lb-dating-card__media">
+          <div class="lb-dating-card__photos" data-photo-track>
+            <article class="lb-dating-photo lb-dating-photo--one is-active" data-photo-slide>
+              <div class="lb-dating-photo__placeholder" aria-label="Portrait placeholder 1"></div>
+            </article>
+            <article class="lb-dating-photo lb-dating-photo--two" data-photo-slide>
+              <div class="lb-dating-photo__placeholder" aria-label="Portrait placeholder 2"></div>
+            </article>
+            <article class="lb-dating-photo lb-dating-photo--three" data-photo-slide>
+              <div class="lb-dating-photo__placeholder" aria-label="Portrait placeholder 3"></div>
+            </article>
+          </div>
+
+          <div class="lb-dating-card__photoControls">
+            <button class="lb-dating-card__arrow" type="button" data-photo-prev aria-label="Previous photo">‹</button>
+            <p class="lb-dating-card__photoCount" data-photo-count>1 / 3</p>
+            <button class="lb-dating-card__arrow" type="button" data-photo-next aria-label="Next photo">›</button>
+          </div>
+
+          <div class="lb-dating-card__dots" role="tablist" aria-label="Photo selector">
+            <button class="lb-dating-card__dot is-active" type="button" data-photo-dot="0" aria-label="Go to photo 1" aria-pressed="true"></button>
+            <button class="lb-dating-card__dot" type="button" data-photo-dot="1" aria-label="Go to photo 2" aria-pressed="false"></button>
+            <button class="lb-dating-card__dot" type="button" data-photo-dot="2" aria-label="Go to photo 3" aria-pressed="false"></button>
+          </div>
+        </div>
+
+        <div class="lb-dating-card__info">
+          <header class="lb-dating-card__header">
+            <p class="lb-dating-card__openBadge">Open to Crushes</p>
+            <h1 class="lb-dating-card__title">Mia, 30s</h1>
+            <p class="lb-dating-card__location">Los Angeles, CA</p>
+          </header>
+
+          <section class="lb-dating-quick" aria-label="Quick Snapshot">
+            <p class="lb-dating-quick__label">Quick Snapshot</p>
+            <div class="lb-dating-quick__railWrap lb-horizontal-scroller">
+              <div class="lb-dating-quick__rail lb-horizontal-scroller__track" role="list" aria-label="Quick snapshot details">
+                <span class="lb-dating-quick__chip" role="listitem">F4M</span>
+                <span class="lb-dating-quick__chip" role="listitem">30s</span>
+                <span class="lb-dating-quick__chip" role="listitem">CA</span>
+                <span class="lb-dating-quick__chip" role="listitem">
+                  <svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-target"></use></svg>
+                  <span>Long-term</span>
+                </span>
+                <span class="lb-dating-quick__chip" role="listitem">
+                  <svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-link"></use></svg>
+                  <span>Monogamous</span>
+                </span>
+                <span class="lb-dating-quick__chip" role="listitem">
+                  <svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-route"></use></svg>
+                  <span>Open to LDR</span>
+                </span>
+                <span class="lb-dating-quick__chip" role="listitem">
+                  <svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-family"></use></svg>
+                  <span>No kids</span>
+                </span>
+                <span class="lb-dating-quick__chip" role="listitem">Creative Producer</span>
+              </div>
+            </div>
+            <p class="lb-dating-quick__hint lb-horizontal-scroller__hint">Swipe for more →</p>
+          </section>
+
+          <section class="lb-dating-stacks" aria-label="Dating details">
+            <article class="lb-dating-stack">
+              <h3 class="lb-dating-stack__title">Looking For</h3>
+              <ul class="lb-dating-stack__list">
+                <li class="lb-dating-stack__row">
+                  <span class="lb-dating-stack__meta"><svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-target"></use></svg><span>Relationship goal</span></span>
+                  <strong>Long-term</strong>
+                </li>
+                <li class="lb-dating-stack__row">
+                  <span class="lb-dating-stack__meta"><svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-route"></use></svg><span>Open to long-distance</span></span>
+                  <strong>Yes</strong>
+                </li>
+                <li class="lb-dating-stack__row"><span>Dating direction</span><strong>F4M</strong></li>
+              </ul>
+            </article>
+
+            <article class="lb-dating-stack">
+              <h3 class="lb-dating-stack__title">Relationship Style</h3>
+              <ul class="lb-dating-stack__list">
+                <li class="lb-dating-stack__row">
+                  <span class="lb-dating-stack__meta"><svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-link"></use></svg><span>Relationship style</span></span>
+                  <strong>Monogamous</strong>
+                </li>
+                <li class="lb-dating-stack__row"><span>Dating pace</span><strong>Open to intentional dating</strong></li>
+                <li class="lb-dating-stack__row">
+                  <span class="lb-dating-stack__meta"><svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-family"></use></svg><span>Kids / family status</span></span>
+                  <strong>No kids</strong>
+                </li>
+              </ul>
+            </article>
+
+            <article class="lb-dating-stack">
+              <h3 class="lb-dating-stack__title">Lifestyle / Work</h3>
+              <ul class="lb-dating-stack__list">
+                <li class="lb-dating-stack__row"><span>Occupation</span><strong>Creative Producer</strong></li>
+                <li class="lb-dating-stack__row"><span>Location</span><strong>Los Angeles, CA</strong></li>
+                <li class="lb-dating-stack__row"><span>Lifestyle</span><strong>Moderate</strong></li>
+              </ul>
+            </article>
+
+            <article class="lb-dating-stack">
+              <h3 class="lb-dating-stack__title">Basics</h3>
+              <ul class="lb-dating-stack__list">
+                <li class="lb-dating-stack__row">
+                  <span class="lb-dating-stack__meta"><svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-user"></use></svg><span>Gender identity</span></span>
+                  <strong>Woman</strong>
+                </li>
+                <li class="lb-dating-stack__row">
+                  <span class="lb-dating-stack__meta"><svg class="lb-dating-icon" aria-hidden="true"><use href="#lb-icon-user"></use></svg><span>Orientation</span></span>
+                  <strong>Straight</strong>
+                </li>
+                <li class="lb-dating-stack__row"><span>Age band</span><strong>30s</strong></li>
+              </ul>
+            </article>
+          </section>
+
+          <section class="lb-dating-prompts" aria-label="Personality prompts">
+            <article class="lb-dating-prompts__card">
+              <p class="lb-dating-prompts__prompt">The way to get my attention is…</p>
+              <p class="lb-dating-prompts__answer">Consistency with a little flirt.</p>
+            </article>
+            <article class="lb-dating-prompts__card">
+              <p class="lb-dating-prompts__prompt">I’m not for you if…</p>
+              <p class="lb-dating-prompts__answer">You think “wyd” counts as effort.</p>
+            </article>
+            <article class="lb-dating-prompts__card">
+              <p class="lb-dating-prompts__prompt">My green flag is…</p>
+              <p class="lb-dating-prompts__answer">I show up the same way in public and private.</p>
+            </article>
+            <article class="lb-dating-prompts__card">
+              <p class="lb-dating-prompts__prompt">Dating me feels like…</p>
+              <p class="lb-dating-prompts__answer">Soft launch energy with real follow-through.</p>
+            </article>
+          </section>
+
+          <footer class="lb-dating-card__footer">
+            <button class="lb-dating-card__crushBtn" type="button" data-send-crush>Send a Crush 💘</button>
+          </footer>
+        </div>
+      </section>
+    </main>
+
+    <div class="lb-dating-toast" data-crush-toast hidden>Crush flow coming next.</div>
+
+    <script src="./dating-card.js"></script>
+  </body>
+</html>

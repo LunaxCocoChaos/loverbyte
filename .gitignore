@@ -1,0 +1,68 @@
+# System
+.DS_Store
+.localized
+
+# Backup files
+*.bak
+*.bak-*
+
+# Archives
+*.zip
+
+# Misc non-demo files
+free-quiz-request-widget.html
+Height-256.png
+
+# Old version folders
+loverbyte-feed-v1/
+loverbyte-feed-v2/
+loverbyte-feed-v3/
+loverbyte-feed-v4/
+loverbyte-feed-v5/
+loverbyte-feed-v6/
+loverbyte-feed-v6b/
+loverbyte-feed-v7/
+loverbyte-feed-v7b/
+loverbyte-feed-v7c/
+loverbyte-feed-v7d/
+loverbyte-feed-v8/
+loverbyte-feed-v9/
+loverbyte-feed-v9b/
+loverbyte-feed-v10/
+loverbyte-feed-v10b/
+loverbyte-feed-v11/
+loverbyte-feed-v12/
+loverbyte-feed-v13/
+loverbyte-feed-working-copy/
+
+# Backup snapshot folders
+backup-feed-stable-2026-05-09-161537/
+feed-rebuild-v1/
+feed-rebuild-v1-backup-patch5-20260509-183445/
+feed-rebuild-v1-wrong-source-2026-05-09-163709/
+loverbyte-feed-page-backup-2026-05-06-0408/
+loverbyte-feed-page-backup-2026-05-06-184314/
+loverbyte-feed-page-backup-2026-05-06-192810/
+loverbyte-feed-page-backup-2026-05-06-195630/
+loverbyte-feed-page-backup-2026-05-08-010909/
+loverbyte-feed-page-broken-archive-2026-05-09-154916/
+loverbyte-feed-page-safety-before-pre-restore-2026-05-09-155242/
+loverbyte-feed-page-version-2026-05-09-154615/
+loverbyte-profile-own-v2/
+loverbyte-profile-own-v2-baseline-backup-20260510/
+loverbyte-profile-v1/
+loverbyte-profile-v2/
+loverbyte-profile-working-copy/
+
+# Other non-demo folders
+loverbyte-mockups/
+loverbyte-landing-page/
+loverbyte-profile-follow-mvp-backup-2026-05-08-131735/
+loverbyte-profile-public-open-to-crushes/
+Lunaiverse_Clockmyteaquiz_DeliveryScreens/
+clockmytea/
+"TEA-TO-GO SCREENS"/
+"Tea To Go Clean Up"/
+"Image resize tasks"/
+"Claude patch"/
+loverbyte-feed-v1/

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Room · Jake + Kelly</title>
+  <link rel="stylesheet" href="./private-room.css" />
+</head>
+<body>
+
+  <!-- floating particles -->
+  <div class="pr-particles" aria-hidden="true">
+    <span class="pr-particle">💘</span>
+    <span class="pr-particle">☕</span>
+    <span class="pr-particle">✨</span>
+    <span class="pr-particle">💘</span>
+    <span class="pr-particle">🌙</span>
+    <span class="pr-particle">✨</span>
+    <span class="pr-particle">☕</span>
+    <span class="pr-particle">💘</span>
+    <span class="pr-particle">✨</span>
+    <span class="pr-particle">🌙</span>
+  </div>
+
+  <main class="pr-screen">
+
+    <!-- ── 1. Header ── -->
+    <header class="pr-header">
+      <div class="pr-header__room-pill">🔐 Private Room</div>
+      <h1 class="pr-header__names">Jake + Kelly</h1>
+      <p class="pr-header__day">Private Room · Day 1 of 7</p>
+      <p class="pr-header__timer">⏳ 7 days to exchange contacts or take it somewhere real</p>
+    </header>
+
+    <!-- ── 2. Avatar pair ── -->
+    <div class="pr-pair" aria-label="Jake and Kelly connection">
+      <div class="pr-pair__person">
+        <div class="pr-pair__avatar pr-pair__avatar--jake">
+          <img
+            src="../loverbyte-profile-own-jake-sender/jake_whitemaleheadshot.png"
+            alt="Jake"
+            onerror="this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.parentElement.style.fontSize='28px';this.parentElement.textContent='J';this.remove();"
+          />
+        </div>
+        <span class="pr-pair__name">Jake</span>
+      </div>
+
+      <div class="pr-pair__connector" aria-hidden="true">
+        <div class="pr-pair__line"></div>
+        <span class="pr-pair__heart">💘</span>
+        <div class="pr-pair__line" style="background:linear-gradient(to top,rgba(79,102,255,.4),transparent)"></div>
+      </div>
+
+      <div class="pr-pair__person">
+        <div class="pr-pair__avatar pr-pair__avatar--kelly">
+          <img
+            src="../loverbyte-video-kelly-own-open-to-crushes/profile/dating-card-v2/Headshot.png"
+            alt="Kelly"
+            onerror="this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.parentElement.style.fontSize='28px';this.parentElement.textContent='K';this.remove();"
+          />
+        </div>
+        <span class="pr-pair__name">Kelly</span>
+      </div>
+    </div>
+
+    <!-- ── 3. Luna card ── -->
+    <div class="pr-card pr-card--glow-teal pr-luna" role="note">
+      <div class="pr-luna__avatar">
+        <img src="../loverbyte-profile-public-luna/Asset/luna-thinking.png" alt="Luna" />
+      </div>
+      <div>
+        <p class="pr-luna__label">Luna says</p>
+        <p class="pr-luna__text">
+          "Welcome to the private room, lovers. You passed the vibe check.
+          Now keep it cute, keep it honest, and please don't turn this into another dry DM." 😘
+        </p>
+      </div>
+    </div>
+
+    <!-- ── 4. Clock My Tea snapshot ── -->
+    <div class="pr-card pr-card--glow-pink pr-cmt">
+      <div class="pr-cmt__header">
+        <span class="pr-cmt__title">Clock My Tea Snapshot</span>
+        <span class="pr-cmt__badge">✅ Compatibility unlocked</span>
+      </div>
+      <div class="pr-cmt__score-row">
+        <span class="pr-cmt__label">Messy But Promising</span>
+        <span class="pr-cmt__pct">74%</span>
+      </div>
+      <div class="pr-cmt__bar"><div class="pr-cmt__bar-fill"></div></div>
+      <p class="pr-cmt__copy">
+        You've got chemistry, curiosity, and just enough chaos to keep Luna watching.
+      </p>
+    </div>
+
+    <!-- ── 5. Chat preview ── -->
+    <div class="pr-card pr-chat">
+      <div class="pr-chat__topbar">
+        <span class="pr-chat__title">💬 Private Chat</span>
+        <span class="pr-chat__privacy">🔐 End-to-end private</span>
+      </div>
+
+      <!-- blurred -->
+      <div class="pr-bubble pr-bubble--left pr-bubble--blurred">
+        <div class="pr-bubble__av">
+          <img src="../loverbyte-video-kelly-own-open-to-crushes/profile/dating-card-v2/Headshot.png" alt="" />
+        </div>
+        <div class="pr-bubble__body">
+          <div class="pr-bubble__text">This message is blurred for privacy.</div>
+          <span class="pr-bubble__caption">Message blurred for privacy</span>
+        </div>
+      </div>
+
+      <!-- Jake visible -->
+      <div class="pr-bubble pr-bubble--right">
+        <div class="pr-bubble__av">
+          <img src="../loverbyte-profile-own-jake-sender/jake_whitemaleheadshot.png" alt="" />
+        </div>
+        <div class="pr-bubble__body">
+          <span class="pr-bubble__name">Jake</span>
+          <div class="pr-bubble__text">So… dog park date first or are we pretending we're subtle?</div>
+        </div>
+      </div>
+
+      <!-- blurred -->
+      <div class="pr-bubble pr-bubble--left pr-bubble--blurred">
+        <div class="pr-bubble__av">
+          <img src="../loverbyte-video-kelly-own-open-to-crushes/profile/dating-card-v2/Headshot.png" alt="" />
+        </div>
+        <div class="pr-bubble__body">
+          <div class="pr-bubble__text">This is a private reply.</div>
+          <span class="pr-bubble__caption">Private reply hidden</span>
+        </div>
+      </div>
+
+      <!-- Kelly visible -->
+      <div class="pr-bubble pr-bubble--left">
+        <div class="pr-bubble__av">
+          <img src="../loverbyte-video-kelly-own-open-to-crushes/profile/dating-card-v2/Headshot.png" alt="" />
+        </div>
+        <div class="pr-bubble__body">
+          <span class="pr-bubble__name">Kelly</span>
+          <div class="pr-bubble__text">Subtle left the room when your dog told you to send the Crush. 🐶</div>
+        </div>
+      </div>
+
+      <!-- Luna system note -->
+      <div class="pr-chat__luna-note" aria-hidden="true">
+        <img src="../loverbyte-profile-public-luna/Asset/luna-thinking.png" alt="" />
+        Luna is minding her business. Mostly.
+      </div>
+
+    </div>
+
+    <!-- ── 6. Composer ── -->
+    <div class="pr-composer" data-composer role="button" tabindex="0" aria-label="Message composer (demo only)">
+      <input class="pr-composer__input" type="text" placeholder="Type your message…" readonly tabindex="-1" />
+      <button class="pr-composer__send" type="button" aria-label="Send" tabindex="-1">💘</button>
+    </div>
+    <p class="pr-composer__note">Private room preview · messaging UI for demo only</p>
+
+  </main>
+
+  <div class="pr-toast" data-toast role="status" aria-live="polite"></div>
+
+  <script src="./private-room.js"></script>
+</body>
+</html>
