@@ -142,38 +142,7 @@
   };
   const profilePostsStorageKey = 'lb_profile_posts';
   const savedItemsStorageKey = 'lb_saved_items_v1';
-  const seededProfilePosts = [
-    {
-      id: 'seed-post-1',
-      handle: '@coco',
-      text: 'Soft launch energy is cute, but consistency is sexier.',
-      labels: ['Hot Take'],
-      images: [],
-      reactions: [
-        { id: 'byte_red_flag', count: 8 },
-        { id: 'standard_laughing', count: 12 },
-        { id: 'pop_teacup_gun_unbothered', count: 4 },
-        { id: 'byte_delusional', count: 6 },
-      ],
-      actions: { react: 0, reply: 0, save: 0 },
-      signals: { tip: 3, poke: 7, crush: 4 },
-      createdAt: Date.now() - 43 * 60 * 1000,
-    },
-    {
-      id: 'seed-post-2',
-      handle: '@coco',
-      text: 'If they wanted to, they would. If they can not, ask better questions.',
-      labels: ['AITA?'],
-      images: [],
-      reactions: [
-        { id: 'byte_receipts', count: 5 },
-        { id: 'byte_watching', count: 4 },
-      ],
-      actions: { react: 0, reply: 0, save: 0 },
-      signals: { tip: 2, poke: 4, crush: 1 },
-      createdAt: Date.now() - 3 * 60 * 60 * 1000,
-    },
-  ];
+  const seededProfilePosts = [];
   const mockProfileReplies = [
     {
       replyId: 'reply_1',
