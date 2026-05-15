@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Approach Energy</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <link rel="stylesheet" href="./signup-step2.css" />
+  </head>
+  <body>
+    <main class="lb-signup2" aria-label="Approach energy screen">
+      <div class="lb-signup2__stars" aria-hidden="true"></div>
+      <div class="lb-signup2__glow lb-signup2__glow--pink" aria-hidden="true"></div>
+      <div class="lb-signup2__glow lb-signup2__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-signup2__card" data-approach-card>
+        <p class="lb-signup2__kicker">APPROACH ENERGY</p>
+        <h1 class="lb-signup2__title">Are you open to being approached here?</h1>
+        <p class="lb-signup2__copy">This helps people know whether to flirt, chill, or simply enjoy your takes respectfully.</p>
+
+        <div class="lb-signup2__options" role="radiogroup" aria-label="Approach openness">
+          <button class="lb-signup2__option tone-active" type="button" role="radio" aria-checked="false" data-value="Yes, actively" data-open="true" data-icon="💘">Yes, actively</button>
+          <button class="lb-signup2__option tone-casual" type="button" role="radio" aria-checked="false" data-value="Yes, casually" data-open="true" data-icon="😌">Yes, casually</button>
+          <button class="lb-signup2__option tone-maybe" type="button" role="radio" aria-checked="false" data-value="Maybe, if the vibe is right" data-open="true" data-icon="👀">Maybe, if the vibe is right</button>
+          <button class="lb-signup2__option tone-social" type="button" role="radio" aria-checked="false" data-value="No, I’m just here socially" data-open="false" data-icon="☕">No, I’m just here socially</button>
+          <button class="lb-signup2__option tone-partnered" type="button" role="radio" aria-checked="false" data-value="No, I’m partnered / unavailable" data-open="false" data-icon="🔒">No, I’m partnered / unavailable</button>
+        </div>
+
+        <p class="lb-signup2__micro">Your answer helps set the vibe, not lock you in forever.</p>
+
+        <div class="lb-signup2__actions">
+          <button class="lb-signup2__continue" type="button" data-continue disabled>
+            <span class="lb-signup2__continueText">Continue</span>
+            <span class="lb-signup2__arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <p class="lb-signup2__progress">Room setup · 4/8</p>
+      </section>
+    </main>
+
+    <script src="./signup-step2.js"></script>
+  </body>
+</html>

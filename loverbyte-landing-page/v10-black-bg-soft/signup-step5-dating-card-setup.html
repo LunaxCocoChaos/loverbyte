@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Dating Card</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <link rel="stylesheet" href="./signup-step5-dating-card-setup.css" />
+  </head>
+  <body>
+    <main class="lb-signup5" aria-label="Dating card onboarding screen">
+      <div class="lb-signup5__stars" aria-hidden="true"></div>
+      <div class="lb-signup5__glow lb-signup5__glow--pink" aria-hidden="true"></div>
+      <div class="lb-signup5__glow lb-signup5__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-signup5__card" data-dating-card-builder>
+        <div class="lb-signup5__progressTop" aria-label="Onboarding progress">
+          <p class="lb-signup5__progressLabel">Room setup · 7/8</p>
+          <div class="lb-signup5__progressBar" aria-hidden="true">
+            <span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span></span>
+          </div>
+        </div>
+
+        <p class="lb-signup5__kicker">DATING CARD</p>
+        <h1 class="lb-signup5__title">Make it easier for the right people to find you</h1>
+        <p class="lb-signup5__copy">Your Dating Card gets pinned to your profile so people know you’re open before they send a Crush.</p>
+        <p class="lb-signup5__subcopy">Keep it light. You can edit or unpin it later.</p>
+
+        <div class="lb-signup5__layout">
+          <aside class="lb-signup5__previewWrap" aria-label="Dating card preview">
+            <p class="lb-signup5__sectionTitle">Live card preview</p>
+            <p class="lb-signup5__helper">This is the lightweight card people see before sending a Crush.</p>
+            <article class="lb-cardPreview" data-preview>
+              <p class="lb-cardPreview__status">Open to Crushes</p>
+              <div class="lb-cardPreview__photo" data-preview-photo>
+                <span>Main photo</span>
+              </div>
+              <div class="lb-cardPreview__body">
+                <p class="lb-cardPreview__name" data-preview-name>You</p>
+                <p class="lb-cardPreview__loc" data-preview-location>Location pending</p>
+                <div class="lb-cardPreview__chips" data-preview-lookingfor></div>
+                <p class="lb-cardPreview__prompt" data-preview-prompt>Pick one line for your card</p>
+              </div>
+            </article>
+            <p class="lb-signup5__previewNote">Pinned automatically after setup. You can unpin later in profile settings.</p>
+          </aside>
+
+          <section class="lb-signup5__builder">
+            <div class="lb-signup5__group">
+              <p class="lb-signup5__sectionTitle">Pick your Crush-card photos</p>
+              <p class="lb-signup5__helper">Add 2–3 photos max. A clear face shot is ideal, and a full-body or fit-check photo helps too. Mystery is cute. Blurry pixels are not.</p>
+
+              <div class="lb-signup5__photos" data-photo-grid>
+                <article class="lb-photoSlot lb-photoSlot--main" data-slot="0">
+                  <p class="lb-photoSlot__label">Main photo</p>
+                  <button type="button" class="lb-photoSlot__button" data-pick-photo="0">
+                    <img data-photo-preview="0" alt="Main photo" />
+                    <span class="lb-photoSlot__empty">＋</span>
+                    <span class="lb-photoSlot__hint">Add photo</span>
+                  </button>
+                  <div class="lb-photoSlot__actions">
+                    <button type="button" data-replace-photo="0">Replace</button>
+                    <button type="button" data-remove-photo="0">Remove</button>
+                  </div>
+                </article>
+
+                <article class="lb-photoSlot" data-slot="1">
+                  <p class="lb-photoSlot__label">Add another</p>
+                  <button type="button" class="lb-photoSlot__button" data-pick-photo="1">
+                    <img data-photo-preview="1" alt="Second photo" />
+                    <span class="lb-photoSlot__empty">＋</span>
+                    <span class="lb-photoSlot__hint">Add photo</span>
+                  </button>
+                  <div class="lb-photoSlot__actions">
+                    <button type="button" data-replace-photo="1">Replace</button>
+                    <button type="button" data-remove-photo="1">Remove</button>
+                  </div>
+                </article>
+
+                <article class="lb-photoSlot" data-slot="2">
+                  <p class="lb-photoSlot__label">Optional</p>
+                  <button type="button" class="lb-photoSlot__button" data-pick-photo="2">
+                    <img data-photo-preview="2" alt="Third photo" />
+                    <span class="lb-photoSlot__empty">＋</span>
+                    <span class="lb-photoSlot__hint">Add photo</span>
+                  </button>
+                  <div class="lb-photoSlot__actions">
+                    <button type="button" data-replace-photo="2">Replace</button>
+                    <button type="button" data-remove-photo="2">Remove</button>
+                  </div>
+                </article>
+              </div>
+              <p class="lb-signup5__hint" data-photo-hint>Add at least one photo.</p>
+              <span class="lb-signup5__error" data-photo-error></span>
+              <input type="file" accept="image/*" data-photo-input hidden />
+            </div>
+
+            <div class="lb-signup5__group">
+              <p class="lb-signup5__sectionTitle">How do you identify?</p>
+              <p class="lb-signup5__helper">This helps your Dating Card show up with the right context.</p>
+              <div class="lb-chipGrid" data-gender-identity>
+                <button type="button" data-value="Woman">Woman</button>
+                <button type="button" data-value="Man">Man</button>
+                <button type="button" data-value="Nonbinary">Nonbinary</button>
+                <button type="button" data-value="Trans woman">Trans woman</button>
+                <button type="button" data-value="Trans man">Trans man</button>
+                <button type="button" data-value="Genderqueer / gender-fluid">Genderqueer / gender-fluid</button>
+                <button type="button" data-value="Self-describe">Self-describe</button>
+                <button type="button" data-value="Prefer not to say">Prefer not to say</button>
+              </div>
+              <label class="lb-signup5__inlineField is-hidden" data-gender-custom-wrap>
+                <span>Tell us your gender identity</span>
+                <input type="text" maxlength="40" data-gender-custom placeholder="Type your identity" />
+              </label>
+              <span class="lb-signup5__error" data-gender-error></span>
+            </div>
+
+            <div class="lb-signup5__group">
+              <p class="lb-signup5__sectionTitle">What kind of connection are you looking for?</p>
+              <div class="lb-chipGrid" data-connection-intent>
+                <button type="button" data-value="Life partner">Life partner</button>
+                <button type="button" data-value="Long-term relationship">Long-term relationship</button>
+                <button type="button" data-value="Long-term, open to short">Long-term, open to short</button>
+                <button type="button" data-value="Short-term, open to long">Short-term, open to long</button>
+                <button type="button" data-value="Short-term dating">Short-term dating</button>
+                <button type="button" data-value="New friends">New friends</button>
+                <button type="button" data-value="Still figuring it out">Still figuring it out</button>
+              </div>
+              <label class="lb-signup5__toggle" for="openLongDistance">
+                <input id="openLongDistance" type="checkbox" data-long-distance />
+                <span class="lb-signup5__toggleText">Open to long-distance</span>
+              </label>
+              <p class="lb-signup5__toggleHelper">For the brave, busy, or passport-ready.</p>
+              <p class="lb-signup5__hint">Choose the clearest lane for now. You can update it later.</p>
+              <span class="lb-signup5__error" data-intent-error></span>
+            </div>
+
+            <div class="lb-signup5__group">
+              <p class="lb-signup5__sectionTitle">Who can send you romantic energy?</p>
+              <div class="lb-chipGrid" data-open-to>
+                <button type="button" data-value="Women">Women</button>
+                <button type="button" data-value="Men">Men</button>
+                <button type="button" data-value="Nonbinary people">Nonbinary people</button>
+                <button type="button" data-value="Trans women">Trans women</button>
+                <button type="button" data-value="Trans men">Trans men</button>
+                <button type="button" data-value="Everyone">Everyone</button>
+                <button type="button" data-value="Prefer to specify later">Prefer to specify later</button>
+              </div>
+              <p class="lb-signup5__hint" data-open-note></p>
+              <span class="lb-signup5__error" data-opento-error></span>
+            </div>
+
+            <div class="lb-signup5__group lb-signup5__location">
+              <p class="lb-signup5__sectionTitle">Where should people know you’re based?</p>
+              <p class="lb-signup5__helper">We don’t need your exact location. Just enough so people know the general vibe.</p>
+              <div class="lb-signup5__locationGrid">
+                <label>
+                  <span>Country</span>
+                  <select data-country>
+                    <option value="">Select country</option>
+                    <option value="United States">United States</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Other / Not listed yet">Other / Not listed yet</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-region-label>State</span>
+                  <input type="text" data-region placeholder="Select state" />
+                </label>
+                <label>
+                  <span>City (optional)</span>
+                  <input type="text" data-city placeholder="City" />
+                </label>
+              </div>
+              <span class="lb-signup5__error" data-country-error></span>
+              <span class="lb-signup5__error" data-region-error></span>
+            </div>
+
+            <div class="lb-signup5__group">
+              <p class="lb-signup5__sectionTitle">Pick one line for your card</p>
+              <label class="lb-signup5__promptPick">
+                <span>Prompt</span>
+                <select data-prompt-select>
+                  <option value="">Choose a prompt</option>
+                  <option value="My green flag is…">My green flag is…</option>
+                  <option value="Dating me feels like…">Dating me feels like…</option>
+                  <option value="I’m attracted to people who…">I’m attracted to people who…</option>
+                  <option value="My love language might be…">My love language might be…</option>
+                  <option value="My toxic trait is… but I’m working on it.">My toxic trait is… but I’m working on it.</option>
+                </select>
+              </label>
+              <label class="lb-signup5__promptAnswer">
+                <span>Answer</span>
+                <textarea maxlength="120" rows="3" data-prompt-answer placeholder="Keep it short, sharp, and real."></textarea>
+              </label>
+              <p class="lb-signup5__count" data-prompt-count>0/120</p>
+              <span class="lb-signup5__error" data-prompt-error></span>
+            </div>
+          </section>
+        </div>
+
+        <div class="lb-signup5__actionsBar">
+          <div class="lb-signup5__actions">
+            <button class="lb-signup5__pin" type="button" data-pin disabled>
+              <span class="lb-signup5__pinText">Continue</span>
+              <span class="lb-signup5__arrow" aria-hidden="true">→</span>
+            </button>
+            <button class="lb-signup5__back" type="button" data-back-openness>Back to openness settings</button>
+          </div>
+          <p class="lb-signup5__micro">Your Dating Card pins automatically when complete. You can edit or unpin it later.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./signup-step5-dating-card-setup.js"></script>
+  </body>
+</html>

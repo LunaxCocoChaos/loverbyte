@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Feed</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <link rel="stylesheet" href="./feed.css" />
+  </head>
+  <body>
+    <main class="lb-feed-page" aria-label="Loverbyte feed screen">
+      <div class="lb-feed-page__stars" aria-hidden="true"></div>
+      <div class="lb-feed-page__glow lb-feed-page__glow--pink" aria-hidden="true"></div>
+      <div class="lb-feed-page__glow lb-feed-page__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-feed-shell">
+        <header class="lb-feed-topbar" aria-label="Feed top app bar">
+          <button class="lb-feed-topbar__iconBtn" type="button" aria-label="Open menu">
+            <span class="lb-icon-menu" aria-hidden="true"></span>
+          </button>
+
+          <a class="lb-feed-topbar__brand" href="./feed.html" aria-label="Go to feed">
+            <img src="./assets/loverbyte-wordmark-nav.png" alt="Loverbyte" />
+          </a>
+
+          <button class="lb-feed-topbar__avatarBtn" type="button" aria-label="Open profile">
+            <span class="lb-feed-topbar__avatarCore" aria-hidden="true"></span>
+          </button>
+        </header>
+
+        <section class="lb-vibe-card" aria-label="Daily theme card">
+          <p class="lb-vibe-card__kicker">
+            <span class="lb-vibe-card__liveDot" aria-hidden="true"></span>
+            TODAY’S VIBE
+          </p>
+          <h1 class="lb-vibe-card__title">Monday Money Moves</h1>
+          <p class="lb-vibe-card__copy">Talk ambition, standards, money, dating, and the bag you’re building.</p>
+        </section>
+
+        <section class="lb-week-tabs" aria-label="Week day tabs">
+          <div class="lb-week-tabs__scroller" role="group" aria-label="Choose feed day">
+            <button class="lb-week-tabs__tab is-active" type="button" aria-pressed="true" data-day="Mon">Mon</button>
+            <button class="lb-week-tabs__tab" type="button" aria-pressed="false" data-day="Tue">Tue</button>
+            <button class="lb-week-tabs__tab" type="button" aria-pressed="false" data-day="Wed">Wed</button>
+            <button class="lb-week-tabs__tab" type="button" aria-pressed="false" data-day="Thu">Thu</button>
+            <button class="lb-week-tabs__tab" type="button" aria-pressed="false" data-day="Fri">Fri</button>
+            <button class="lb-week-tabs__tab" type="button" aria-pressed="false" data-day="Sat">Sat</button>
+            <button class="lb-week-tabs__tab" type="button" aria-pressed="false" data-day="Sun">Sun</button>
+          </div>
+        </section>
+
+        <section class="lb-feed-placeholder" aria-label="Feed content placeholder">
+          <p>Feed starts here.</p>
+        </section>
+      </section>
+    </main>
+
+    <script src="./feed.js"></script>
+  </body>
+</html>

@@ -1,0 +1,521 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: #0b0b0f;
+  color: #f7f4ff;
+  font-family: var(--font-ui);
+}
+
+.lb-signup4 {
+  min-height: 100vh;
+  padding: clamp(24px, 4vw, 46px) 14px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.lb-signup4__stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 12% 24%, rgba(255,255,255,0.42), transparent),
+    radial-gradient(1.2px 1.2px at 76% 15%, rgba(255,255,255,0.31), transparent),
+    radial-gradient(1px 1px at 84% 76%, rgba(255,255,255,0.24), transparent),
+    radial-gradient(1px 1px at 26% 78%, rgba(255,255,255,0.26), transparent);
+  opacity: 0.44;
+  pointer-events: none;
+}
+
+.lb-signup4__glow {
+  position: absolute;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+.lb-signup4__glow--pink {
+  width: min(62vw, 500px);
+  height: min(44vw, 340px);
+  left: 13%;
+  top: 12%;
+  background: radial-gradient(circle, rgba(255,79,191,0.14), transparent 74%);
+}
+
+.lb-signup4__glow--blue {
+  width: min(56vw, 450px);
+  height: min(42vw, 320px);
+  right: 10%;
+  bottom: 14%;
+  background: radial-gradient(circle, rgba(79,102,255,0.13), transparent 74%);
+}
+
+.lb-signup4__card {
+  width: min(860px, 100%);
+  max-width: 860px;
+  border-radius: 28px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(16,19,30,0.94), rgba(16,19,30,0.94)) padding-box,
+    linear-gradient(112deg, rgba(255,79,191,0.34), rgba(79,102,255,0.30) 55%, rgba(0,224,211,0.30)) border-box,
+    linear-gradient(155deg, rgba(20,24,39,0.88), rgba(11,13,22,0.94));
+  box-shadow:
+    0 22px 56px rgba(4,8,16,0.58),
+    0 0 26px rgba(79,102,255,0.14),
+    0 0 20px rgba(255,79,191,0.12),
+    inset 0 0 0 1px rgba(255,255,255,0.03);
+  backdrop-filter: blur(10px);
+  padding: clamp(32px, 4.8vw, 52px) clamp(18px, 4vw, 40px);
+  position: relative;
+  text-align: center;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: lbProfileTrailerIn .6s cubic-bezier(.2,.7,.2,1) forwards;
+}
+
+.lb-signup4__card::before {
+  content: "";
+  position: absolute;
+  inset: 11% 18% auto;
+  height: 120px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(58% 100% at 50% 50%, rgba(255,79,191,0.12), transparent 78%),
+    radial-gradient(58% 100% at 50% 50%, rgba(79,102,255,0.12), transparent 78%);
+}
+
+.lb-signup4__card > * { position: relative; z-index: 1; }
+
+.lb-signup4__progressTop {
+  margin-bottom: 10px;
+}
+
+.lb-signup4__progressLabel {
+  margin: 0;
+  color: rgba(247,244,255,0.58);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.lb-signup4__progressBar {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.lb-signup4__progressBar span {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+}
+
+.lb-signup4__progressBar span.is-on {
+  background: linear-gradient(90deg, rgba(255,79,191,0.92), rgba(79,102,255,0.9));
+  box-shadow: 0 0 10px rgba(79,102,255,0.28);
+}
+
+.lb-signup4__kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  font-weight: 600;
+  color: #00E0D3;
+  opacity: 0.95;
+}
+
+.lb-signup4__title {
+  margin: clamp(12px, 2.6vw, 18px) auto 0;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4.6vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: rgba(247,244,255,0.99);
+}
+
+.lb-signup4__copy {
+  margin: clamp(14px, 2.8vw, 18px) auto 0;
+  width: min(560px, 100%);
+  color: rgba(247,244,255,0.84);
+  font-size: clamp(15px, 1.7vw, 17px);
+  line-height: 1.54;
+}
+
+.lb-signup4__grid {
+  margin-top: clamp(24px, 3.4vw, 30px);
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 18px;
+  text-align: left;
+}
+
+.lb-signup4__photoZone,
+.lb-signup4__fieldsZone {
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 20px;
+  background: rgba(13,16,26,0.52);
+  padding: 16px;
+}
+
+.lb-signup4__fieldsZone {
+  display: grid;
+  gap: 14px;
+}
+
+.lb-signup4__label {
+  display: block;
+  color: rgba(247,244,255,0.96);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.lb-signup4__helper {
+  display: block;
+  margin-top: 4px;
+  color: rgba(247,244,255,0.62);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.lb-signup4__lore {
+  margin: 8px 0 0;
+  color: rgba(247,244,255,0.5);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.lb-signup4__avatarWrap {
+  margin-top: 12px;
+  width: 138px;
+  height: 138px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(9,12,20,0.74);
+  box-shadow:
+    0 0 20px rgba(79,102,255,0.16),
+    0 0 16px rgba(255,79,191,0.14);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  animation: lbAvatarPulse 2.8s ease-in-out infinite;
+}
+
+.lb-signup4__avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.lb-signup4__avatarWrap.has-photo .lb-signup4__avatar {
+  display: block;
+}
+.lb-signup4__avatarWrap.has-default-avatar .lb-signup4__avatar {
+  display: block;
+}
+
+.lb-signup4__avatarFallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background:
+    radial-gradient(48% 48% at 50% 34%, rgba(79,102,255,0.18), transparent 78%),
+    radial-gradient(58% 58% at 50% 72%, rgba(255,79,191,0.16), transparent 76%);
+}
+
+.lb-signup4__avatarGlyph {
+  width: 58px;
+  height: 58px;
+  background: linear-gradient(145deg, rgba(255,178,230,0.94), rgba(143,255,245,0.92));
+  -webkit-mask: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.8'><path stroke-linecap='round' stroke-linejoin='round' d='M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z'/><path stroke-linecap='round' stroke-linejoin='round' d='M4.5 20.118a7.5 7.5 0 0115 0A17.93 17.93 0 0112 21.75a17.93 17.93 0 01-7.5-1.632z'/></svg>\") no-repeat center / contain;
+  mask: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='1.8'><path stroke-linecap='round' stroke-linejoin='round' d='M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z'/><path stroke-linecap='round' stroke-linejoin='round' d='M4.5 20.118a7.5 7.5 0 0115 0A17.93 17.93 0 0112 21.75a17.93 17.93 0 01-7.5-1.632z'/></svg>\") no-repeat center / contain;
+  filter: drop-shadow(0 0 10px rgba(79,102,255,0.28));
+}
+
+.lb-signup4__avatarFallback::after {
+  content: \"♥\";
+  position: absolute;
+  right: 38px;
+  bottom: 34px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(14,18,29,0.86);
+  color: rgba(255,79,191,0.9);
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 10px rgba(255,79,191,0.22);
+}
+
+.lb-signup4__avatarWrap.has-photo .lb-signup4__avatarFallback {
+  display: none;
+}
+.lb-signup4__avatarWrap.has-default-avatar .lb-signup4__avatarFallback {
+  display: none;
+}
+
+.lb-signup4__photoActions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.lb-signup4__photoBtn {
+  min-height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,224,211,0.42);
+  background: rgba(12,20,30,0.82);
+  color: #f7f4ff;
+  padding: 8px 14px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,224,211,0.18);
+}
+
+.lb-signup4__photoBtn:hover {
+  border-color: rgba(0,224,211,0.66);
+  box-shadow: 0 0 14px rgba(0,224,211,0.28), 0 0 10px rgba(79,102,255,0.22);
+}
+
+.lb-signup4__photoLink {
+  border: 0;
+  background: transparent;
+  color: rgba(247,244,255,0.7);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.lb-signup4__photoLink:hover { color: rgba(247,244,255,0.92); }
+.lb-signup4__photoLink.is-hidden { display: none; }
+
+.lb-signup4__field { display: grid; gap: 6px; }
+
+.lb-signup4__field input,
+.lb-signup4__field textarea {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  background: rgba(10,13,22,0.74);
+  color: rgba(247,244,255,0.96);
+  font-size: 14px;
+  font-family: var(--font-ui);
+  padding: 11px 12px;
+  outline: none;
+}
+
+.lb-signup4__field textarea {
+  resize: vertical;
+  min-height: 86px;
+  max-height: 160px;
+}
+
+.lb-signup4__field input::placeholder,
+.lb-signup4__field textarea::placeholder {
+  color: rgba(247,244,255,0.44);
+}
+
+.lb-signup4__field input[readonly] {
+  background: rgba(10,13,22,0.56);
+  border-color: rgba(79,102,255,0.26);
+  color: rgba(247,244,255,0.82);
+  cursor: default;
+}
+
+.lb-signup4__field input:focus,
+.lb-signup4__field textarea:focus {
+  border-color: rgba(255,79,191,0.58);
+  box-shadow:
+    0 0 0 2px rgba(255,79,191,0.14),
+    0 0 0 4px rgba(0,224,211,0.1);
+}
+
+.lb-signup4__count {
+  justify-self: end;
+  color: rgba(247,244,255,0.56);
+  font-size: 12px;
+}
+
+.lb-signup4__count.is-max {
+  color: rgba(255,178,230,0.95);
+}
+
+.lb-signup4__error {
+  min-height: 16px;
+  color: rgba(255,178,230,0.95);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.lb-signup4__micro {
+  margin: 14px 0 0;
+  color: rgba(247,244,255,0.58);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+}
+
+.lb-signup4__actions {
+  margin-top: clamp(24px, 3.6vw, 30px);
+  display: flex;
+  justify-content: center;
+}
+
+.lb-signup4__continue {
+  width: min(420px, 100%);
+  min-height: 56px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 999px;
+  padding: 13px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(18,21,34,0.88);
+  color: rgba(247,244,255,0.88);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(10,12,22,0.42);
+  position: relative;
+  transition: filter .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+
+.lb-signup4__continueText,
+.lb-signup4__arrow {
+  position: relative;
+  z-index: 1;
+}
+
+.lb-signup4__arrow {
+  display: inline-block;
+  transform: translateX(0);
+  transition: transform .2s ease;
+}
+
+.lb-signup4__continue::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 1px solid rgba(79,102,255,0.34);
+  opacity: 0;
+  pointer-events: none;
+  animation: none;
+}
+
+.lb-signup4__continue:disabled {
+  opacity: .68;
+  cursor: not-allowed;
+  filter: none;
+  box-shadow: 0 8px 18px rgba(10,12,22,0.38);
+  border-color: rgba(255,255,255,0.12);
+  background: linear-gradient(150deg, rgba(24,27,39,0.86), rgba(14,17,27,0.9));
+  color: rgba(247,244,255,0.7);
+}
+
+.lb-signup4__continue:disabled::before {
+  opacity: .2;
+  animation: none;
+}
+
+.lb-signup4__continue:not(:disabled) {
+  background: linear-gradient(105deg, #FF4FBF 0%, #D95CE0 42%, #4F66FF 100%);
+  color: #ffffff;
+  box-shadow:
+    0 10px 24px rgba(255,79,191,0.28),
+    0 10px 26px rgba(79,102,255,0.24);
+}
+
+.lb-signup4__continue:not(:disabled)::before {
+  opacity: .75;
+  animation: lbProfileBtnPulse 3.2s ease-in-out infinite;
+}
+
+.lb-signup4__continue:not(:disabled):hover {
+  filter: brightness(1.06);
+  box-shadow:
+    0 12px 28px rgba(255,79,191,0.32),
+    0 12px 30px rgba(79,102,255,0.30);
+}
+
+.lb-signup4__continue:not(:disabled):hover .lb-signup4__arrow {
+  transform: translateX(4px);
+}
+
+@keyframes lbProfileTrailerIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lbProfileBtnPulse {
+  0%, 100% { opacity: .52; }
+  50% { opacity: .95; }
+}
+
+@keyframes lbAvatarPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(79,102,255,0.16), 0 0 16px rgba(255,79,191,0.14); }
+  50% { box-shadow: 0 0 24px rgba(79,102,255,0.2), 0 0 20px rgba(255,79,191,0.18); }
+}
+
+@media (max-width: 880px) {
+  .lb-signup4__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lb-signup4__photoZone {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .lb-signup4__label,
+  .lb-signup4__helper {
+    justify-self: start;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+@media (max-width: 760px) {
+  .lb-signup4 {
+    padding: 18px 12px;
+  }
+
+  .lb-signup4__card {
+    border-radius: 20px;
+    padding: 30px 16px;
+  }
+
+  .lb-signup4__continue {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lb-signup4__card,
+  .lb-signup4__continue::before,
+  .lb-signup4__avatarWrap {
+    animation: none !important;
+  }
+
+  .lb-signup4__card {
+    opacity: 1;
+    transform: none;
+  }
+}

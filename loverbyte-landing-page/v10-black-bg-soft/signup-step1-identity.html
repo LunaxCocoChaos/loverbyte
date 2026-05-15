@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Identity Check</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <link rel="stylesheet" href="./signup-step1-identity.css" />
+  </head>
+  <body>
+    <main class="lb-signup-id" aria-label="Identity setup screen">
+      <div class="lb-signup-id__stars" aria-hidden="true"></div>
+      <div class="lb-signup-id__glow lb-signup-id__glow--pink" aria-hidden="true"></div>
+      <div class="lb-signup-id__glow lb-signup-id__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-signup-id__card" data-identity-card>
+        <p class="lb-signup-id__kicker">IDENTITY CHECK</p>
+        <h1 class="lb-signup-id__title">Claim your name in the room</h1>
+        <p class="lb-signup-id__copy">Set your display name, lock your username, and confirm age so people know who just pulled up.</p>
+
+        <label class="lb-signup-id__field" for="displayName">
+          <span class="lb-signup-id__label">Display name</span>
+          <input id="displayName" name="displayName" type="text" maxlength="40" placeholder="How you want people to see your name" data-display-name required />
+          <span class="lb-signup-id__error" data-display-error></span>
+        </label>
+
+        <label class="lb-signup-id__field" for="username">
+          <span class="lb-signup-id__label">Username</span>
+          <span class="lb-signup-id__helper">3–20 characters · letters, numbers, or underscore</span>
+          <div class="lb-signup-id__usernameRow">
+            <span class="lb-signup-id__at">@</span>
+            <input id="username" name="username" type="text" maxlength="20" autocapitalize="none" autocomplete="off" spellcheck="false" placeholder="pickyourname" data-username required />
+          </div>
+          <span class="lb-signup-id__availability" data-username-status>Choose a username to check availability.</span>
+          <span class="lb-signup-id__error" data-username-error></span>
+        </label>
+
+        <div class="lb-signup-id__suggestWrap" data-suggestions-wrap hidden>
+          <p class="lb-signup-id__suggestLabel">Try one of these:</p>
+          <div class="lb-signup-id__suggestions" data-suggestions></div>
+        </div>
+
+        <label class="lb-signup-id__field" for="birthdate">
+          <span class="lb-signup-id__label">Birthdate</span>
+          <span class="lb-signup-id__helper">You must be at least 18 years old.</span>
+          <input id="birthdate" name="birthdate" type="date" data-birthdate required />
+          <span class="lb-signup-id__error" data-birthdate-error></span>
+        </label>
+
+        <div class="lb-signup-id__actions">
+          <button class="lb-signup-id__continue" type="button" data-continue disabled>
+            <span>Continue</span>
+            <span class="lb-signup-id__arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <p class="lb-signup-id__progress">Room setup · 2/8</p>
+      </section>
+    </main>
+
+    <script src="./signup-step1-identity.js"></script>
+  </body>
+</html>

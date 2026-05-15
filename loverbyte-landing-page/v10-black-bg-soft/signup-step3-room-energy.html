@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Room Energy</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <link rel="stylesheet" href="./signup-step3-room-energy.css" />
+  </head>
+  <body>
+    <main class="lb-signup3" aria-label="Room energy screen">
+      <div class="lb-signup3__stars" aria-hidden="true"></div>
+      <div class="lb-signup3__glow lb-signup3__glow--pink" aria-hidden="true"></div>
+      <div class="lb-signup3__glow lb-signup3__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-signup3__card" data-room-energy-card>
+        <p class="lb-signup3__kicker">ROOM ENERGY</p>
+        <h1 class="lb-signup3__title">What brought you here?</h1>
+        <p class="lb-signup3__copy">Pick up to 3. We’ll use this to shape your feed, prompts, and room energy.</p>
+
+        <div class="lb-signup3__meta">
+          <p class="lb-signup3__helper" data-helper>Pick up to 3.</p>
+          <p class="lb-signup3__count" data-count>0/3 selected</p>
+        </div>
+
+        <div class="lb-signup3__options" role="group" aria-label="Room energy intents">
+          <button class="lb-signup3__option" type="button" data-value="Find love" data-icon="💘">Find love</button>
+          <button class="lb-signup3__option" type="button" data-value="Flirt casually" data-icon="😌">Flirt casually</button>
+          <button class="lb-signup3__option" type="button" data-value="Meet interesting people" data-icon="✨">Meet interesting people</button>
+          <button class="lb-signup3__option" type="button" data-value="Talk about relationships" data-icon="💬">Talk about relationships</button>
+          <button class="lb-signup3__option" type="button" data-value="Share dating stories" data-icon="📖">Share dating stories</button>
+          <button class="lb-signup3__option" type="button" data-value="Get dating advice" data-icon="🧭">Get dating advice</button>
+          <button class="lb-signup3__option" type="button" data-value="Heal from heartbreak" data-icon="💗">Heal from heartbreak</button>
+          <button class="lb-signup3__option" type="button" data-value="Learn from other people’s experiences" data-icon="👂">Learn from other people’s experiences</button>
+          <button class="lb-signup3__option" type="button" data-value="Just here for the tea" data-icon="☕">Just here for the tea</button>
+          <button class="lb-signup3__option" type="button" data-value="Build my voice / brand" data-icon="🎙️">Build my voice / brand</button>
+        </div>
+
+        <p class="lb-signup3__micro">You can change this later.</p>
+
+        <div class="lb-signup3__actions">
+          <button class="lb-signup3__continue" type="button" data-continue disabled>
+            <span class="lb-signup3__continueText">Continue</span>
+            <span class="lb-signup3__arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <p class="lb-signup3__progress">Room setup · 5/8</p>
+      </section>
+    </main>
+
+    <script src="./signup-step3-room-energy.js"></script>
+  </body>
+</html>

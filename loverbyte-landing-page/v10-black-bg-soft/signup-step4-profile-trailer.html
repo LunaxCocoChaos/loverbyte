@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Profile Trailer</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <link rel="stylesheet" href="./signup-step4-profile-trailer.css" />
+  </head>
+  <body>
+    <main class="lb-signup4" aria-label="Profile trailer screen">
+      <div class="lb-signup4__stars" aria-hidden="true"></div>
+      <div class="lb-signup4__glow lb-signup4__glow--pink" aria-hidden="true"></div>
+      <div class="lb-signup4__glow lb-signup4__glow--blue" aria-hidden="true"></div>
+
+      <section class="lb-signup4__card" data-profile-card>
+        <div class="lb-signup4__progressTop" aria-label="Onboarding progress">
+          <p class="lb-signup4__progressLabel">Room setup · 6/8</p>
+          <div class="lb-signup4__progressBar" aria-hidden="true">
+            <span class="is-on"></span>
+            <span class="is-on"></span>
+            <span class="is-on"></span>
+            <span class="is-on"></span>
+            <span class="is-on"></span>
+            <span class="is-on"></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <p class="lb-signup4__kicker">PROFILE TRAILER</p>
+        <h1 class="lb-signup4__title">Give people the trailer.</h1>
+        <p class="lb-signup4__copy">Not the documentary. Just enough so the room knows who pulled up.</p>
+
+        <div class="lb-signup4__grid">
+          <section class="lb-signup4__photoZone" aria-label="Profile photo">
+            <p class="lb-signup4__label">Profile photo</p>
+            <p class="lb-signup4__helper">Optional, but the room likes a face.</p>
+            <p class="lb-signup4__lore">No pressure. Just enough lore to not look like a bot.</p>
+
+            <div class="lb-signup4__avatarWrap" data-avatar-wrap>
+              <img class="lb-signup4__avatar" data-avatar alt="Profile preview" />
+              <div class="lb-signup4__avatarFallback" data-avatar-fallback aria-hidden="true">
+                <span class="lb-signup4__avatarGlyph"></span>
+              </div>
+            </div>
+
+            <div class="lb-signup4__photoActions">
+              <button type="button" class="lb-signup4__photoBtn" data-add-photo>Add photo</button>
+              <button type="button" class="lb-signup4__photoLink" data-skip-photo>Skip for now</button>
+              <button type="button" class="lb-signup4__photoLink is-hidden" data-remove-photo>Remove</button>
+            </div>
+
+            <input type="file" accept="image/*" data-photo-input hidden />
+          </section>
+
+          <section class="lb-signup4__fieldsZone" aria-label="Profile basics fields">
+            <label class="lb-signup4__field" for="shortBio">
+              <span class="lb-signup4__label">Your opening line</span>
+              <span class="lb-signup4__helper">One or two lines. Keep a little mystery.</span>
+              <textarea id="shortBio" name="shortBio" maxlength="140" rows="3" placeholder="Pop culture brain, soft heart, strong opinions." data-bio required></textarea>
+              <span class="lb-signup4__count" data-bio-count>0/140</span>
+              <span class="lb-signup4__error" data-bio-error></span>
+            </label>
+
+            <label class="lb-signup4__field" for="ageDisplay">
+              <span class="lb-signup4__label">Age</span>
+              <span class="lb-signup4__helper">Auto-calculated from your birthdate.</span>
+              <input id="ageDisplay" name="ageDisplay" type="text" data-age-display readonly />
+            </label>
+
+            <label class="lb-signup4__field" for="location">
+              <span class="lb-signup4__label">Location</span>
+              <span class="lb-signup4__helper">Optional for now. You can keep it general.</span>
+              <input id="location" name="location" type="text" placeholder="City, state, or just state" data-location />
+            </label>
+          </section>
+        </div>
+
+        <p class="lb-signup4__micro">You can edit this anytime.</p>
+
+        <div class="lb-signup4__actions">
+          <button class="lb-signup4__continue" type="button" data-continue disabled>
+            <span class="lb-signup4__continueText">Continue</span>
+            <span class="lb-signup4__arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+      </section>
+    </main>
+
+    <script src="./signup-step4-profile-trailer.js"></script>
+  </body>
+</html>

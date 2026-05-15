@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Room Check</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <link rel="stylesheet" href="./signup-step1.css" />
+  </head>
+  <body>
+    <main class="lb-signup1" aria-label="Room check screen">
+      <div class="lb-signup1__stars" aria-hidden="true"></div>
+      <div class="lb-signup1__glow lb-signup1__glow--pink" aria-hidden="true"></div>
+      <div class="lb-signup1__glow lb-signup1__glow--blue" aria-hidden="true"></div>
+      <span class="lb-signup1__vibe lb-signup1__vibe--a" aria-hidden="true">soft launch</span>
+      <span class="lb-signup1__vibe lb-signup1__vibe--b" aria-hidden="true">situationship</span>
+      <span class="lb-signup1__vibe lb-signup1__vibe--c" aria-hidden="true">single-ish</span>
+      <span class="lb-signup1__vibe lb-signup1__vibe--d" aria-hidden="true">taken-ish</span>
+      <span class="lb-signup1__vibe lb-signup1__vibe--e" aria-hidden="true">just here</span>
+
+      <section class="lb-signup1__card" data-room-check-card>
+        <p class="lb-signup1__kicker">ROOM CHECK</p>
+        <p class="lb-signup1__lane">Pick the lane you’re entering with.</p>
+        <h1 class="lb-signup1__title">Where are you in love right now?</h1>
+        <p class="lb-signup1__copy">No judgment. We just need to know what kind of energy you’re bringing into the room.</p>
+
+        <div class="lb-signup1__options" role="radiogroup" aria-label="Relationship status">
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="Single" data-icon="✨">Single</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="Casually dating" data-icon="😌">Casually dating</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="In a situationship" data-icon="🫠">In a situationship</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="In a relationship" data-icon="💞">In a relationship</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="Long-term relationship" data-icon="🔒">Long-term relationship</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="Engaged" data-icon="💍">Engaged</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="Married" data-icon="🏡">Married</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="It’s complicated" data-icon="🌀">It’s complicated</button>
+          <button class="lb-signup1__option" type="button" role="radio" aria-checked="false" data-value="Prefer not to say" data-icon="👀">Prefer not to say</button>
+        </div>
+
+        <div class="lb-signup1__actions">
+          <button class="lb-signup1__continue" type="button" data-continue disabled>Continue →</button>
+        </div>
+        <p class="lb-signup1__progress">Room setup · 3/8</p>
+      </section>
+    </main>
+
+    <script src="./signup-step1.js"></script>
+  </body>
+</html>

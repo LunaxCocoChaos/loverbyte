@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loverbyte — Room Ready</title>
+    <link rel="stylesheet" href="./colors_and_type.css" />
+    <style>
+      *{box-sizing:border-box}html,body{margin:0;padding:0}
+      body{min-height:100vh;display:grid;place-items:center;background:#0b0b0f;color:#f7f4ff;font-family:var(--font-ui);padding:16px}
+      .box{width:min(740px,100%);border-radius:24px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(155deg,rgba(20,24,39,.88),rgba(11,13,22,.94));box-shadow:0 22px 56px rgba(4,8,16,.58);padding:34px 20px;text-align:center}
+      h1{margin:0 0 10px;font-family:var(--font-display)}
+      p{margin:0;color:rgba(247,244,255,.84);line-height:1.5}
+      .v{margin-top:12px;color:#00E0D3;font-weight:600}
+      a{display:inline-block;margin-top:16px;color:#FFB2E6;text-decoration:none}
+    </style>
+  </head>
+  <body>
+    <section class="box" aria-label="Onboarding complete placeholder">
+      <h1>Room setup complete</h1>
+      <p>Your onboarding data is saved for the next product steps.</p>
+      <p class="v" id="status"></p>
+      <a href="./index.html">Go to product demo</a>
+    </section>
+    <script>
+      try {
+        const active = sessionStorage.getItem('lb_dating_card_active');
+        const text = active === 'true' ? 'Dating Card pinned.' : 'Dating Card skipped for now.';
+        document.getElementById('status').textContent = text;
+      } catch(e) {}
+    </script>
+  </body>
+</html>
